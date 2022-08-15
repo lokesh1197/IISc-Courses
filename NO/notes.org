@@ -1,0 +1,18 @@
+* Linear Algebra
+- functions: maps an input space to an output space
+- scalar valued function: output is a scalar
+- vector valued function: output is a vector
+- countour map -> contour line(iso line) -> scalar representation for a vector (using a function)
+- in a countour map, derivative always moves in the direction the function value increases
+- finite derivative, finite volume, finite element methods -> methods to solve derivative numerically
+- Tesselation: dividing a domain into a finite number of grid points
+- Automatic differentiation
+- Ax = \lambda x (eigen value decomposition)
+- Av = \sigma u (singular value decomposition)
+- 
+- Pseudo inverse -> S.V.D. (singular value decomposition) -> Moore-Penrose
+- Matrix vector multiplication is a linear combination of matrix columns with the weights as the entries of the vector
+- Matrix -> sum of eigen vector * eigen value -> E.V.D. (eigen value decomposition) -> dimension reduction
+- Rectangular (Au = sigma v) -> S.V.D.
+- Vector Norm -> L1(|x_1| + |x_2| + |x_3|), L2(\sqrt{x_1^2 + x_2^2 + x_3^2}), Lp(\sqrt[p]{sum of pth power of all entries})
+- Matrix Norm -> Frobenius norm (\sqrt{sum of squares of all entries})
