@@ -1,0 +1,62 @@
+#+title: ISS Architecture Notes
+#+author: Lokesh Mohanty
+
+* Assignment 1
+
+1. Calculate how many times this C loop will iterate. Assume that C float variables are represented using the 32 bit IEEE 754 Floating Point Standard representation.
+
+#+begin_src C
+  #include <stdio.h>
+
+  int main() {
+    int count = 0;
+    float f = 1.0;
+    while(f != 0.0) {
+     f = f/2.0; 
+     count++;
+    }
+    printf("Number of loops: %d", count);
+  }
+#+end_src
+
+#+RESULTS:
+: Number of loops: 150
+
+2. Prove that the C shift operator <<  (>>) can be used to multiply (divide) a 32 bit unsigned int by powers of 2. Does this idea also work for 32 bit signed ints represented using 2s complement representation? If not, show a counterexample.
+
+#+begin_src C :results verbatim
+  #include <stdio.h>
+
+  int main() {
+    unsigned int u = 4;
+    int sn = -4;
+    int sp = 4;
+    int maxp = 2147483647;
+    int maxn = -2147483648;
+    int maxn1 = -2147483648 + 1073741824;
+    unsigned int maxu = 4294967295;
+
+    printf("Divide by 2:\n 4(unsigned) -> %u\n 4(signed) -> %d\n -4 -> %d\n", u >> 1, sp >> 1, sn >> 1);
+    printf("Divide by 8:\n 4(unsigned) -> %u\n 4(signed) -> %d\n -4 -> %d\n", u >> 3, sp >> 3, sn >> 3);
+    printf("maxp: %d\n", maxp <<1);
+    printf("maxn: %d\n", maxn <<1);
+    printf("maxn1: %d\n", maxn1 <<1);
+    printf("maxu: %u\n", maxu <<1);
+  }
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Divide by 2:
+ 4(unsigned) -> 2
+ 4(signed) -> 2
+ -4 -> -2
+Divide by 8:
+ 4(unsigned) -> 0
+ 4(signed) -> 0
+ -4 -> -1
+maxp: -2
+maxn: 0
+maxn1: -2147483648
+maxu: 4294967294
+#+end_example
