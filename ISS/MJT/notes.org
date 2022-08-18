@@ -60,3 +60,18 @@ maxn: 0
 maxn1: -2147483648
 maxu: 4294967294
 #+end_example
+
+
+#+begin_src C
+  #include<stdio.h>
+
+  int main() {
+    printf("%d\n", 0b11111111111111111111111111111110);
+    printf("%d", 0b11111111111111111111111111111110 << 2);
+    return 0;
+  }
+#+end_src
+
+#+RESULTS:
+| -2 |
+| -8 |

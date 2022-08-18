@@ -1,4 +1,3 @@
-
 \documentclass[12pt, letterpaper]{article}
 %% \usepackage[margin=0.5in]{geometry}
 \usepackage{amsmath}
@@ -8,8 +7,6 @@
 \title{Assignment 1}
 \author{Lokesh Mohanty (SR no: 21014)}
 \date{August 2022}
-
-\newcommand{\M}{\mathbb{M}^{2x2}}
 
 \begin{document}
 
@@ -110,7 +107,7 @@ Hence the shift operator ($>>$) can be used to divide a 32 bit negative signed i
 When $a_{n-2}$ is not $30$ (i.e., $31$st bit is $0$), shifting it to left makes the number positive instead of multiplying it as it goes out of storage. Hence this is also valid only when the resultant number is within the range of signed int.
 
 
-\subparagraph{(d)} The C shift operator $<<$ can be used to divide a $32$ bit signed int by powers of 2
+\subparagraph{(d)} The C shift operator $>>$ can be used to divide a $32$ bit signed int by powers of 2
 \subparagraph{\textit{\underline{Proof}:}}
 
 The storage method for positive signed int is same as that of unsigned int. Hence the right shift operator ($>>$) can be used to divide 32 bit positive signed int by powers of 2.\\
