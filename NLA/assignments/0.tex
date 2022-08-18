@@ -1189,9 +1189,13 @@ From equation \ref{5b}
 
 %% -------------------------------- Problem #5.e -----------------------------------------------
 \subparagraph{(e)} Given that,
-\begin{equation}\label{5e}
-\mathbf{AA}^T = \mathbf{I}\text{, where }\mathbf{A}\text{ is a full rank matrix}
-\end{equation}\\
+\begin{equation}\label{5e}\begin{split}
+&\mathbf{AA}^T = \mathbf{I}\text{, where }\mathbf{A}\text{ is a full rank matrix}\\
+\implies &\mathbf{A}^{-1}\mathbf{AA}^T = \mathbf{A}^{-1}I\\
+\implies &\mathbf{A}^T = \mathbf{A}^{-1}\\
+\implies &\mathbf{A}^T\mathbf{A} = \mathbf{A}^{-1}\mathbf{A} = I\\
+\implies &\boxed{\mathbf{AA}^T = \mathbf{A}^T\mathbf{A} = \mathbf{I}}
+\end{split}\end{equation}\\
 
 We know that geometric length of a vector $\mathbf{v} = \begin{pmatrix} x\\y\\z \end{pmatrix},\,x,y,z\in\mathbb{R}$ is
 $\,\sqrt{\mathbf{v}.\mathbf{v}}\,$ i.e., $\,\sqrt{x^2 + y^2 + z^2}$\\
