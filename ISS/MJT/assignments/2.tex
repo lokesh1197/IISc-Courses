@@ -1,0 +1,39 @@
+\documentclass[12pt, letterpaper]{article}
+%% \usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyvrb}
+
+\title{Assignment 2}
+\author{Lokesh Mohanty (SR no: 21014)}
+\date{August 2022}
+
+\begin{document}
+
+\maketitle
+
+%% -------------------------------- Problem #1 -----------------------------------------------
+\paragraph{1.} $C$ expression that yields a word consisting of the least significant byte of x and the remaining bytes of y, given 2 unsigned ints $x$ and $y$:
+
+\[\boxed{\text{\verb~(x \& 0x000000FF) | (y \& 0xFFFFFF00)~}}\]
+
+where, \verb+(x & 0x000000FF)+ gives the LSB of $x$ and \verb+(y & 0xFFFFFF00)+ gives all the bytes other than LSB combining which gives the required answer.
+
+%% -------------------------------- Problem #2 -----------------------------------------------
+\paragraph{2.} $C$ expression that evaluates to $1$ when below condition is true and $0$ otherwise
+\subparagraph{A.} Any bit of $x$ equals $0$ (i.e., all values of $x$ other than when $x$ is all $1$s i.e., \verb~0xFFFFFFFF~)
+\[\boxed{\text{\verb~!(x == 0xFFFFFFFF)~}}\]
+\subparagraph{B.} Any bit in the LSB of $x$ equals $1$ (i.e., all values of $x$ where the LSB is not $0$ as
+(\verb~0 && 1~) is 0 and 1 otherwise)
+\[\boxed{\text{\verb~(x \& 0x000000FF) \&\& 1~}}\]
+
+%% -------------------------------- Problem #3 -----------------------------------------------
+\paragraph{3.} IEEE 754 approximation for $\pi$ has hexadecimal representation of \underline{\verb~0x40490FDB~} and for $22.0/7.0$ it is \underline{\verb~0x40492492~}, \verb~XNOR~ of which is \underline{\verb~0x00002b49~}\\ (i.e., $\frac{0}{s}.\frac{00000000}{e}.\frac{00000000010101101001001}{f}$). Hence the bit position at which $\pi$ differs from $22.0/7.0$ is the $\boxed{10\text{th}}$ bit in $f$ (i.e., $10$th bit after the decimal)
+
+
+\end{document}
+
+%% Local Variables:
+%% eval: (async-shell-command "latexmk -output-directory=out -pdf -pvc -interaction=nonstopmode 2.tex &")
+%% eval: (async-shell-command "zathura out/2.pdf &")
+%% End:

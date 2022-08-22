@@ -75,3 +75,67 @@ maxu: 4294967294
 #+RESULTS:
 | -2 |
 | -8 |
+
+#+begin_src C :results verbatim
+  #include <stdio.h>
+
+  int main() {
+    unsigned int x = 0x89ABCDEF, y = 0x76543210;
+    printf("&x: %p,&y: %p\n", &x, &y);
+    printf("Least significant byte of x and remaining bytes of y: %x\n", (x & 0xFF) | (y & 0xFFFFFF00));
+    printf("Any bit of x equals 0: %d\n", !(x == 0xFFFFFFFF));
+    /* printf("Any bit in the least significant byte of x equals 1: %d\n", (x & 0xFF == 0) ? 0 : 1); */
+    printf("Any bit in the least significant byte of x equals 1: %d\n", ((x & 0xFF) && 1));
+    printf("%b, %b\n", x, x % 256);
+
+    int pi_int = 0x40490FDB;
+    float *pi = &pi_int;
+    float pi1 = 22.0 / 7.0;
+    printf("%f", *pi);
+    printf(", %f\n", pi1);
+    printf("%x", *pi);
+    printf(", %x\n", pi1);
+    printf("%x\n", pi1);
+    /* printf("%p\n", sizeof(&x)); */
+    return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: &x: 0x7fff5ae5cc20,&y: 0x7fff5ae5cc24
+: Least significant byte of x and remaining bytes of y: 765432ef
+: Any bit of x equals 0: 1
+: Any bit in the least significant byte of x equals 1: 1
+: 10001001101010111100110111101111, 11101111
+: 3.141593, 3.142857
+: f1dcc0b8, f1dcc0bc
+: f1dcc0c1
+
+
+#+begin_src C :results verbatim
+  #include <stdio.h>
+  #include <stdint.h>
+  #include <inttypes.h>
+  #include <math.h>
+
+  int main() {
+    float pi = (float)M_PI;
+    float pi_approx = 22.0/7.0;
+    union {
+      float f;
+      uint32_t u;
+    } f2u = { .f = pi }, fa2u = { .f = pi_approx };
+
+    printf("pi: %f\n  : 0x%" PRIx32 "\n", pi, f2u.u);
+    printf("pi: %f\n  : 0x%" PRIx32 "\n", pi_approx, fa2u.u);
+    printf("common: 0x%" PRIx32 "\n", ~(f2u.u & fa2u.u) & (f2u.u | fa2u.u));
+    return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: pi: 3.141593
+:   : 0x40490fdb
+: pi: 3.142857
+:   : 0x40492492
+: common: 0x2b49
