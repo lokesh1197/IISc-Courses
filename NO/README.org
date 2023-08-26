@@ -1,2 +1,0 @@
-#+title: DS 211: Numerical Optimization (August 2022)
-#+author: Lokesh Mohanty

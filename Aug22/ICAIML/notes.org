@@ -1,0 +1,352 @@
+#+title: DS 226: Introduction to Computing for AI and ML
+#+author: Lokesh Mohanty
+#+startup: inlineimages
+
+* Other
+- Automatic mixed precision for major deep learning frameworks
+  FP16 and FP32
+- 32-bit processor: can access $2^{32}$ different memory addresses (i.e., max 4GB RAM)
+- 64-bit real number: (s:1, e:11, f:52)
+- Performance:
+  - MIPS: million instructions per second (integer performance, ...)
+  - FLOPS: floating point operations per second
+- Moore's law: number of transistors on a chip double every 2 years
+- Dennard scaling: power density can be kept constant at scaling even with the increasing clock rate (by lowering supply voltage)
+  It ended in 2004
+- RISC: reduced instruction set computers
+- TPU > GPU > Multicore > RISC > Microprocessors > Minicomputer > Mainframes
+- SMP: shared memory parallelism
+- DMP: distributed memory process
+* Cache Optimization
+:PROPERTIES:
+:Created: <2022-08-29 Mon>
+:Finished: <2022-09-05 Mon>
+:END:
+** Operations involving matrices
+- number of memory referrals(m = n):
+  - read/write: $3 + n^2$
+  - $2n^2$ FLOPs
+
+- Blocking: improves temporal locality to reduce misses, especially operations with multidimensional arrays
+#+begin_src C
+  for(jj = 0; jj < n; jj++)
+  for(kk = 0; kk < n; kk++)
+    for(i = 0; i < n; i++)
+      for(j = jj; j < min(jj + b, n); j++) {
+        s = 0;
+        for (k=kk; k< min(kk+b, n); k++) s += A[i][k] * B[k][j];
+        C[i][j] = s;
+      }
+#+end_src
+
+* Python Programming
+:PROPERTIES:
+:Created: <2022-09-05 Mon>
+:Finished: <2022-09-07 Wed>
+:END:
+** Interpreter language
+Prevents many compiler optimization
+
+Solutions:
+- write kernels in C and expose through python wrapper, however often needs new algorithms/update written from scratch in python
+- Just-in-time Compiler (eg: Numba)
+** Global Interpreter Lock (GIL)
+- assures thread safety and no data races by allowing only on thread at a time
+- prevents the performance benefits arising from multiple threads in parallel in a multicore CPU
+
+Solutions:
+- enable multithreading
+
+** Interpreter vs Compiler
+Both convert source to machine code
+
+| Interpreter                         | Compiler                                 |
+|-------------------------------------+------------------------------------------|
+| translates one statement at a time  | scans and translates the entire program  |
+|-------------------------------------+------------------------------------------|
+| takes less time to analyze the code | takes lot of time to analyze and compile |
+| but overall compute time is more    | time is more but execution time is less  |
+|-------------------------------------+------------------------------------------|
+| does not generate intermediate      | generate intermediate object code, needs |
+| code, thus needs less memory        | further linking and more memory          |
+|-------------------------------------+------------------------------------------|
+| stops at the first (syntax) error   | generates error messages at the end of   |
+|                                     | compilation, debugging is challenging    |
+|-------------------------------------+------------------------------------------|
+| eg: python, ruby, javascript ...    | eg: c, c++, java, c# ...                 |
+
+** Source Code
+*** High level Code
+*** Assembly Code
+
+** Object Code
+- product of a compiler or other translator, consisting of machine code, byte code or both
+- machine code one particular library or module not yet linked into a complete program
+- linker connects multiple object codes to generate a complete program
+
+** Machine Code
+- binary code
+
+** Bytecode
+- form of instruction set designed for efficient execution by a software interpreter
+- unlike source code, bytecodes are compact numeric codes, constants and references
+- product of compiler parsing and performing semantic analysis (type, scope and nested depths)
+- can be executed by parsing and directly executing the instruction, one at a time
+- interperter is very portable
+
+  soure code -> machine code (interpreter, worst performance)
+  source code -> byte code -> machine code (PVM, poor performance)
+
+  #+begin_src ditaa
+  
+  #+end_src
+
+** Just-in-Time Compiler (JIT)
+- can be used to translate bytecode into machine code as necessary at runtime
+- makes the virtual machine hardware specific but does not loose the portability og bytecode
+- introduces delay before a program is run but improves execution
+- method to improve the performance of interpreter programs
+- also called dynamic compilation
+- compiles a major part of the xource code or more commonly byte code (p-code) during execution, opposed to prior to execution
+- allows system specific optinization and speedup
+- goal is to achieve or better the performance of static compilation (when optimization are available at the runtime)
+
+** Basic Data Types
+- int, float, str
+- list: ordered sequence of objects (mixed type)
+- dict: unordered key:value pairs
+- tup (tuples: ordered immutable sequence of objects
+- Set, bool
+
+** Performance
+*Library*: timeit
+*Asymptotic Analysis*: worst case(O(n)), best case(\Omega(n)) and average case(\Thetn))
+
+* OOPs
+SCHEDULED: <2022-09-07 Wed>
+:END:
+- Software
+  - collection of computer programs that interoperates to perform one of more tasks
+  - must be modular, easy to read, reuse, understand, maintain, ...
+  - requires OOPs
+  - quality metrics: functional suitability, performance, reliability, security, maintainability, portability
+
+- methods, constructors
+
+** inheritance
+=Multilevel inheritance=
+class classA { ... };
+class classB: public classA { ... };
+class classC: public classB { ... };
+
+=Multiple inheritance=
+class classA: public classX, public classY { ... };
+
+** Polymorphism
+methods with the same name perform different tasks in each class in the context of inheritance
+
+=virtual funcitons=:
+an inheritable and overridable function or method for which dynamic dispatch is facilitated under polymorphism
+
+#+begin_src c
+  #include <iostream>
+
+  int main( {
+    v->GetType();
+    b->GetType();
+    return 0;
+  }
+#+end_src
+
+* Data Story
+SCHEDULED: <2022-09-19 Mon>
+
+** Business Intelligence
+- Combines data mining, business anlaytics, data visualization and best practices to help organizations to make data-driven decisions
+- Modern Business Intelligence combines Machine learning and Artificial Intelligence with a dashboard
+- Provides insights to organizations to operate and respond to the changing marketplace
+
+*** Components
+**** Data Mining
+**** Data Visualization
+- 90% of information transmitted to the brain in visual
+- A picture is worth a thousand words
+- Research shows that visualization in Business Intelligence could shorten meetings by 24%
+
+*Effective:*
+- Know your audience
+- Structure your storytelling
+- use the right visualization tools
+- Take advantage of Color Theory
+- Tell your tale
+
+*Types:*
+- Bar
+- Histogram
+- Violin
+- Sunburst: hierarcheal data spanning outwards radially from root to leaves
+- Tree
+- Rectangles: not good for hierarcheal
+- Word Cloud
+- Correlation matrices
+- Dendrogram with heatmap
+
+**** Data Story
+The process of bringing the story visually and contextually to life from the data
+- Much of the decision/disruption today is driven by data
+- Combining storytelling with data will better equip to lead
+- Simply showing data is significantly less effective from storytelling with data
+- Knowing how to use plotting tool is not a storytelling
+- Convince: with data (around 5%), with story (around 66%)
+
+*Effective:*
+- Understand the context
+- Choose an appropriate visual display
+- elimiate clutter
+- ...
+
+Book:
+1. Nancy duarte Datastory
+2. Cole Nussbaumer Knaflic: Storytelling with Data: A Data visualization Guide for Business Professionals
+**** Dashboard
+- A type of graphical user interface
+- to visual presentation of performance measures
+- to identify and correct negative trends
+**** Report Generation
+
+* Test
+
+#+begin_src python :results output file :file example.png :output-dir images/
+  import matplotlib.pyplot as plt
+  import numpy as np
+  import sys
+
+  xpoints = np.array([0, 6])
+  ypoints = np.array([0, 250])
+
+  plt.plot(xpoints, ypoints)
+  plt.show()
+  plt.savefig(sys.stdout.buffer)
+#+end_src
+
+#+RESULTS:
+[[file:images/example.png]]
+
+* Linear Regression
+- normal equation
+
+Computational Complexity
+- finding the inverse: order of 2.5 and 3
+- svd: order of 2
+- multigrid: order of 1
+
+* Polynomial Regression
+Non-linear data
+
+The actual solution is still linear as all we need to find are the co-efficients which are always linear
+
+** Runge's Phenomenon
+Problem of oscillation at the edges of an interval that occurs when using polynomial interpolation with polynomials of higher degrees. Causes overfitting.
+
+** Regularization under linear regression
+*** Ridge Regression
+Ridge: $J(\beta) = S_{r} + \frac{\alpha}{2}\sum_{j=1}^{m}$\beta^2_j,
+where S_r is the cost function
+*** Lasso Regression
+Lasso: $J(\beta) = S_{r} + \alpha\sum_{j=1}^{m}$|\beta_j|
+*** Elastic Net
+* Machine Learning
+** Supervised Learning
+*** Regression
+*** Classification
+** Unsuperivsed Learning
+*** Clustering
+*** Dimensionality Reduction
+** Reinforcement Learning
+* Traditional Modelling
+** Application
+Define problem (Business value)
+- Data Munging/Wrangling
+- Pandas, Numby, Seaborn, Matplotlib
+- sklearn, preprocessing, skelarn.impute, Spark
+** Modelling (Train ML Model)
+Identify the relation between the features and the target
+- sklearn.pipeline, sklearn.model_selection
+- XGBoost, TF2, Keras
+** Simulation (Model Validation)
+Evaluation, verify and validate
+- Fine-tune identified models
+- sklearn.ensemble, VotingClassifier, ...
+- Save models using Joblib or Pickle
+
+Data Story
+- PowerPoint, Seaborn, matplotlib, plotly, dash, javascript(fusion charts, react, d3)
+- Dashboard: Tableau, Power BI, GDS
+** Deploy
+Static package, Cloud service (SaaS)
+
+(-> Modelling) Retrain Model (automatic)
+(-> Application) Inspect Solution (get insight of the dynamics, physics)
+
+- AWS SageMaker, Azure ML Studio, GCP AI Platform, Docker, Kubernetes, ...
+* Challenges of ML
+- Insufficient quantity of training data
+- Non-representative training data
+- Poor data quality
+- Irrelevant features
+  - feature engineering
+    - feature selection
+    - feature extraction (combining existing features)
+    - dimensionality reduction
+- Overfitting/underfitting of the training data
+- Reproducibility
+- Explainable ML models, [[https://cloud.google.com/explainable-ai]]
+* Software Methodologies
+** Waterfall
+** Agile
+- Focuses on constant changes
+- Leverages left-shift methodology
+- Target area is software development
+- Address gaps in Customer and Developer communications
+** DevOps
+- Focuses on constant testing and delivery
+- Leverages both left-shift and right-shift methodology
+- Target area is to give end-to-end business solutions and fast delivery
+- Address gaps in Developer and IT Operations communications
+* Others
+- Model drift
+  model becomes irrelevant and requires retraining the models with new labels...
+- Data drift
+  new/exceptions in data for which the model was not trained
+* Tensorflow
+Has good community support
+Version: Tensoflow 2 (keras introduced)
+
+make model
+compile
+fit
+
+checkpoint
+** Sequential
+activation: relu, softmax (used in classification)
+optimizers: Adam
+** Convolution Neural Network
+Image -> Convolved feature (takes spatial relationship into account)
+** Functional API
+** Subclassing API
+* Advanced machine learning
+** Supercomputer
+- SMP on each node
+- DMP on node interconnect
+
+** Edge device
+
+** Federated Learning
+- Avoids the need to send and store the data in the cloud
+*** Computational Challenges
+- SGD requries low-latency, high-throughput connections to the training data
+* Tasks [2/3]
+- [X] Assignment 1
+- [X] Prepare for Quiz 1
+- [ ] [[https://homl.info/colab3][Geron's repo]]
+

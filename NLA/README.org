@@ -1,2 +1,0 @@
-#+title: Numerical Linear Algebra (August 2022)
-#+author: Lokesh Mohanty

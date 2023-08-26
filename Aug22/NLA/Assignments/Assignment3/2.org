@@ -1,0 +1,52 @@
+
+#+begin_src emacs-lisp :exports none
+  (setq org-babel-python-command "~/Documents/Assignments/NLA/bin/python")
+#+end_src
+
+#+begin_src python :session venv :results output :exports both
+  import numpy as np
+  from numpy.linalg import qr
+
+  A = np.array([[8,1,6], [3,5,7], [4,9,2]])
+  Q, R = qr(A)
+
+  print("Q: ", Q)
+  print("R: ", R)
+#+end_src
+
+#+RESULTS:
+: Q:  [[-0.8479983   0.52229204  0.09005497]
+:  [-0.31799936 -0.36546806 -0.8748197 ]
+:  [-0.42399915 -0.77048304  0.47600483]]
+: R:  [[-9.43398113 -6.25398749 -8.16198368]
+:  [ 0.         -8.23939564 -0.96549025]
+:  [ 0.          0.         -4.63139839]]
+
+#+begin_src python :session venv :exports both
+  Q.dot(R)
+#+end_src
+
+#+RESULTS:
+| 8 | 1 | 6 |
+| 3 | 5 | 7 |
+| 4 | 9 | 2 |
+
+#+begin_src python :session venv :exports both
+  q = np.array([
+      [0.8480, -0.5223, -0.0194],
+      [0.3180, 0.3655, 0.1889],
+      [0.4240, 0.7705, -0.1028]
+  ])
+  r = np.array([
+      [9.4340, 6.2540, 8.1620],
+      [0, 8.2394, 0.9657],
+      [0,0,21.4497]
+  ])
+
+  q.dot(r)
+#+end_src
+
+#+RESULTS:
+| 8.000032 | 0.99995338 | 6.00086671 |
+| 3.000012 |  5.0002727 | 7.00032768 |
+| 4.000016 |  9.0001537 | 1.99973069 |

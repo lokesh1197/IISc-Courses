@@ -1,0 +1,197 @@
+\documentclass{article}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[ruled]{algorithm2e}
+
+\title{DS 221 Assignment: Exploration of Top Supercomputers}
+\author{Lokesh Mohanty (lokeshm@iisc.ac.in)}
+
+% insert a dot after the number and before the title
+\renewcommand{\thesection}{\arabic{section}.}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}.}
+
+% give vertical padding to table cells
+\renewcommand*\arraystretch{1.3}
+
+\begin{document}
+\maketitle
+
+\section{Supercomputer with highest number of cores}
+
+In all the latest 5 editions of \verb~top500.org~ the below supercomputer has the highest number of cores.\\
+
+\label{sec:number-cores}
+\begin{tabular}[tb]{rcl}
+  \textbf{System Name} &: &Sunway TaihuLight \\
+  \textbf{Location} &: &National Supercomputing Center in Wuxi, China\\
+  \textbf{Number of Cores} &: &10,649,600\\
+\end{tabular}
+
+\section{Network Topology of Top 20 Supercomputers}
+\label{sec:topology}
+
+\begin{minipage}{0.45\textwidth}
+\subsection{Edition: June 2022}
+\label{sec:edition:-june-2022}
+\begin{tabular}[H]{||l|l|l||} \hline\hline
+  Rank & System Name       & Network Topology \\ \hline\hline
+  1    & Frontier          & Dragon Fly       \\ \hline
+  2    & Fugaku            & 6D mesh/torus    \\ \hline
+  3    & LUMI              & Dragon Fly       \\ \hline
+  4    & Summit            & Fat Tree         \\ \hline
+  5    & Sierra            & Fat Tree         \\ \hline
+  6    & Sunway TaihuLight & Fat Tree         \\ \hline
+  7    & Perlmutter        & Dragon Fly       \\ \hline
+  8    & Selene            & Fat Tree         \\ \hline
+  9    & Tianhe-2A         & Fat Tree         \\ \hline
+  10   & Adastra           & Dragon Fly       \\ \hline
+  11   & JUWELS Booster    & Dragon Fly       \\
+       & Module            &                  \\ \hline
+  12   & HPC5              & Fat Tree         \\ \hline
+  13   & Voyager-EUS2      & Fat Tree         \\ \hline
+  14   & Polaris           & Dragon Fly       \\ \hline
+  15   & SSC-21            & Switched Fabric  \\ \hline
+  16   & Frontera          & Fat Tree         \\ \hline
+  17   & CEA-HF            & Fat Tree         \\ \hline
+  18   & Dammam-7          & Dragon Fly       \\ \hline
+  19   & ABCI 2.0          & Fat Tree         \\ \hline
+  20   & Wisteria/BDEC-01  & 6D mesh/torus    \\ 
+       & (Odyssey)         &                  \\ \hline\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\subsection{Edition: November 2021}
+\label{sec:edition:-nov-2021}
+\begin{tabular}{p{\textwidth}}
+\begin{tabular}[H]{||l|l|l||} \hline\hline
+  Rank & System Name       & Network Topology \\ \hline\hline
+  1    & Fugaku            & 6D mesh/torus    \\ \hline
+  2    & Summit            & Fat Tree         \\ \hline
+  3    & Sierra            & Fat Tree         \\ \hline
+  4    & Sunway TaihuLight & Fat Tree         \\ \hline
+  5    & Perlmutter        & Dragon Fly       \\ \hline
+  6    & Selene            & Fat Tree         \\ \hline
+  7    & Tianhe-2A         & Fat Tree         \\ \hline
+  8    & JUWELS Booster    & Dragon Fly       \\
+       & Module            &                  \\ \hline
+  9    & HPC5              & Fat Tree         \\ \hline
+  10   & Voyager-EUS2      & Fat Tree         \\ \hline
+  11   & SSC-21            & Switched Fabric  \\ \hline
+  12   & Polaris           & Dragon Fly       \\ \hline
+  13   & Frontera          & Fat Tree         \\ \hline
+  14   & CEA-HF            & Fat Tree         \\ \hline
+  15   & Dammam-7          & Dragon Fly       \\ \hline
+  16   & ABCI 2.0          & Fat Tree         \\ \hline
+  17   & Wisteria/BDEC-01  & 6D mesh/torus    \\ 
+       & (Odyssey)         &                  \\ \hline
+  18   & Marconi-100       & Dragon Fly       \\ \hline
+  19   & Chervonenkis      & Switched Fabric  \\ \hline
+  20   & Piz Daint         & Dragon Fly       \\ \hline\hline
+\end{tabular}
+\end{tabular}
+\end{minipage}
+
+\vfill
+\begin{minipage}{0.45\textwidth}
+\subsection{Edition: June 2021}
+\label{sec:edition:-june-2021}
+\begin{tabular}[H]{||l|l|l||} \hline\hline
+  Rank & System Name       & Network Topology \\ \hline\hline
+  1    & Fugaku            & 6D mesh/torus    \\ \hline
+  2    & Summit            & Fat Tree         \\ \hline
+  3    & Sierra            & Fat Tree         \\ \hline
+  4    & Sunway TaihuLight & Fat Tree         \\ \hline
+  5    & Perlmutter        & Dragon Fly       \\ \hline
+  6    & Selene            & Fat Tree         \\ \hline
+  7    & Tianhe-2A         & Fat Tree         \\ \hline
+  8    & JUWELS Booster    & Dragon Fly       \\
+       & Module            &                  \\ \hline
+  9    & HPC5              & Fat Tree         \\ \hline
+  10   & Frontera          & Fat Tree         \\ \hline
+  11   & Dammam-7          & Dragon Fly       \\ \hline
+  12   & ABCI 2.0          & Fat Tree         \\ \hline
+  13   & Wisteria/BDEC-01  & 6D mesh/torus    \\ 
+       & (Odyssey)         &                  \\ \hline
+  14   & Marconi-100       & Dragon Fly       \\ \hline
+  15   & Piz Daint         & Dragon Fly       \\ \hline
+  16   & Trinity           & Dragon Fly       \\ \hline
+  17   & SuperMUC-NG       & Fat Tree         \\ \hline
+  18   & Hawk              & 9D-Hypercube     \\ \hline
+  19   & Ghawar-1          & Dragon Fly       \\ \hline
+  20   & Lassen            & Fat Tree         \\ \hline\hline
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\subsection{Edition: November 2020}
+\label{sec:edition:-nov-2020}
+\begin{tabular}{p{\textwidth}}
+\begin{tabular}[H]{||l|l|l||} \hline\hline
+  Rank & System Name           & Network Topology \\ \hline\hline
+  1    & Fugaku                & 6D mesh/torus    \\ \hline
+  2    & Summit                & Fat Tree         \\ \hline
+  3    & Sierra                & Fat Tree         \\ \hline
+  4    & Sunway TaihuLight     & Fat Tree         \\ \hline
+  5    & Selene                & Fat Tree         \\ \hline
+  6    & Tianhe-2A             & Fat Tree         \\ \hline
+  7    & JUWELS Booster Module & Dragon Fly       \\ \hline
+  8    & HPC5                  & Fat Tree         \\ \hline
+  9    & Frontera              & Fat Tree         \\ \hline
+  10   & Dammam-7              & Dragon Fly       \\ \hline
+  11   & Marconi-100           & Dragon Fly       \\ \hline
+  12   & Piz Daint             & Dragon Fly       \\ \hline
+  13   & Trinity               & Dragon Fly       \\ \hline
+  14   & AI Bridging Cloud     &                  \\
+       & Infrastructure (ABCI) & Fat Tree         \\ \hline
+  15   & SuperMUC-NG           & Fat Tree         \\ \hline
+  16   & Hawk                  & 9D-Hypercube     \\ \hline
+  17   & Lassen                & Fat Tree         \\ \hline
+  18   & PANGEA III            & Fat Tree         \\ \hline
+  19   & TOKI-SORA             & Torus            \\ \hline
+  20   & Cori                  & Dragon Fly       \\ \hline\hline
+\end{tabular}
+\end{tabular}
+\end{minipage}
+
+\vfill
+\begin{minipage}{0.45\textwidth}
+\subsection{Edition: June 2020}
+\label{sec:edition:-june-2020}
+\begin{tabular}[H]{||l|l|l||} \hline\hline
+  Rank & System Name           & Network Topology \\ \hline\hline
+  1    & Fugaku                & 6D mesh/torus    \\ \hline
+  2    & Summit                & Fat Tree         \\ \hline
+  3    & Sierra                & Fat Tree         \\ \hline
+  4    & Sunway TaihuLight     & Fat Tree         \\ \hline
+  5    & Tianhe-2A             & Fat Tree         \\ \hline
+  6    & HPC5                  & Fat Tree         \\ \hline
+  7    & Selene                & Fat Tree         \\ \hline
+  8    & Frontera              & Fat Tree         \\ \hline
+  9    & Marconi-100           & Dragon Fly       \\ \hline
+  10   & Piz Daint             & Dragon Fly       \\ \hline
+  11   & Trinity               & Dragon Fly       \\ \hline
+  12   & AI Bridging Cloud     &                  \\
+       & Infrastructure (ABCI) & Fat Tree         \\ \hline
+  13   & SuperMUC-NG           & Fat Tree         \\ \hline
+  14   & Lassen                & Fat Tree         \\ \hline
+  15   & PANGEA III            & Fat Tree         \\ \hline
+  16   & Cori                  & Dragon Fly       \\ \hline
+  17   & Nurion                & Fat Tree         \\ \hline
+  18   & Oakforest-PACS        & Fat Tree         \\ \hline
+  19   & HPC4                  & Fat Tree         \\ \hline
+  20   & Tera-1000-2           & Fat Tree         \\ \hline\hline
+\end{tabular}
+\end{minipage}
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

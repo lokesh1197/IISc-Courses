@@ -1,0 +1,28 @@
+
+#+begin_src python :results none
+  import matplotlib.pyplot as plt
+
+  # in microseconds
+  n2 = plt.plot(
+      [1, 2, 4, 8],
+      [312, 167, 141, 183],
+      label="10e-2",
+      marker="v"
+  )
+  # n3 = plt.plot(
+  #     [1, 2, 4, 8],
+  #     [3.146, 2.056, 1.693, 1.044],
+  #     label="10e-3",
+  #     marker="o"
+  # )
+  # n4 = plt.plot(
+  #     [1, 2, 4, 8],
+  #     [278, 144, 77, 54],
+  #     label="10e-4",
+  #     marker="x"
+  # )
+  plt.xlabel("Number of threads")
+  plt.ylabel("Time (microseconds)")
+  plt.legend(loc="upper right")
+  plt.savefig("3.png")
+#+end_src

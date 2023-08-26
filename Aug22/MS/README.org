@@ -1,0 +1,372 @@
+#+title: DS 290: Modelling and Simulation (August 2022)
+#+author: Lokesh Mohanty
+
+* Statistical Models in Simulation
+:PROPERTIES:
+:Book: Discretre-Event System Simulation:Banks, Carson, Nelson & Nicol
+:Source: [[./Class Materials/Chapter05.ppt.pdf]]
+:END:
+** Sampling
+- Select a known distribution through educated guess
+- Make estimate of the parameters
+- Test for goodness of fit
+
+** Basics
+*** Discrete random variables
+*** Continuous random variables
+*** Cumulative distribution function
+*** Expectation
+
+** Useful Statistical Models
+*** Queueing systems
+Random variables: inter-arrival, service-time
+
+| Distributions     |                                           |
+|-------------------+-------------------------------------------|
+| Exponential       | random service time                       |
+| Normal            | fairly constant with random variability   |
+| Truncated normal  | normal distribution with restricted value |
+| Gamma and Weibull | more general than exponential             |
+
+*** Inventory and supply chain systems
+Random variables:
+- number of units demanded per order
+- time between demands
+- lead time
+
+| Distributions |                                           |
+|---------------+-------------------------------------------|
+| Gamma         | lead time distribution                    |
+| Poisson       | simple and extensively tabulated          |
+| Negative      | longer tail than poisson                  |
+| Geometric     | special case of negative binomial         |
+
+*** Reliability and maintainability
+Random variables: time to failure(TTF)
+
+| Distributions |                                                      |
+|---------------+------------------------------------------------------|
+| Exponential   | failures are random                                  |
+| Gamma         | standby redundancy, exponential TTF (each component) |
+| Weibull       | failure due to most serious component's failure      |
+| Normal        | failures due to wear                                 |
+
+*** Other areas
+Limited data: uniform, triangular and beta
+others: bernoulli, binomial and hyperexponential
+
+** Distributions
+*** Discrete
+**** Bernoulli
+**** Binomial
+***** Geometric
+***** Negative
+**** Poisson
+*** Continuous
+**** Uniform
+**** Exponential
+**** Normal
+**** Weibull
+**** Lognormal
+*** Empirical
+Distributaion whose parameters are the observed values in a sample of data. Used when it's impossible or unnecessary to establish a random variable with a parametric distribution.
+** Poisson Process
+*** Non-stationary poisson process (NSPP)
+
+* Queueing Models
+:PROPERTIES:
+:Book: Discretre-Event System Simulation:Banks, Carson, Nelson & Nicol
+:Source: [[./Class Materials/Chapter06.ppt.pdf]]
+:END:
+Provides a powerful tool for designing and evaluating the performance of queueing systems
+- Customer
+- Server
+- Calling population
+- System capacity
+- Arrival process
+- Queue behaviour: balk, renege, jockey
+- Queue discipline: FIFO, LIFO, SIRO, SPT, PR
+- Service times and mechanism
+- Time-average number
+- Average time spent in system per customer
+- Conservation Equation (L = $\lambda$w)
+- Server utilization
+- System Performance
+- Service Variability
+- Steady-state of Markovian Model
+- Multiserver Queue
+- Networks of Queues
+** Measures of system performance
+- server utilization, length of waiting lines, delays of customers
+
+* Random Number Generation
+:PROPERTIES:
+:Book: Discretre-Event System Simulation:Banks, Carson, Nelson & Nicol
+:Source: [[./Class Materials/Chapter07.ppt.pdf]]
+:END:
+Random number properties: uniformity, independence
+Important considerations: fast, portable, long cycle, replicable, approximate random number properties
+** Techniques
+*** Linear Congruential Method (LCM)
+*** Combined Linear Congruential Generators (CLCG)
+*** Random number streams
+** Testing
+*** Frequency test (for uniformity)
+**** Kolmogorov-Smirnov
+**** Chi-square
+*** Auto-correlation test (for independence)
+* Random Variate Generation
+:PROPERTIES:
+:Book: Discretre-Event System Simulation:Banks, Carson, Nelson & Nicol
+:Source: [[./Class Materials/Chapter08.ppt.pdf]], [[./Class Materials/se290new.pdf]]
+:Important: se290new:31
+:END:
+Generate samples from a specified distribution as input to a simulation model
+
+** Inverse transform technique
+** Acceptance rejection technique
+- can be used to generate NSPP(non-stationary poisson process(variable $\lambda$))
+- efficiency is determined by speed of generation g() and by acceptance probability
+*** Algorithm
+g(x) -> proposal
+
+1. Generate Y from density g(x) and U as uniform(0,1).
+
+2. If U <= f(Y)/Cg(Y), set X := Y. Otherwise return to Step 1.
+
+\[
+  P(X \in dx) = P((Y \in dx) | A) = \frac{P((Y \in dx) \cap A)}{P A}\\
+\]
+
+=Efficiency=:
+\[
+  P A = E(P(A|Y)) = E \frac{f(Y)}{Cg(Y)} = \int \frac{f(y)}{Cg(y)} g(y) dy = \frac{1}{C} \int f(y) dy = 1/C
+\]
+
+*** Thinning
+- Generate stationary poisson arrival process at the fastest rate ($\lambda^* = \max \lambda(t)$)
+- But accept only a portion of arrivals, thinning out just enough to get the desired result
+#+begin_example
+  Step 1: $\lambda^{*} = max \lambda(t) = 1/5$, t = 0 and i = 1
+  Step 2: for a random number R = 0.2130,
+              E = -5ln(0.213) = 13.13
+              t = 13.13
+  Step 3: generate R = 0.8830
+              $\lambda(13.13)/\lambda^{*}$ = (1/15)/(1/5) = 1/3
+              Since R > 1/3, do not generate the arrival
+
+  Step 2: for a random number R = 0.5530,
+              E = -5ln(0.553) = 2.96
+              t = 13.13 + 2.96 = 16.09
+  Step 3: generate R = 0.0240
+              $\lambda(16.09)/\lambda^{*}$ = (1/15)/(1/5) = 1/3
+              Since R < 1/3, T_1 = t = 16.09
+              and i = i + 1 = 2
+#+end_example
+
+** Special Properties
+* Conditional Expectation
+:PROPERTIES:
+:Source: [[./Class Materials/cond_exp.pdf]]
+:Important: se290new:31
+:END:
+
+Partition theorem:
+\[ E[X] = \sum_nE[X|B_n]P(B_n) \]
+\[ f_{X|Y}(x|y) = \frac{P(X=x, Y=y)}{P(Y=y)} = \frac{f_{X,Y}(x,y)}{f_Y(y)} \]
+
+Theorem 2:
+\[ E[(X - E[X|Y])^2 \leq E[(X - h(Y))^2] \], equality holds if and only if $h(Y) = E[X|Y]$
+
+* Input Modeling
+:PROPERTIES:
+:Book: Discretre-Event System Simulation:Banks, Carson, Nelson & Nicol
+:Source: [[./Class Materials/Chapter09.ppt.pdf]]
+:END:
+** Collection of data
+collect data or make educated guess
+*** Stale Data
+*** Unexpected Data
+*** Time-varying Data
+*** Dependent Data
+*** Discrete Data
+*** Continuous Data
+** Identifying the distribution
+*** Histograms
+*** Selecting families of distribution
+**** Binomial
+**** Negative Binomial (includes geometric)
+**** Poisson
+**** Normal
+**** Lognormal
+**** Exponential
+**** Gamma
+**** Beta
+**** Erlang
+**** Weibull
+**** Discrete/Continuous Uniform
+**** Triangular
+**** Empirical
+*** Quantile-Quantile Plots
+(pg: 348)
+helpful for small number of data points and doesn't suffer from the problems of histogram
+** Choose parameters for the distribution
+[[file:Class Materials/Jerry Banks, John S. Carson II, Barry L. Nelson, David M. Nicol - Discrete-Event System Simulation-Pearson (2013).pdf::353][suggested estimators]] -> maximum-likelihood estimators based on raw data [[file:Class Materials/Jerry Banks, John S. Carson II, Barry L. Nelson, David M. Nicol - Discrete-Event System Simulation-Pearson (2013).pdf::354][example]]
+
+sample mean and variance are used to estimate parameters of the hypothesized distribution
+
+** Evaluate for goodness of fit
+*** Chi-Square test
+Formalizes the intuitive idea of comparing the histogram of the data to the shape of the candidate density or mass function.
+
+n observations, k class intervals
+O_i: observed frequency, E_i: expected frequency
+\[ \chi^{2}^{}_{0} = \sum_{i=1}^{k} \frac{(O_{i} - E_{i})^{2}}{E_{i}} \]
+
+*** Kolmogorov Smirnov test
+Formalilzes the idea behind examining a q-q plot.
+Tests for the uniformity of numbers
+
+F(x): hypothesized distribution's cdf, S_N(x): empirical cdf
+Based on maximum difference statistics: $D = \max |F(x) - S_N(x)|$
+
+** Fitting a NSPP to arrival data
+1. fit a very flexible model with lots of parameters
+2. approximate constant arrival rate over some basic interval of time, varying with time intervals
+
+** Multivariate/Time series
+only considering for linear
+
+correlation -> diagonal dominance and symmetric conidtion of a matrix
+
+*** AR(1)
+*** EAR(1)
+* Verification and Validation
+:PROPERTIES:
+:Book: Discretre-Event System Simulation:Banks, Carson, Nelson & Nicol
+:Source: [[./Class Materials/Chapter10.ppt.pdf]]
+:NOTER_DOCUMENT: Class Materials/Chapter10.ppt.pdf
+:END:
+** Verification
+- documentation: clarifying the logic of a model
+- use of trace: detailed printout of the state of the simulation model over time
+** Calibration & Validation
+Three-step approach:
+*** High Face Validity
+*** Validate Model Assumptions
+*** Validate I-O Transformation
+**** Hypothesis Testing
+\alpha = 0.05
+from where did t_critical come?
+**** Type I and II Error
+For a fixed sample size n, increasing \alpha will decrease \beta
+
+***** Type I Error (\alpha) (based on H0)
+- Error of rejecting a valid model
+- controlled by specifying a small level of significance \alpha
+***** Type II Error (\beta) (based on H1)
+- Error of accepting a model as valid when it is invalid
+- Controlled by specifying critical difference and find the n
+**** Confidence Interval Testing (most important)
+Confidence Interval (C.I.) for \mu is $Y \pm t_{\frac{\alpha}{2}, n-1}S/\sqrt{n}$
+**** Using Historical Output Data
+**** Using a Turing Test
+* Output analysis for a Single Model
+To estimate the standard Error or Confidence Interval(CI) and to figure out the number of observations required to achieve desired error/CI
+
+** Types of Simulations
+- Terminating
+- Non-Terminating
+
+** Performance Measures
+- Prediction Interval -> measure of risk
+- we measure the variance of the estimator (confidence interval estimation)
+
+*** Confidence Interval (CI)
+- a measure of error
+
+*** Prediction Interval (PI)
+- a measure of risk
+
+** Statistical estimation of performance measures
+Across replication, within replication
+** Analysis of Transient Simulations
+** Analysis of Steady-State Simulations
+*** Initialization Bias
+divide the simulation into 2 phases
+- iniitalization phase: 0 to T_0
+- data collection phase: T_0 to T_0 + T_E (reaching steady state)
+
+Ensemble average -> used to find the steady state
+
+- The more correlation makes it longer to reach steady state
+- Different performance measures could approach steady state at different rates
+* Comparision and Evaluation of Alternate System Designs
+:PROPERTIES:
+:Book: Discretre-Event System Simulation:Banks, Carson, Nelson & Nicol (pg: 471)
+:Source: [[./Class Materials/Chapter12.ppt.pdf]]
+:END:
+Weak convergence entails a lot of variance. Hence it is not as authenticate as strong convergence
+
+** Two system comparisions
+
+Weak: easier to compute, but difficult to analyze
+Strong: little bit difficult to compute, but easy to analyze
+
+*** Independent Sampling (weak comparision)
+*Goal*: compare 2 possible configurations of a system
+*Approach*: method of replications used to analyze the output data
+*Performance*: $\theta_1 - \theta_{2}$
+
+if confidence interval is completely to the left of 0, System 2 is better, if completely to the right of 0, System 1 is better and if 0 strongly lies within it then there is no strong statistical evidence that one is better than the one
+
+- High variance
+
+*** Correlated Sampling (common random numbers) (strong comparision)
+Exactly same random number streams 
+
+- Low variance
+
+Any random variable can be represented as
+$X = E(X) + \int_{0}^{1}\sigma dW_{s}$, $dW_{s} \sim N(0,dS)$
+-> Representation theorem (clark-Ocone Formula).
+$\sigma$ is knows as Malliavain derivative.
+
+
+Inependent sampling(weakest comparision) >> CRN without synchronization > CRN with synchronization(strongest comparision)
+
+** Multi system
+- Fixed sample size procedures
+- Sequential sampling (multistage)
+*** Bonferroni Approach
+Should be used only when small number of comparisions are made
+- Individual
+- Comparision to an existing system
+- All pariwise
+
+** Metamodels
+describe relation between input and output
+*** Simple Linear Regression
+E(Y/x) = \beta_0 + \beta_1 x
+\beta_0 and \beta_1 are estimated by method of least squares
+
+***** Test for significance of regression (lack-of-fit test)
+Hypothesis testing: H_0: \beta_1 = 0 and H_1: \beta_1 $\not =$ 0
+- Failure to reject H_0 indicates no linear relationship between x and Y
+- If H_0 is rejected, implies that variation in Y can be explained by x but there may be higher order terms
+
+*** Multiple Linear Regression
+E(Y/(x_1, x_2, ...)) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \epsilon
+
+*** Robust Heuristics
+Example: genetic algorithms and tabu search
+
+* Try [0/1]
+- [ ] \[ E(X|XY) = \sqrt{XY} \]
+
+* Glossary
+- i.i.d. -> independent and identically distributed random variables
+* Events [1/3]
+- [X] Mid Semester 1 (chapter 5, 6, 7, 8) (19th September)
+- [ ] Mid Semester 2
+- [ ] End Semester

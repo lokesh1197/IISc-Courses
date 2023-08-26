@@ -1,0 +1,196 @@
+-O2
+Time Taken: 3.286355s
+Time Taken: 3.278836s
+Time Taken: 3.309091s
+Time Taken: 3.582599s
+Time Taken: 3.575298s
+Time Taken: 3.596118s
+Time Taken: 3.304386s
+Time Taken: 3.278604s
+Time Taken: 3.290919s
+Time Taken: 3.301837s
+
+real	0m33.965s
+user	0m33.734s
+sys	0m0.229s
+-O2 -floop-interchange
+Time Taken: 3.321012s
+Time Taken: 3.580923s
+Time Taken: 3.327324s
+Time Taken: 3.336360s
+Time Taken: 3.291806s
+Time Taken: 3.369145s
+Time Taken: 3.322305s
+Time Taken: 3.340835s
+Time Taken: 3.310709s
+Time Taken: 3.291353s
+
+real	0m33.659s
+user	0m33.416s
+sys	0m0.242s
+-O2 -fpeel-loops -funroll-loops
+Time Taken: 3.244678s
+Time Taken: 3.256148s
+Time Taken: 3.259777s
+Time Taken: 3.215732s
+Time Taken: 3.239849s
+Time Taken: 3.276522s
+Time Taken: 3.261901s
+Time Taken: 3.290647s
+Time Taken: 3.232515s
+Time Taken: 3.271894s
+
+real	0m32.715s
+user	0m32.466s
+sys	0m0.248s
+-O2 -floop-interchange -fpeel-loops -funroll-loops
+Time Taken: 3.255663s
+Time Taken: 3.268025s
+Time Taken: 3.237009s
+Time Taken: 3.249137s
+Time Taken: 3.239486s
+Time Taken: 3.228756s
+Time Taken: 3.252511s
+Time Taken: 3.243777s
+Time Taken: 3.265614s
+Time Taken: 3.258485s
+
+real	0m32.660s
+user	0m32.413s
+sys	0m0.241s
+Ass3.c:18:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:18:5: optimized:  loop versioned for vectorization because of possible aliasing
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+-O2 -ftree-vectorize -fopt-info-vec
+Time Taken: 1.474648s
+Time Taken: 1.475328s
+Time Taken: 1.468635s
+Time Taken: 1.486698s
+Time Taken: 1.482335s
+Time Taken: 1.459778s
+Time Taken: 1.455762s
+Time Taken: 1.476086s
+Time Taken: 1.486196s
+Time Taken: 1.455095s
+
+real	0m14.864s
+user	0m14.646s
+sys	0m0.216s
+Ass3.c:18:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:18:5: optimized:  loop versioned for vectorization because of possible aliasing
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+-O2 -floop-interchange -fpeel-loops -funroll-loops -ftree-vectorize -fopt-info-vec
+Time Taken: 1.445437s
+Time Taken: 1.463247s
+Time Taken: 1.459409s
+Time Taken: 1.478327s
+Time Taken: 1.484957s
+Time Taken: 1.456879s
+Time Taken: 1.442947s
+Time Taken: 1.443291s
+Time Taken: 1.476866s
+Time Taken: 1.439761s
+
+real	0m14.734s
+user	0m14.503s
+sys	0m0.230s
+-O3
+Time Taken: 1.538030s
+Time Taken: 1.535193s
+Time Taken: 1.552802s
+Time Taken: 1.565265s
+Time Taken: 1.555859s
+Time Taken: 1.555069s
+Time Taken: 1.560047s
+Time Taken: 1.555969s
+Time Taken: 1.671890s
+Time Taken: 1.567165s
+
+real	0m15.800s
+user	0m15.587s
+sys	0m0.212s
+-O3 -floop-interchange
+Time Taken: 1.555111s
+Time Taken: 1.578938s
+Time Taken: 1.585727s
+Time Taken: 1.547269s
+Time Taken: 1.576682s
+Time Taken: 1.596710s
+Time Taken: 1.562649s
+Time Taken: 1.566765s
+Time Taken: 1.553563s
+Time Taken: 1.587040s
+
+real	0m15.857s
+user	0m15.621s
+sys	0m0.234s
+-O3 -fpeel-loops -funroll-loops
+Time Taken: 1.535658s
+Time Taken: 1.483703s
+Time Taken: 1.475962s
+Time Taken: 1.469822s
+Time Taken: 1.503524s
+Time Taken: 1.460061s
+Time Taken: 1.449666s
+Time Taken: 1.451401s
+Time Taken: 1.491849s
+Time Taken: 1.488105s
+
+real	0m14.954s
+user	0m14.742s
+sys	0m0.211s
+-O3 -floop-interchange -fpeel-loops -funroll-loops
+Time Taken: 1.530902s
+Time Taken: 1.653616s
+Time Taken: 1.812901s
+Time Taken: 1.556621s
+Time Taken: 1.984376s
+Time Taken: 1.558438s
+Time Taken: 1.636585s
+Time Taken: 2.13276s
+Time Taken: 1.852446s
+Time Taken: 1.860147s
+
+real	0m17.613s
+user	0m17.383s
+sys	0m0.225s
+Ass3.c:18:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:18:5: optimized:  loop versioned for vectorization because of possible aliasing
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+-O3 -ftree-vectorize -fopt-info-vec
+Time Taken: 2.404384s
+Time Taken: 1.712394s
+Time Taken: 1.778478s
+Time Taken: 1.640400s
+Time Taken: 1.618635s
+Time Taken: 1.817312s
+Time Taken: 1.715113s
+Time Taken: 1.910998s
+Time Taken: 1.623707s
+Time Taken: 1.739473s
+
+real	0m18.103s
+user	0m17.890s
+sys	0m0.210s
+Ass3.c:18:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:18:5: optimized:  loop versioned for vectorization because of possible aliasing
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+-O3 -floop-interchange -fpeel-loops -funroll-loops -ftree-vectorize -fopt-info-vec
+Time Taken: 1.463419s
+Time Taken: 1.523892s
+Time Taken: 1.463277s
+Time Taken: 1.450227s
+Time Taken: 1.456074s
+Time Taken: 1.435603s
+Time Taken: 1.533204s
+Time Taken: 1.468974s
+Time Taken: 1.452741s
+Time Taken: 1.446427s
+
+real	0m14.835s
+user	0m14.627s
+sys	0m0.207s

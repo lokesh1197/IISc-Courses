@@ -1,0 +1,616 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathabx}
+% \usepackage{minted}
+
+\usepackage{fancybox}
+\setlength\parindent{0pt}
+
+\title{Assignment 3}
+\author{Lokesh Mohanty (SR no: 21014)}
+\date{October 2022}
+
+\begin{document}
+\fontsize{14pt}{18pt}\selectfont
+
+\maketitle
+
+\section*{Problem 1}
+\label{sec:prob1}
+
+\paragraph{(a)} Show that $\mathbf{I} - 2\mathbf{P}$ is orthogonal if $\mathbf{P}$ is a orthogonal projector
+
+\paragraph{Proof:}
+
+$\mathbf{P}$ is an orthogonal projector which implies that
+$P^T = P$ and $P = P^2$.
+
+For $\mathbf{I} - 2\mathbf{P}$ to be orthogonal, $(\mathbf{I}-2\mathbf{P})^T(\mathbf{I}-2\mathbf{P}) = \mathbf{I}$ and $(\mathbf{I}-2\mathbf{P})(\mathbf{I}-2\mathbf{P})^T = \mathbf{I}$
+
+\begin{align*}
+  (\mathbf{I}-2\mathbf{P})(\mathbf{I}-2\mathbf{P})^T &= (\mathbf{I}-2\mathbf{P})^2\\
+  &= \mathbf{I} - 4\mathbf{P} + 4\mathbf{P}^2\\
+  &= \mathbf{I} - 4\mathbf{P} + 4\mathbf{P}\\
+  &= \mathbf{I}\\
+\end{align*}
+
+\begin{align*}
+  (\mathbf{I}-2\mathbf{P})^T(\mathbf{I}-2\mathbf{P}) &= (\mathbf{I}-2\mathbf{P})^2\\
+  &= \mathbf{I} - 4\mathbf{P} + 4\mathbf{P}^2\\
+  &= \mathbf{I} - 4\mathbf{P} + 4\mathbf{P}\\
+  &= \mathbf{I}\\
+\end{align*}
+
+$\therefore \boxed{\mathbf{I} - 2\mathbf{P}\text{ is orthogonal if }\mathbf{P}\text{ is a orthogonal projector}}$
+
+\paragraph{(b)} Answers:
+\begin{itemize}
+\item $\mathbf{P} = \mathbf{A}(\mathbf{A}^T\mathbf{A})^{-1}\mathbf{A}^T$
+  
+\item If $\mathbf{P}\mathbf{v} = \mathbf{v}$, then $\mathbf{v}$ is in the range of column space of $\mathbf{A}$ else it is in the null space of $\mathbf{A}$. This means that if $\mathbf{v}$ is in the null space of $\mathbf{I}- \mathbf{P}$, then $\mathbf{v}$ is in the range of $\mathbf{A}$. Which means that if $\mathbf{v}$ is in the range of $\mathbf{I} - \mathbf{P}$, then $\mathbf{v}$ is in the null space of $\mathbf{A}$. Hence $range(\mathbf{I} - \mathbf{P}) = null(\mathbf{A}^T)$
+  
+\item Eigen values of $\mathbf{P}$ can only be 0 or 1.
+
+  If $\lambda$ is a eigen value of $\mathbf{P}$, then
+  $\mathbf{P}\mathbf{v} = \lambda \mathbf{v}$
+
+\begin{minipage}[bt]{0.45\textwidth}
+\begin{align*}
+  \mathbf{P}(\mathbf{P}\mathbf{v})
+  &= \mathbf{P}^2\mathbf{v}\\
+  &= \mathbf{P}\mathbf{v}\\
+  &= \lambda \mathbf{v}\\
+\end{align*}
+\end{minipage}
+\hfill 
+\begin{minipage}[bt]{0.45\textwidth}
+\begin{align*}
+  \mathbf{P}(\mathbf{P}\mathbf{v})
+  &= \mathbf{P}(\lambda \mathbf{v})\\
+  &= \lambda(\mathbf{P} \mathbf{v})\\
+  &= \lambda(\lambda \mathbf{v})\\
+  &= \lambda^2 \mathbf{v}\\
+\end{align*}
+\end{minipage}
+\end{itemize}
+
+\begin{align*}
+  \implies &\lambda \mathbf{v} = \lambda^2 \mathbf{v}\\
+  \implies &\lambda(\lambda - 1) = 0\\
+  \implies &\lambda = 0,1\\
+\end{align*}
+
+\paragraph{(c)} Show that $||\mathbf{P}||_2 \geq 1$ if $\mathbf{P}$ is a non-zero projection
+\paragraph{Proof:} We know that $\mathbf{P}^2 = \mathbf{P}$
+\begin{align*}
+  \implies &||\mathbf{P}^2||_2 = ||\mathbf{P}||_2\\
+  \implies &||\mathbf{P}||_2||\mathbf{P}||_2 \geq ||\mathbf{P}||_2\\
+  \implies &||\mathbf{P}||_2 \geq 1\\
+\end{align*}
+
+\pagebreak
+\section*{Problem 2}
+\label{sec:prob2}
+
+By Classical Gram-Schmidt Orthogonalization,
+
+$\mathbf{q}_1 = \frac{\mathbf{a}_1}{r_{11}}$,
+$r_{11} = ||\mathbf{a}_1||$
+ \bigskip
+
+$\mathbf{q}_2 = \frac{\mathbf{a}_2 - r_{12}\mathbf{q}_1}{r_{22}}$,
+$r_{12} = \mathbf{q}_1^T\mathbf{a}_2$,
+$r_{22} = ||\mathbf{a}_2 - r_{12}\mathbf{q}_1||$
+ \bigskip
+
+$\mathbf{q}_3 = \frac{\mathbf{a}_3 - r_{13}\mathbf{q}_1 - r_{23}\mathbf{q}_2}{r_{33}}$,
+$r_{13} = \mathbf{q}_1^T\mathbf{a}_3$,
+$r_{23} = \mathbf{q}_2^T\mathbf{a}_3$,
+$r_{33} = ||\mathbf{a}_3 - r_{13}\mathbf{q}_1 - r_{23}\mathbf{q}_2||$
+ \bigskip
+
+Where $\mathbf{Q} = (\mathbf{q}_1\,\mathbf{q}_2\,\mathbf{q}_3)$,
+$\mathbf{R} = \begin{pmatrix} 
+r_{11}  & r_{12} & r_{13} \\
+0       & r_{22} & r_{23} \\
+0       & 0 & r_{33}
+ \end{pmatrix}$
+
+ Hence,
+
+ $\mathbf{q}_1 =
+ \frac{1}{\sqrt{89}}\begin{pmatrix} 8 \\ 3 \\ 4 \end{pmatrix}
+ = \begin{pmatrix} 0.8480 \\ 0.3180 \\ 0.4240 \end{pmatrix}$,
+ $r_{11} = \sqrt{8^2 + 3^2 + 4^2} = \sqrt{89} = 9.4340$
+ \bigskip
+
+ $\mathbf{q}_2 = \frac{1}{r_{22}}\begin{pmatrix} 
+1 - (59/89)8 \\
+5 - (59/89)3 \\
+9 - (59/89)4
+ \end{pmatrix} = \frac{1}{8.2394}\begin{pmatrix} 
+-4.3034 \\ 3.0112 \\ 6.3483
+ \end{pmatrix} = \begin{pmatrix} 
+-0.5223 \\ 0.3655 \\ 0.7705
+ \end{pmatrix}$,\\
+ $r_{12} = \frac{8 + 15 + 36}{\sqrt{89}} = \frac{59}{\sqrt{89}} = 6.2540$,
+ $r_{22} = \sqrt{18.5190 + 9.0675 + 40.3011} = 8.2394$
+ \bigskip
+
+ $\mathbf{q}_3 = \frac{1}{21.4497}\begin{pmatrix}
+ 6 - 6.9214 + 0.5044\\
+ 7 - 2.5955 - 0.3530\\
+ 2 - 3.4607 - 0.7441\\
+ \end{pmatrix} = \begin{pmatrix} 
+ -0.0194 \\ 0.1889 \\ -0.1028
+\end{pmatrix}$,
+ \vspace{2mm}
+
+ $r_{13} = 8.1620$,
+ $r_{23} = 0.9657$,
+ $r_{33} = 21.4497$
+ \vspace{5mm}
+
+ Therefore, $\mathbf{Q} = \begin{pmatrix} 
+0.8480  & -0.5223 & -0.0194 \\
+0.3180  & 0.3655 & 0.1889 \\
+0.4240  & 0.7705 & -0.1028
+ \end{pmatrix}$,
+ $\mathbf{R} = \begin{pmatrix} 
+9.4340  & 6.2540 & 8.1620 \\
+0       & 8.2394 & 0.9657 \\
+0       & 0 & 21.4497
+ \end{pmatrix}$
+ \vspace{5mm}
+
+\vspace{5mm}
+\textbf{Python Code}:
+\hrule
+\begin{verbatim}
+  import numpy as np
+  from numpy.linalg import qr
+
+  A = np.array([[8,1,6], [3,5,7], [4,9,2]])
+  Q, R = qr(A)
+
+  print("Q: ", Q)
+  print("R: ", R)
+\end{verbatim}
+
+ \vspace{5mm}
+ From code, we get\\
+ \vspace{5mm}
+ $\mathbf{Q} = \begin{pmatrix} 
+-0.8479983  & 0.52229204 & 0.09005497 \\
+-0.31799936  & -0.36546806 & -0.8748197 \\
+-0.42399915  & -0.77048304 & 0.47600483
+ \end{pmatrix}$,\\
+ $\mathbf{R} = \begin{pmatrix} 
+-9.43398113  & -6.25398749 & -8.16198368 \\
+0       & -8.23939564 & -0.96549025 \\
+0       & 0 & -4.63139839
+ \end{pmatrix}$
+
+
+ From the above results we can see that we can make the factorization unique by making sure that the diagonal elements in $\mathbf{R}$ are all positive(or all negative).
+
+
+\pagebreak
+\section*{Problem 3}
+\label{sec:prob3}
+
+\paragraph{(a)} n = 4, By Gram Schmidt orthogonalization procedure:
+
+\begin{align*}
+  &q_0(x) = \frac{a_1}{r_{11}}, \, r_{11} = ||q_0(x)|| = \sqrt{q_0^Tq_0}\\
+  &q_1(x) = \frac{a_2 - r_{12}q_0(x)}{r_{22}}, \, r_{12} = q_0(x)^Ta_2, \, r_{22} = ||a_2 - r_{12}q_0(x)||, ...
+\end{align*}
+
+\hline
+
+\begin{align*}
+  \therefore\, &q_0(x) = \frac{1}{\sqrt{2}}\begin{bmatrix}1\end{bmatrix}\\
+               &r_{11} = \sqrt{\int_{-1}^11\times 1dx} = \sqrt{2}\\
+\end{align*}
+\hline
+\begin{align*}
+               &q_1(x) = \sqrt{\frac{3}{2}}\begin{bmatrix}x\end{bmatrix}\\
+               &r_{12} = \int_{-1}^1 \frac{1}{\sqrt{2}} \times xdx = 0\\
+               &r_{22} = \sqrt{\int_{-1}^1x\times xdx} = \sqrt{\frac{2}{3}}\\
+\end{align*}
+\hline
+\begin{align*}
+               &q_2(x) = \sqrt{\frac{5}{2}}\begin{bmatrix}x^2 - \frac{1}{3}\end{bmatrix}\\
+               &r_{13} = \int_{-1}^1 \frac{1}{\sqrt{2}} \times x^2dx = \frac{\sqrt{2}}{3} \\
+               &r_{23} = \int_{-1}^1 \frac{x\sqrt{3}}{\sqrt{2}} \times x^2dx = 0\\
+               &r_{33} = \sqrt{\int_{-1}^1x^2 \times x^2dx} = \sqrt{\frac{2}{5}}\\
+\end{align*}
+\hline
+\begin{align*}
+               &q_3(x) = \sqrt{\frac{7}{2}}\begin{bmatrix}x^3 - \frac{3}{5}x\end{bmatrix}\\
+               &r_{14} = \int_{-1}^1 \frac{1}{\sqrt{2}} \times x^3dx = 0 \\
+               &r_{24} = \int_{-1}^1 \frac{x\sqrt{3}}{\sqrt{2}} \times x^3dx = \frac{\sqrt{6}}{5} \\
+               &r_{34} = \int_{-1}^1 \frac{(3x^2-1)\sqrt{5}}{3\sqrt{2}} \times x^3dx = 0\\
+               &r_{44} = \sqrt{\int_{-1}^1x^3\times x^3dx} = \sqrt{\frac{2}{7}}\\
+\end{align*}
+\hline
+\vspace{2mm}
+Hence,
+\begin{align*}
+ &\mathbf{Q} = \begin{bmatrix} 
+  \frac{1}{\sqrt{2}}  & \frac{\sqrt{3}x}{\sqrt{2}}
+  & \frac{3\sqrt{5}x^2 - \sqrt{5}}{3\sqrt{2}}
+  & \frac{5\sqrt{7}x^3 - 3\sqrt{7}}{5\sqrt{2}}
+               \end{bmatrix},
+ &\mathbf{R} = \begin{bmatrix} 
+                 \sqrt{2}  & 0 & \frac{\sqrt{2}}{3} & 0 \\
+                 0  & \sqrt{\frac{2}{3}} & 0 & \frac{\sqrt{6}}{5} \\
+                 0  & 0 & \sqrt{\frac{2}{5}}  & 0 \\
+                 0  & 0 & 0  & \sqrt{\frac{2}{7}}
+               \end{bmatrix}
+\end{align*}
+
+
+\paragraph{(b)} For $n \geq 2$, $\int_{-1}^1q_{n-1}(x)dx = 0$
+\paragraph{Proof:} We know that the matrix $\mathbf{Q}$ is orthogonal i.e.,
+$q_i(x), q_j(x)$ are orthogonal to each other for $i \not = j$.
+That is inner product of $q_i(x), q_j(x), (i \not = j)$ is 0.\\
+\vspace{1cm}
+And as per the definition of inner product, $\int_{-1}^1q_i(x)q_j(x)dx = 0, \forall i \not = j$\\
+Let i = 0 and j = n - 1 $\implies \int_{-1}^1q_0(x)q_{n-1}(x)dx = 0 \implies \frac{1}{\sqrt{2}}\int_{-1}^1q_{n-1}(x)dx = 0$.
+
+Hence proved.
+
+\pagebreak
+\section*{Problem 4}
+\label{sec:prob4}
+
+$\mathbf{A} = \begin{bmatrix} 
+0.70000  & 0.70711 \\
+0.70001  & 0.70711
+ \end{bmatrix}$
+
+\paragraph{(a)} Using CGS,
+
+\[\begin{split}
+&\mathbf{q}_1 = \frac{\mathbf{a}_1}{r_{11}},\,
+r_{11} = ||\mathbf{a}_1||\\
+&\mathbf{q}_2 = \frac{\mathbf{a}_2 - r_{12}\mathbf{q}_1}{r_{22}},\,
+r_{12} = \mathbf{q}_1^T\mathbf{a}_2,\,
+r_{22} = ||\mathbf{a}_2 - r_{12}\mathbf{q}_1||
+\end{split}\]
+
+\begin{align*}
+  \implies &\mathbf{q}_1
+             = \frac{1}{0.99002}\begin{bmatrix} 0.70000 \\ 0.70001 \end{bmatrix}
+             = \begin{bmatrix} 0.70706 \\ 0.70707 \end{bmatrix},
+  r_{11} = \sqrt{0.49000 + 0.49014} = 0.99002\\
+  \implies &\mathbf{q}_2 = \frac{1}{r_{22}}
+             \begin{bmatrix}
+               0.70711 - 0.70702\\
+               0.70711 - 0.70703
+             \end{bmatrix}
+             = \frac{1}{0.00012}\begin{bmatrix}
+               0.00009\\
+               0.00008
+             \end{bmatrix}
+             = \begin{bmatrix}
+               0.75000\\
+               0.66667
+             \end{bmatrix},\\
+  &r_{12} = 0.70706 \times 0.70711 + 0.70707 \times 0.70711 = 0.99995,\\
+  &r_{22} = \left\Vert\begin{bmatrix}
+               0.00009\\
+               0.00008
+             \end{bmatrix}\right\Vert = 0.00012
+\end{align*}
+
+\begin{align*}
+  \therefore &\mathbf{Q} = \begin{bmatrix} 
+                             0.70706  & 0.75000 \\
+                             0.70707  & 0.66667
+                           \end{bmatrix}
+             &\mathbf{R} = \begin{bmatrix} 
+                             0.99002  & 0.99995 \\
+                             0.00000  & 0.00012
+                           \end{bmatrix}
+\end{align*}
+ 
+\paragraph{(b)} Using Householder's method,
+
+We know that, $\mathbf{Q}_2\mathbf{Q}_1\mathbf{A} = \mathbf{R}$, $\mathbf{Q} = (\mathbf{Q}_1^{-1}\mathbf{Q}_2^{-1})$
+
+\begin{align*}
+  \mathbf{v}_1 &= \mathbf{a}_1 = \begin{bmatrix} 0.70000 \\ 0.70001 \end{bmatrix}\\
+  \mathbf{v} &= sign(v_{11})||\mathbf{v}_1||\mathbf{e}_1 + \mathbf{v}_1
+  = \begin{bmatrix} 1.68996 \\ 0.70001 \end{bmatrix}                           \\ 
+  \mathbf{Q}_1 &= \mathbf{I} - \frac{2\mathbf{v}\mathbf{v}^T}{||\mathbf{v}||^2}\\
+  \implies \mathbf{Q}_1 &= \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+                 - \frac{2}{3.34597}
+                 \begin{bmatrix}
+                   2.85596 & 1.18299 \\ 1.18299 & 0.49001
+                 \end{bmatrix}
+               &= \begin{bmatrix}
+                   -0.70709 & -0.70711 \\ -0.70711 & -0.70711
+                 \end{bmatrix}\\
+  \implies \mathbf{Q}_1\mathbf{A} &= \begin{bmatrix}
+                   -0.70709 & -0.70711 \\ -0.70711 & -0.70711
+                 \end{bmatrix}\begin{bmatrix} 
+                    0.70000  & 0.70711 \\ 0.70001  & 0.70711
+                  \end{bmatrix}\\
+  &= \begin{bmatrix} 
+      -0.98995  & 0.99999 \\ 0.00000  & 0.00000
+    \end{bmatrix}\\
+  \mathbf{Q}_2 &= \begin{bmatrix} \mathbf{I} & 0 \\ 0 & \mathbf{F} \end{bmatrix}\\
+  \mathbf{F} &= \mathbf{I} - \frac{2\mathbf{v}\mathbf{v}^T}{||\mathbf{v}||^2}\\
+  \mathbf{v} &= sign(0)||0||\mathbf{e}_1 + 0 = [0]\\
+  \implies \mathbf{F} &= [1]\\
+  \implies \mathbf{Q}_2 &= \begin{bmatrix}1 & 0 \\ 0 & 1 \end{bmatrix}\\
+  \mathbf{R} = \mathbf{Q}_2\mathbf{Q}_1\mathbf{A} &= \begin{bmatrix} 
+      -0.98995  & 0.99999 \\ 0.00000  & 0.00000
+    \end{bmatrix}\\
+\end{align*}
+
+Since $\mathbf{Q}_1, \mathbf{Q}_2$ are orthogonal, $\mathbf{Q} = \mathbf{Q}_1^T\mathbf{Q}_2^T$
+
+\begin{align*}
+  \implies \mathbf{Q} &= \mathbf{Q}_1^T\mathbf{Q}_2^T\\
+  &= \begin{bmatrix}-0.70709 & -0.70711 \\ -0.70711 & 0.70711\end{bmatrix}
+\end{align*}
+
+\paragraph{Check for orthogonality:}
+
+In case of CGS, $\mathbf{q}_1^T\mathbf{q}_2 = 0.70706 * 0.75000 + 0.70707 * 0.66667 \approx 1$ i.e. very large loss of orthogonality\\
+
+In case of Householder, $\mathbf{q}_1^T\mathbf{q}_2 = 0.70709 * 0.70711 - 0.70711 * 0.70711 \approx 0$ i.e. almost no loss of orthogonality\\
+
+
+
+\pagebreak
+\section*{Problem 5}
+\label{sec:prob5}
+
+\paragraph{(a)} $r_{12} = q_1^Ta_2 = q_{11}a_{21} + q_{12}a_{22} + ... + q_{1m}a_{1m}$
+\begin{align*}
+  \tilde{r}_{12} &= fl(q_1^Ta_2)\\
+                &= (...(q_{11}(1 + \epsilon_{11})a_{21}(1 + \epsilon_{21})
+                   + q_{12}(1 + \epsilon_{12})a_{22}(1 + \epsilon_{22}))(1 + \epsilon_{32})\\
+                &+ ... + q_{1m}(1 + \epsilon_{1m})a_{2m}(1 + \epsilon_{2m}))(1 + \epsilon_{3m})\\
+                &= q_{11}a_{21}(1 + \epsilon_{11})(1 + \epsilon_{21})(1 + \epsilon_{32})...(1 + \epsilon_{3m})\\
+                &+ ... + q_{1m}a_{2m}(1 + \epsilon_{1m})(1 + \epsilon_{2m})(1 + \epsilon_{3m})\\
+  \implies \tilde{r}_{12}- r_{12} &= q_{11}a_{21}(1 + \epsilon_{11})(1 + \epsilon_{21})(1 + \epsilon_{32})...(1 + \epsilon_{3m})\\
+                &+ ... + q_{1m}a_{2m}(1 + \epsilon_{1m})(1 + \epsilon_{2m})(1 + \epsilon_{3m})\\
+                &- (q_{11}a_{21} + q_{12}a_{22} + ... + q_{1m}a_{2m})\\
+                &= q_{11}a_{21}(\epsilon_{11} + \epsilon_{21} + \epsilon_{32} + ... + \epsilon_{3m} + O(\epsilon_{machine}^2))\\
+                &+ ... + q_{1m}a_{2m}(\epsilon_{1m} + \epsilon_{2m} + \epsilon_{3m} + O(\epsilon_{machine}^2))\\
+                &\leq q_{11}a_{21}(m\epsilon_{machine} + O(\epsilon_{machine}^2))\\
+                &+ ... + q_{1m}a_{2m}(m\epsilon_{machine} + O(\epsilon_{machine}^2))\\
+                &\leq (q_{11}a_{21} + ... + q_{1m}a_{2m})(m\epsilon_{machine} + O(\epsilon_{machine}^2))\\
+                &\leq m\epsilon_{machine} + O(\epsilon_{machine}^2)
+\end{align*}
+
+$\therefore \boxed{|\tilde{r}_{12} - r_{12}| \leq m\epsilon_{machine} + O(\epsilon_{machine}^2)}$
+
+\paragraph{(b)} $\tilde{\mathbf{w}}_2 = fl(\mathbf{a}_2 - fl(\tilde{r}_{12}\mathbf{q}_1))$
+
+\begin{align*}
+  \tilde{w}_{2i} &= (a_{2i}(1 + \epsilon_{1i}) - \tilde{r}_{12}q_{1i}(1+\epsilon_{2i}))(1 + \epsilon_{3i}), \, \forall i \in [1,m]\\
+  \implies \tilde{w}_{2i} - w_{2i} &= (a_{2i}(1 + \epsilon_{1i}) - \tilde{r}_{12}q_{1i}(1+\epsilon_{2i}))(1 + \epsilon_{3i}) - (a_{2i} - r_{12}q_{1i})\\
+                 &= a_{2i}(1 + \epsilon_{1i} + \epsilon_{3i} + O(\epsilon_{machine}^2)) - \tilde{r}_{12}q_{1i}(1+\epsilon_{2i} + \epsilon_{3i} + O(\epsilon_{machine}^2))\\
+                 &- (a_{2i} - r_{12}q_{1i})\\
+                 &\leq (a_{2i} - r_{12}q_{1i})(1 + \epsilon_{1i} + \epsilon_{2i} + \epsilon_{3i} + m\epsilon_{machine} + O(\epsilon_{machine}^2) - 1)\\
+                 &\leq (m + 3)\epsilon_{machine} + O(\epsilon_{machine}^2)\\
+\end{align*}
+$\therefore \boxed{|\tilde{\mathbf{w}}_2 - \mathbf{w}_2| \leq (m + 3)\epsilon_{machine} + O(\epsilon_{machine}^2)}$
+
+\paragraph{(c)} Given that $\tilde{\mathbf{q}}_2 = \frac{\tilde{\mathbf{w}}_2}{\tilde{r}_{22}}$, $\tilde{r}_{22} = ||\tilde{\mathbf{w}}_2||$
+
+\begin{align*}
+  q_{1i}\tilde{q}_{2i} &= q_{1i} \frac{\tilde{w}_{2i}}{\tilde{r}_{22}}\\
+  &\leq q_{1i} \left(  \frac{w_{2i} + (m + 3)\epsilon_{machine} + O(\epsilon_{machine}^2)}{\tilde{r}_{22}} \right)\\
+  \implies |\mathbf{q}_1^T\tilde{\mathbf{q}}_2| &\leq \frac{\sum q_{1i}w_{2i} + (\sum q_{1i})((m + 3)\epsilon_{machine} + O(\epsilon_{machine}^2))}{\tilde{r}_{22}}\\
+  &\leq \frac{(m + 3)\epsilon_{machine}}{\tilde{r}_{22}}\\
+\end{align*}
+$\therefore \boxed{|\mathbf{q}_1^T\tilde{\mathbf{q}}_2| \leq \frac{(m + 3)\epsilon_{machine}}{\tilde{r}_{22}}}$
+
+\pagebreak
+\section*{Problem 6}
+\label{sec:prob6}
+
+\paragraph{Code:}
+
+\begin{verbatim}
+# NLA, Assignment 3, Problem 6
+
+from math import sin
+from random import random
+
+import numpy as np
+from numpy.linalg import svd, pinv, norm
+
+import matplotlib.pyplot as plt
+
+def generateData(m,n):
+    '''
+    Generate A, b where Ax = b is a polynomial model for the function sin(10t)
+    '''
+    # data = [random() for _ in range(m)]
+    data = np.linspace(0, 1, m)
+    b = np.array([sin(10 * x) for x in data])
+    A = np.array([[
+            1 if i == 0 else x**i for x in data
+        ] for i in range(n)]).transpose()
+    return A, b
+
+def qr_mgs(A):
+    '''
+    Reduced QR factorization using Modified Gram Schmidt method
+    '''
+    _, n = A.shape
+    R = np.empty((n, n))
+    A_t = A.transpose()
+    for i in range(n):
+        R[i][i] = norm(A_t[i])
+        A_t[i] = A_t[i] / R[i][i]
+        for j in range(i+1, n):
+            R[i][j] = A_t[i].dot(A_t[j])
+            A_t[j] = A_t[j] - R[i][j] * A_t[i]
+    return A_t.transpose(), R
+
+def qr_hh(A, b):
+    '''
+    QR factorization using Householder triangularization method
+    Returns R and Q_t * b
+    '''
+    m, n = A.shape
+    for i in range(n):
+        x = A[i:m, i:i+1]
+        x[0] += np.sign(x[0]) * norm(x)
+        x = x / norm(x)
+        A[i:m, i:n] -= np.matmul(2*x, np.matmul(x.reshape(1, m - i), A[i:m, i:n]))
+        b[i:m] -= 2 * x.reshape(m - i).dot(b[i:m]) * x.reshape(m - i)
+    return A, b
+
+def backSubstitution(U, b):
+    '''
+    Given a upper triangular matrix and the result matrix, returns x
+    '''
+    n = U.shape[1]
+    x = np.empty(n)
+    for i in range(n-1, -1, -1):
+        slag = sum([U[i][j] * x[j] for j in range(n-1, i-1, -1)])
+        x[i] = (b[i] - slag) / U[i][i]
+    return x
+
+def getXA(A, b):
+    '''
+    Returns coefficients of the polymonial using Modified Gram-Schmidt method
+    '''
+    Q, R = qr_mgs(A)
+    return backSubstitution(R, Q.transpose().dot(b))
+
+def getXB(A, b):
+    '''
+    Returns coefficients of the polymonial using Householder's method
+    '''
+    R, b = qr_hh(A, b)
+    return backSubstitution(R, b)
+
+def getXC(A, b):
+    '''
+    Returns coefficients of the polymonial using SVD decomposition
+    '''
+    U, Sigma, V = svd(A)
+    SigmaInverse = np.pad(pinv(np.diag(Sigma)), pad_width=((0, 0), (0, 85)))
+    return np.matmul(np.matmul(np.matmul(V, SigmaInverse), U.transpose()), b)
+
+def getXD(A, b):
+    '''
+    Returns coefficients of the polymonial using pseudo inverse
+    '''
+    return np.matmul(pinv(A.transpose().dot(A)), A.transpose().dot(b))
+
+# ---------------------------------------------------------------------------------
+# m = 100, n = 15
+A, b = generateData(100, 15)
+
+print(getXA(A, b))
+
+# input = np.sort(np.array([random() for _ in range(100)]))
+input = np.linspace(0, 1, 100)
+fig, ((axA, axB), (axC, axD)) = plt.subplots(2, 2)
+
+axA.set_title("Using Modified Gram-Schmidt")
+axA.plot(input, A.dot(getXA(np.copy(A), b)))
+axA.scatter(input, A.dot(getXA(np.copy(A), b)))
+axA.set_ylim([-1, 1])
+
+axB.set_title("Using Householder triangularization")
+axB.plot(input, A.dot(getXB(np.copy(A), b)))
+axB.scatter(input, A.dot(getXB(np.copy(A), b)))
+axB.set_ylim([-1, 1])
+
+axC.set_title("Using SVD Decomposition")
+axC.plot(input, A.dot(getXC(np.copy(A), b)))
+axC.scatter(input, A.dot(getXC(np.copy(A), b)))
+axC.set_ylim([-1, 1])
+
+axD.set_title("Using Pseudo Inverse")
+axD.plot(input, A.dot(getXD(np.copy(A), b)))
+axD.scatter(input, A.dot(getXD(np.copy(A), b)))
+axD.set_ylim([-1, 1])
+
+plt.show()
+\end{verbatim}
+
+From the plots we can see that using QR Factorization by Householder method and using SVD gives us closer solution due to them being numerically stable.
+
+\pagebreak
+\section*{Problem 7}
+\label{sec:prob7}
+
+\begin{align*}
+  \mathbf{A} = \begin{bmatrix}
+                 1 & 2 & 3 \\
+                 4 & 5 & 6 \\
+                 1 & 2 & 3 \\
+                 2 & 8 & 2 \\
+               \end{bmatrix},
+  \mathbf{b} = \begin{bmatrix}
+                 1 \\
+                 2 \\
+                 3 \\
+                 4 \\
+               \end{bmatrix},
+\end{align*}
+
+We know that least square solution of $\mathbf{Ax} = \mathbf{b}$ is
+$\mathbf{x} = (\mathbf{A}^T\mathbf{A})^{-1}\mathbf{A}^T\mathbf{b}$
+
+\begin{align*}
+  \implies \mathbf{x} &= (\mathbf{A}^T\mathbf{A})^{-1}\mathbf{A}^T\mathbf{b}\\
+  &= \left( \begin{bmatrix}
+        22 & 40 & 34 \\
+        40 & 97 & 58 \\
+        34 & 58 & 58 \\
+      \end{bmatrix} \right)^{-1}
+    \begin{bmatrix}
+      1 & 4 & 1 & 2 \\
+      2 & 5 & 2 & 8 \\
+      3 & 6 & 3 & 2 \\
+    \end{bmatrix}
+    \begin{bmatrix}
+      1 \\
+      2 \\
+      3 \\
+      4 \\
+    \end{bmatrix}\\
+  &= \begin{bmatrix}
+        0.872 & -0.134 & -0.377 \\
+        -0.134 & 0.046 & 0.032 \\
+        -0.377 & 0.032 & 0.206 \\
+      \end{bmatrix}
+      \begin{bmatrix}
+        20 \\
+        26 \\
+        32 \\
+      \end{bmatrix}\\
+  &= \begin{bmatrix}
+        -1.333 \\
+        0.667 \\
+        0.667 \\
+      \end{bmatrix}\\
+\end{align*}
+
+We were able to find the least square solution as $(\mathbf{A}^T\mathbf{A})^{-1}$ exists as $\mathbf{A}$ is full rank.
+
+Hence to compute least square solution by the above method, we need the matrix $\mathbf{A}$ to be full rank which can be done by remove dependent colums from the matrix.
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

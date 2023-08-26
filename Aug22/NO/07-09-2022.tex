@@ -1,0 +1,88 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\fontsize{14pt}{18pt}\selectfont
+
+\[\theta_{k+1} = \theta_k - \eta\Delta L\]
+Loss Function: $f(y, \hat{y})$, $\theta \rightarrow \hat{y}$
+minimize Loss Function ($\theta, \alpha, D$)
+
+SGD, mini-batch, full-batch -> number of data points to calculate $\Delta L$
+
+Layers: dense, convolution, recurrent, transformer(high level linear interpolation)
+
+Data Transformation pipeline
+\begin{tabular}{c | c | c | c | c}
+  Input& Dense& Convolution& Recurrent& Output
+\end{tabular}
+
+\[
+  D = D_{dev} + D_{test},\, D_{dev} = D_{train} + D_{validate}
+\]
+
+Static Data Sets:
+Randomized: $D_{dev} \rightarrow 80\% of D$ randomly choosen
+Stratified Sampling: chosse 80\% of each category if the data contains many categories
+
+Temporal Data Sets: Time series, ...
+
+Empirical risk minimization error (inner optimization)
+\[
+  \begin{split}
+    \theta^* &= \min_{\theta}L(\theta, \alpha, D_{train})\\
+    \alpha^* &= \min_{\alpha} V(\alpha, \theta^*, D_{validate})
+  \end{split}
+\]
+Outer optimization: $a_{k+1} = \alpha_k - \eta\Delta V$
+$\alpha$ can be calculated by using by derivative free methods, $\left( \frac{\partial V}{\partial\alpha} \right)$
+Discretization (to decide value of $\alpha$): logarithmic/linear, empirically logarithmic is better
+- Development Set (cross validation) (V -> CV)
+  - k-Fold Splitting: train: (k-1) , validate: (1), cross validation score: calculate average for all combination of the folds
+  - grid search: 
+
+
+Generalization Error: $V(\alpha^*, \theta^*, D_{test})$
+\newline
+
+\section{Search}
+\label{sec:search}
+
+\subsection{Golden Section Search}
+\label{sec:gold-sect-search}
+
+\begin{itemize}
+\item Evaluate V at golden ratio
+\item Choose which part to keep
+\end{itemize}
+
+\subsection{Bisection Search}
+\label{sec:bisection-search}
+
+\begin{itemize}
+\item Evaluate V at midpoint
+\item Choose which part to keep
+\end{itemize}
+
+\subsection{Randomized Search}
+\label{sec:randomized-search}
+
+\begin{itemize}
+\item Evaluate V at a few random points
+\item Choose the part with minimum value
+\end{itemize}
+
+\subsection{Adjoint Method}
+\label{sec:adjoint-method}
+
+- Adjoint Automatic Differentiation Method
+- Surrogate Modelling
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

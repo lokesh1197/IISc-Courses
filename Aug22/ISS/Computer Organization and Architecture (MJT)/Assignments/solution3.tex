@@ -1,0 +1,287 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyvrb}
+\usepackage{minted}
+
+\title{Assignment 3}
+\author{Lokesh Mohanty (SR no: 21014)}
+\date{August 2022}
+
+\begin{document}
+
+\maketitle
+
+\section{Computer \& Compiler Details}
+\label{sec:comp}
+
+\subsection{Basic Information}
+\label{sec:basic}
+\begin{tabular}{@{$\bullet$ }ll}
+  Architecture    &: x86\_64\\
+  CPU op-mode(s)  &: 32-bit, 64-bit\\
+  Address sizes   &: 48 bits physical, 48 bits virtual\\
+  Byte Order      &: Little Endian\\
+  CPU(s)          &: 16\\
+\end{tabular}
+
+\subsection{CPU Details}
+\label{sec:cpu}
+\begin{tabular}{@{$\bullet$ }ll}
+  Vendor ID       &: AuthenticAMD\\
+  Model name            &: AMD Ryzen 7 PRO 5875U with Radeon Graphics\\
+  CPU family            &: 25\\
+  Model                 &: 80\\
+  Thread(s) per core    &: 2\\
+  Core(s) per socket    &: 8\\
+  Socket(s)             &: 1\\
+  Stepping              &: 0\\
+  Frequency boost       &: enabled\\
+  CPU(s) scaling MHz    &: 44\%\\
+  CPU max MHz           &: 4546.8750\\
+  CPU min MHz           &: 1600.0000\\
+\end{tabular}
+
+\subsection{Cache}
+\label{sec:cache}
+\begin{tabular}{@{$\bullet$ }ll}
+  L1d cache  &: 256 KiB (8 instances)\\
+  L1i cache  &: 256 KiB (8 instances)\\
+  L2 cache   &: 4 MiB (8 instances)\\
+  L3 cache   &: 16 MiB (1 instance)\\
+\end{tabular}
+
+\subsection{Compiler Details}
+\label{sec:compiler}
+
+\begin{tabular}{@{$\bullet$ }ll}
+  Compiler &: gcc (GCC)\\
+  Version  &: 10.2.1 20201203\\
+\end{tabular}
+
+\section{Program Code}
+\label{sec:code}
+
+\subsection{Function to multiply 2 matrices}
+\label{sec:code-matmul}
+
+\begin{minted}{c}
+void matmul(float C[][N], float A[][N], float B[][N]) {
+  for (int i = 0; i < N; i++) {
+    for (int k = 0; k < N; k++) {
+      for (int j = 0; j < N; j++) {
+        C[i][j] += A[i][k] * B[k][j];
+      }
+    }
+  }
+}
+\end{minted}
+
+\subsection{Function to verify correctness of matrix multiplication}
+\label{sec:code-verify}
+
+\begin{minted}{c}
+bool verifyMatmul(float C[][N], float A[][N], float B[][N]) {
+  for (int count = 0; count < 10; count++) {
+    int i = rand() % N, j = rand() % N;
+    float actualValue = 0;
+    for (int k = 0; k < N; k++) actualValue += A[i][k] * B[k][j];
+    if (C[i][j] != actualValue) return false;
+  }
+  return true;
+}
+\end{minted}
+
+\subsection{Function to generate input matrices}
+\label{sec:code-generate}
+
+\begin{minted}{c}
+void generateMatrix(float matrix[][N]) {
+  for (int i = 0; i < N; i++) {
+    for (int j = 0; j < N; j++) {
+      matrix[i][j] = rand() % N;
+    }
+  }
+}
+\end{minted}
+
+\subsection{Function to measure matrix multiplication time}
+\label{sec:code-time}
+
+\begin{minted}{c}
+typedef void (*MatMul)(float [][N], float [][N], float [][N]);
+void time(MatMul func, float C[][N], float A[][N], float B[][N]) {
+  struct timeval start, end, timeTaken;
+
+  gettimeofday(&start, NULL);
+  func(C, A, B);
+  gettimeofday(&end, NULL);
+
+  bool isMatmulValid = verifyMatmul(C, A, B);
+  printf("Is Valid Matmul: %s\n",
+         isMatmulValid ? "true" : "false");
+
+  timeTaken.tv_usec = end.tv_usec - start.tv_usec;
+  timeTaken.tv_sec = end.tv_sec - start.tv_sec;
+  if (timeTaken.tv_usec < 0) {
+    timeTaken.tv_usec = 1000000 + timeTaken.tv_usec;
+    timeTaken.tv_sec--;
+  }
+  printf("Time Taken: %ld.%lds\n",
+         timeTaken.tv_sec, timeTaken.tv_usec);
+}
+\end{minted}
+
+\subsection{Main Function}
+\label{sec:code-main}
+
+\begin{minted}{c}
+int main() {
+  // using static to prevent segmentation fault for large N
+  static float A[N][N], B[N][N], C[N][N] = {0.0};
+
+  generateMatrix(A);
+  generateMatrix(B);
+  time(matmul, C, A, B);
+  return 0;
+}
+\end{minted}
+
+\subsection{Imports and Macros}
+\label{sec:code-imports}
+
+\begin{minted}{c}
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h>
+#define N 1024
+\end{minted}
+
+\subsection{Bash script for profiling}
+\label{sec:code-profile}
+
+\begin{minted}{c}
+#!/bin/bash
+
+OPTIONS=("-O2"
+         "-O2 -floop-interchange"
+         "-O2 -fpeel-loops -funroll-loops"
+         "-O2 -floop-interchange -fpeel-loops -funroll-loops"
+         "-O2 -ftree-vectorize -fopt-info-vec"
+         "-O2 -floop-interchange -fpeel-loops -funroll-loops -ftree-vectorize -fopt-info-vec")
+
+for option in "${OPTIONS[@]}"; do
+    gcc $option Ass3.c
+    echo $option
+    # remove pagecache
+    sync
+    sudo sh -c 'echo 1 > /proc/sys/vm/drop_caches'
+    # time for i in {1..10}; do ./a.out; done
+    for i in {1..10}; do
+        perf stat -e cycles,instructions,cache-misses,cache-references ./a.out;
+    done
+done
+\end{minted}
+
+\section{Results \& Observations}
+\label{sec:res}
+
+\subsection{Results}
+\label{sec:res1}
+
+With Basic optimizations\\
+\textbf{Flags:} \verb~-O2~\\
+\begin{tabular}{|l|r|}
+  \hline
+  Time& $0.388s$\\
+  \hline
+  Cycles& $1.693 \times 10^9$\\
+  \hline
+  Instructions& $7.531 \times 10^9$\\
+  \hline
+  Instructions/Cycle & $4.45$\\
+  \hline
+\end{tabular}\\
+
+With loop interchange\\
+\textbf{Flags:} \verb~-O2 -floop-interchange~\\
+\begin{tabular}{|l|r|}
+  \hline
+  Time& $0.393s$\\
+  \hline
+  Cycles& $1.683 \times 10^9$\\
+  \hline
+  Instructions& $7.531 \times 10^9$\\
+  \hline
+  Instructions/Cycle & $4.47$\\
+  \hline
+\end{tabular}\\
+
+With loop unrolling\\
+\textbf{Flags:} \verb~-O2 -fpeel-loops -funroll-loops~\\
+\begin{tabular}{|l|r|}
+  \hline
+  Time& $0.385s$\\
+  \hline
+  Cycles& $1.680 \times 10^9$\\
+  \hline
+  Instructions& $4.707 \times 10^9$\\
+  \hline
+  Instructions/Cycle & $2.90$\\
+  \hline
+\end{tabular}\\
+
+With both loop interchange and unrolling\\
+\textbf{Flags:} \verb~-O2 -floop-interchange -fpeel-loops -funroll-loops~\\
+\begin{tabular}{|l|r|}
+  \hline
+  Time& $0.386s$\\
+  \hline
+  Cycles& $1.693 \times 10^9$\\
+  \hline
+  Instructions& $4.707 \times 10^9$\\
+  \hline
+  Instructions/Cycle & $2.79$\\
+  \hline
+\end{tabular}\\
+
+With vectorization\\
+\textbf{Flags:} \verb~-O2 -ftree-vectorize -fopt-info-vec~\\
+\begin{tabular}{|l|r|}
+  \hline
+  Time& $0.097s$\\
+  \hline
+  Cycles& $0.373 \times 10^9$\\
+  \hline
+  Instructions& $2.172 \times 10^9$\\
+  \hline
+  Instructions/Cycle & $5.82$\\
+  \hline
+\end{tabular}\\
+
+With loop interchange, loop unrolling and vectorization\\
+\textbf{Flags:} \verb~-O2 -floop-interchange -fpeel-loops -funroll-loops -ftree-vectorize -fopt-info-vec~\\
+\begin{tabular}{|l|r|}
+  \hline
+  Time& $0.091s$\\
+  \hline
+  Cycles& $0.395 \times 10^9$\\
+  \hline
+  Instructions& $1.465 \times 10^9$\\
+  \hline
+  Instructions/Cycle & $3.71$\\
+  \hline
+\end{tabular}\\
+
+\subsection{Observations}
+\label{sec:obs}
+
+From the results we can see that we get the best optimization when we use a combination of loop-interchange, loop-unroll and vectorization optimization flags
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

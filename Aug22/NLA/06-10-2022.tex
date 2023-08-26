@@ -1,0 +1,119 @@
+\documentclass{article}
+
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancybox}
+\setlength\parindent{0pt}
+
+\newcommand{\T}[1]{\underset{\sim}{#1}}
+% \newcommand{\T}[1]{\stackrel{#1}{\sim}}
+
+\begin{document}
+\fontsize{14pt}{18pt}\selectfont
+
+\section{QR Factorization}
+\label{sec:qr-fac}
+
+\subsection{Classical Gram-Schmidt Orthogonalization}
+\label{sec:qr:cgs}
+
+Numerically unstable
+Good for parallelization
+
+Operation count:
+\begin{align*}
+for j = 1 to n
+  v_j = a_j
+  for i = 1 to j-1
+    r_{ij} = q_i^Ta_j     \rightarrow m multiplications + (m-1) additions
+    v_j = v_j - r_{ij}q_i \rightarrow m multiplications + m subtractions
+  r_{jj} = ||v_j||_2
+  q_i = v_j
+
+  Total work \sim 4m flops
+  Total flops = \sum_{j=1}^n\sum_{i=1}^{j-1}4m = (\frac{n(n+1)}{2} - 1)4m
+              = O(2mn^2)
+\end{align*}
+  
+
+\subsection{Modified Gram-Schmidt Orthogonalization}
+\label{sec:qr:mgs}
+
+Numerically stable and accuracy of orthogonality is dependent on K(A)
+
+\subsection{Householder Factorization}
+\label{sec:qr:hhf}
+
+Triangularization
+Numerically stable and accuracy of orthogonality is better than modified GS.
+
+Let $Q_n...Q_3Q_2Q_1A = R$. The product $Q = Q_1^TQ_2^T...Q_n^T$ is orthogonal, $A=QR$ is the full QR factorizaiton of A
+
+\begin{align*}
+  A = \begin{pmatrix}
+        * & * & ... & *\\
+        * & * & ... & *\\
+        \vdots & \vdots* & \ddots & \vdots \\
+        * & * & ... & *\\
+      \end{pmatrix}
+      \rightarrow^{Q_1}
+      \begin{pmatrix}
+        * & * & ... & *\\
+        0 & * & ... & *\\
+        \vdots & \vdots* & \ddots & \vdots \\
+        0 & * & ... & *\\
+      \end{pmatrix}
+      \rightarrow^{Q_2}
+      \begin{pmatrix}
+        * & * & ... & *\\
+        0 & * & ... & *\\
+        \vdots & \vdots* & \ddots & \vdots \\
+        0 & 0 & ... & *\\
+      \end{pmatrix}
+      ...
+\end{align*}
+
+$Q_k = \begin{pmatrix} I_{(k-1, k-1)} & 0 \\ 0 & F_{(m-k+1, m-k+1)} \end{pmatrix}$
+
+$x \rightarrow^F Fx = ||x||e_1$
+
+Householder reflector: F
+$F = (I - 2uu^T)$
+
+\begin{align*}
+  for k = 1:n
+    x = A(k:m, k)
+    v_k = sgn(x_1)||x||e_1 + x
+    v_k=\frac{v_k}{||v_k||_2}
+    A(k:m, k:n) = A(k:m, k:n) - 2v_kv_k^TA(k:m, k:n)
+\end{align*}
+
+Algorithm for $Q^Tb$
+\begin{align*}
+  for k = 1:n
+    b(k:m) = b(k:m) - 2v_kv_k^Tb(k:m)
+\end{align*}
+
+flops: $2mn^2 - \frac{2}{3}n^3$
+
+\subsection{Check for Orthogonality}
+\label{sec:qr:test}
+
+\begin{align*}
+  MGS:         &||I - Q^TQ|| = O(K(A)\epsilon_{machine})\\
+  Householder: &||I - Q^TQ|| = O(\epsilon_{machine})\\
+\end{align*}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "<none>"
+%%% End:

@@ -1,0 +1,120 @@
+#+title: Parallel Architecture
+#+instructor: Sathish Vadhiyar
+#+date: 06-10-2022
+
+[[https://cds.iisc.ac.in/courses/ds221/][Website]]
+
+* Motivations of Parallel Computing
+** Faster execution times
+** Large amount of data
+** For certain kinds of problems, parallelism is more natural
+** Due to computer arthitecture trends (cpu speeds have saturated)
+* Classification of Architectures
+** Flynn's classification
+*** Single Instruction Single Data (SISD): Serial Computers
+*** Single Instruction Multiple Data (SIMD): Vector processors, processor arrays
+*** Multiple Instruction Single Data (MISD): Not popular
+*** Multiple Instruction Multiple Data (MIMD): Most popular
+** Based on memory
+*** Shared memory
+**** Shared Memory Machine
+- Processors share physical address space
+- Communication can be done through this shared memory
+**** Distributed Memory Machine (Message passing machine)
+*** UMA (Uniform Memory Access)
+Shared memory itself is distribued among processor nodes uniformly
+*** NUMA (Non-Uniform Memory Access)
+Shared memory itself is distribued among processor nodes non-uniformly
+* Share Memory Architecture: Caches
+** Cache Coherence Problem
+** Protocols
+*** Write update
+Update in main memory on update.
+Lot of traffic when there are multiple writes.
+*** Write invalidate
+Send an invalidate signal to all caches and update on first read.
+
+States: Shared, Invalid, Dirty
+Shared:  Read -> Shared,                    Write -> Dirty, (Shared -> Invalid)
+Dirty:   Read -> Dirty,                     Write -> Dirty
+Invalid: Read -> Shared, (Dirty -> Shared), Write -> Dirty, (Shared, Dirty -> Invalid)
+** Snoopy Bus Architecture
+Snoopy cache controllers: publish the information over the bus, subscribe the bus
+- for bus based arthitecture
+- a separate bus is maintained for snooping
+** Directory Based
+- Propagate coherence operations to relevant processors
+- a central directory maintains states of cache blocks, associated processors
+
+*** Full bit vector scheme: O(M x P)
+*** Sparse/tagged directory scheme
+** False Sharing
+- Cache coherence occurs at the granularity of cache lines (i.e., an entire cache line is invalidated)
+- This leads to false sharing
+
+** Interconnection Networks
+- In shared memory used to connect processors to memory
+- In distributed memory used to connect different processors
+- Components
+  - *Interface (PCI/PCI-e)*: for connecting processor to network link
+  - *Network link*: connected to a communication network (network of connections)
+- Routing techinques
+  - the pattern in which the switches are connected
+  - plays a major role in deciding the speed of packet transfer between the processors
+- Network topology
+  - *Static*: bus, completely connected, start, linear array, ring, mesh, k-d mesh, hypercubes, trees
+  - *Dynamic*: communication links are formed dynamically by switches, (eg: crossbar, multistage)
+
+*Bus, ring*: used in small scale shared memory systems (a single link between processors can become the limitation)
+*Crossbar switches*: used in some small-scale shared memory machines, small or medium-scale distributed memory
+
+Multistage network (eg: omega network)
+- to reduce switching complexity
+- omega network consists of logP stages, each consisting of P/2 switching elements
+
+*** Contention
+crossbar: non blocking
+omega: can occur during multiple communication to disjoint pairs
+fat tree: non blocking (constant bisection bandwidth (CBB))
+
+*** Evaluation
+**** Diameter
+Maximum distance between any two processing nodes
+
+- Full connected: 1
+- Star: 2
+- Ring: p/2
+- Hypercube: log p
+
+**** Connectivity
+Multiplicity of paths between 2 nodes (number of paths from each processor)
+More paths increases capability to withstand failures
+
+- Linear array: 1
+- Ring: 2
+- 2D mesh: 2
+- 2D mesh with wrap around (torus): 4
+- Hypercubes: log p
+
+**** Bisection width
+Minimum number of links to be removed from network to partiion it into 2 equal halves
+Important from network topology view. It captures the average case
+
+- Ring: 2
+- P-node 2D mesh: root(P)
+- Completely connected: p^2/4
+- Hypercubes: p/2
+
+**** Channel Width
+Number of bits that can be simultaneously communicated over a link (i.e., number of physical wires between 2 nodes)
+
+**** Channel Rate
+Performance of a single physical wire
+
+**** Channel Bandwidth
+Channel rate times Channel width
+
+**** Bisection Bandwidth
+Bisection width times Channel Bandwidth
+
+One of the most important metrics

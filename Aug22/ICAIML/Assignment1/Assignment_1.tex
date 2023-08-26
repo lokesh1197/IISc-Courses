@@ -1,0 +1,419 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{enumerate}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{intersections}
+\usepackage{tkz-euclide}
+\usepackage[labelfont={footnotesize,it,bf},textfont={small,it}]{caption}
+
+\pgfplotsset{
+  standard/.style = thick,
+  trig format=rad,
+  enlargelimits,
+  axis line style={latex-latex},
+  axis x line=middle,
+  axis y line=middle,
+  enlarge x limits=0.15,
+  enlarge y limits=0.15,
+  every axis x label/.style={at={(current axis.right of origin)}, anchor=north west},
+  every axis y label/.style={at={(current axis.above origin)}, anchor=south east},
+  grid=both,
+  ticklabel style={font=\tiny,fill=white},
+}
+
+\title{Assignment 1}
+\author{Lokesh Mohanty (SR no: 21014)}
+\date{September 2022}
+
+\begin{document}
+\fontsize{14pt}{18pt}\selectfont
+
+\maketitle
+
+\section*{Question 1}
+\label{sec:question-1}
+
+\paragraph{(a)} Define mapping $UtoST_w: \mathbb{Y} \rightarrow \mathbb{Z}$
+\newline\newline
+Since we know that the function $U_w$ is bijective, hence its inverse exists
+\begin{align*}
+  \implies U_w^{-1}: \mathbb{Y} \rightarrow \mathbb{X}
+\end{align*}
+Hence $U_w^{-1}$ converts an unsigned integer to its bit representation and since $ST_w$ converts a bit representation to its signed representation, $UtoST_w$ can be defined as
+\begin{align*}
+  UtoST_w (y) = ST_w(U_w^{-1}(y))
+\end{align*}
+
+We know that $U_w(x) = \sum_{i=0}^{w-1}x_i2^i$ and $ST_w(x) = \sum_{i=0}^{w-2}x_i2^i - x_{w-1}2^{w-1}$,
+\begin{align*}
+  \implies &U_w(x) - ST_w(x) = x_{w-1}2^w\\
+  \implies &ST_w(x) = -x_{w-1}2^w + U_w(x)\\
+\end{align*}
+Replacing $x$ with $U_w^{-1}(y)$ we get $ST_w(U_w^{-1}(y)) = -x_{w-1}2^w + y$ where $U_w(x) = y$\\\\
+We know that, $x_{w-1}$ is $1$ only when $y \geq 2^{w-1}$. Hence
+\begin{align*}
+UtoST_w (y) &= -2^w + y, &\text{ when $y \geq 2^{w-1}$}\\
+            &= y,        &\text{ when $y < 2^{w-1}$}\\
+\end{align*}
+
+
+\paragraph{(b)} Define mapping $ST_wtoU: \mathbb{Z} \rightarrow \mathbb{Y}$
+\newline\newline
+Since we know that the function $ST_w$ is bijective, hence its inverse exists
+\begin{align*}
+  \implies ST_w^{-1}: \mathbb{Z} \rightarrow \mathbb{X}
+\end{align*}
+Hence $ST_w^{-1}$ converts an signed integer to its bit representation and since $U_w$ converts a bit representation to its unsigned representation, $ST_wtoU$ can be defined as
+\begin{align*}
+  ST_wtoU (z) = U_w(ST_w^{-1}(z))
+\end{align*}
+
+We know that $U_w(x) = \sum_{i=0}^{w-1}x_i2^i$ and $ST_w(x) = \sum_{i=0}^{w-2}x_i2^i - x_{w-1}2^{w-1}$,
+\begin{align*}
+  \implies &U_w(x) - ST_w(x) = x_{w-1}2^w\\
+  \implies &U_w(x) = x_{w-1}2^w + ST_w(x)\\
+\end{align*}
+Replacing $x$ with $ST_w^{-1}(y)$ we get $U_w(ST_w^{-1}(y)) = x_{w-1}2^w + y$ where $ST_w(x) = y$.\\\\
+We know that, $x_{w-1}$ is $1$ only when $y < 0$. Hence
+\begin{align*}
+STtoU_w (y) &= 2^w + y, &\text{ when $y < 0$}\\
+            &= y,        &\text{ when $y >= 0$}\\
+\end{align*}
+
+\pagebreak
+\section*{Question 2}
+\label{sec:question-2}
+
+\paragraph{(a)} Convert decimal numbers to IEEE float format and hexadecimal
+\newline\newline
+\begin{itemize}
+\item 86.125 \newline
+  
+  IEEE single precision float format ($(-1)^s \times 1.f \times 2^{-127 + e}$):
+  \begin{align*}
+    86.125 &= (2^{6} + 2^{4} + 2^{2} + 2^{1}) + (2^{-3})\\
+           &= 1010110.001\\
+           &= 1.010110001 \times 2^6 = 1.010110001 \times 2^{-127 + 133}\\
+           &= (-1)^0 \times 1.010110001 \times 2^{-127 + 133}
+  \end{align*}
+  Hence $s:0$, $f:010110001000...$, $e:10000101$\newline
+
+  Hexadecimal format(from IEEE format):
+  \begin{align*}
+    &binary: & 0100 & 0010 & 1010 & 1100 & 0100 & 0000 & 0000 & 0000\\
+    &hexadecimal: & 4 & 2  & A    & C    & 4    & 0    & 0    & 0   \\
+  \end{align*}
+  Hence hexadecimal format(from IEEE format): 42AC4000
+  \\\\
+  Hexadecimal from decimal: $86.2 = 5(16^1) + 5(16^0) + 5(16^{-1}) = 55.2$
+\newline\newline
+
+\item 0.523 \newline
+  
+  IEEE single precision float format ($(-1)^s \times 1.f \times 2^{-127 + e}$):
+  \begin{align*}
+    0.523 &= (2^{-1} + 2^{-6} + 2^{-8} + 2^{-9} + 2^{-10} + 2^{-11}
+            + 2^{-15} + 2^{-16} + 2^{-18} + 2^{-20} + 2^{-22})\\
+          &= 0.1000010111100011010101 \times 2^{-1}\\
+          &= 0.1000010111100011010101 \times 2^{-127 + 126}\\
+          &= (-1)^0 \times 1.000010111100011010101 \times 2^{-127 + 126}
+  \end{align*}
+  Hence $s:0$, $f:00001011110001101010100$, $e:01111110$\newline
+
+  Hexadecimal format(from IEEE format):
+  \begin{align*}
+    &binary: & 0011 & 1111 & 0000 & 0101 & 1110 & 0011 & 0101 & 0100\\
+    &hexadecimal: & 3 & F  & 0    & 5    & E    & 3    & 5    & 4   \\
+  \end{align*}
+  Hence hexadecimal format(from IEEE format): 3F05E354\\\\
+  Hexadecimal from decimal: $0.523 \approx 8(16^{-1}) + 5(16^{-2}) + 14(16^{-3}) = 0.85E$
+\newline\newline
+
+\item -0 \newline
+  
+  0 is stored in denormalized as it cannot be stored in normalized form
+  of IEEE single precision float format
+
+  IEEE single precision float denormalized form ($(-1)^s \times 0.f \times 2^{-127}$):
+  Hence for $-0$, $s: 1$, $f: 000...$, $e: 00000000$
+  \begin{align*}
+    (-1)^0 \times 0.00... \times 2^{-127}
+  \end{align*}
+
+  Hexadecimal format(from IEEE format):
+  \begin{align*}
+    &binary: & 1000 & 0000 & 0000 & 0000 & 0000 & 0000 & 0000 & 0000\\
+    &hexadecimal: & 8 & 0  & 0    & 0    & 0    & 0    & 0    & 0   \\
+  \end{align*}
+  Hence hexadecimal format(from IEEE format): 80000000\\\\
+  Hexadecimal from decimal: $0 = 0(16^0) = 0$
+\end{itemize}
+
+\paragraph{(b)} Number of numbers between
+\begin{itemize}
+\item $-2^{-12}$ and $-2^{-11}$\newline\newline
+  $-2^{-12}$ is represented as $(-1)^1 \times 1.0 \times 2^{115 - 127}$
+  $-2^{-11}$ is represented as $(-1)^1 \times 1.0 \times 2^{116 - 127}$
+  \newline\newline
+  All the numbers between $-2^{-12}$ and $-2^{-11}$ will have fixed $s: 1$ and $e: 115$, $f$ can be anything other than all zeros i.e., each bit in $f$ has 2 options (1 or 0), and since there are 23 bits in f, there are $2^{23} - 1$ possibilities other than all zeros.
+  \newline
+  Hence number of numbers between $-2^{-12}$ and $-2^{-11}$ are $2^{23} - 1$
+  \newline\newline
+
+\item $-2^{-13}$ and $-2^{-12}$\newline\newline
+  $-2^{-13}$ is represented as $(-1)^1 \times 1.0 \times 2^{114 - 127}$
+  $-2^{-12}$ is represented as $(-1)^1 \times 1.0 \times 2^{115 - 127}$
+  \newline\newline
+  All the numbers between $-2^{-13}$ and $-2^{-12}$ will have fixed $s: 1$ and $e: 114$, $f$ can be anything other than all zeros i.e., each bit in $f$ has 2 options (1 or 0), and since there are 23 bits in f, there are $2^{23} - 1$ possibilities other than all zeros.
+  \newline
+  Hence number of numbers between $-2^{-13}$ and $-2^{-12}$ are $2^{23} - 1$
+\end{itemize}
+
+Hence in both cases the number of numbers between consecutive powers of 2 are same.
+
+\paragraph{(c)} Smallest value of $n$(natural number) that cannot be represented using
+
+\begin{itemize}
+\item 32-bit IEEE single-precision float representation\newline\newline
+  We know that the gap between any 2 consecutive numbers between $2^m$ and $2^{m + 1}$ is $2^{m - 23}$ as
+\begin{align*}
+  &1.00000000000000000000000 \times 2^m: &2^m\\
+  &1.00000000000000000000001 \times 2^m: &2^m + 2^{m - 23}\\
+\end{align*}
+Hence for all $m > 23$, the gap is greater than 1 (i.e., the natural numbers in between cannot be precisely represented)\newline
+
+The smallest value of such $m$ is $24$ i.e., $2^{24}$ and the next number that can be stored is $2^{24} + 2^1$ which implies that $2^{24} + 1$ cannot be stored. Hence $n = 2^{24} + 1$\newline\newline
+
+\item 32-bit signed integer representation\newline\newline
+  We know that in integer representation the gap always remains constant($= 1$).\newline
+  Hence the smallest $n$ that cannot be represented should be out of range.\newline
+
+  \textbf{Range}: $-2^{31}$ to $2^{31} - 1$\newline
+  Hence $n = 2^{31}$\newline\newline
+
+\item 32-bit unsigned integer representation\newline\newline
+  We know that in integer representation the gap always remains constant($= 1$).\newline
+  Hence the smallest $n$ that cannot be represented should be out of range.\newline
+
+  \textbf{Range}: $0$ to $2^{32} - 1$\newline
+  Hence $n = 2^{32}$\newline
+\end{itemize}
+
+\pagebreak
+\section*{Question 3}
+\label{sec:question-3}
+
+\paragraph{(a)}
+\begin{enumerate}[(i)]
+\item\label{item:1} minimum number of bits required to store the score(w):\newline
+
+  Range of the scores is from 1 to 10. Since the range has 10 distinct values and since $2^3 \leq 10 \leq 2^4$, a minimum of 4 bits will be required. Where 1 can be stored as \verb~0001~ and 10 can be stored as \verb~1010~.Hence $w = 4$.\newline\newline
+
+\item\label{item:2} Explaination of the counter-intuitive behaviour\newline
+
+  Using the above 4-bit unsigned representation (assume it to be $b_4b_3b_2b_1$), 2 points would be deducted from their score when they achieve democracy, which is $b_4b_3b_2b_1 -$ \verb~0010~. Hence when the country X achieves democracy and since it started with score of 1, its final score will be \verb~0001~ - \verb~0010~ which is equal to \verb~1111~. And since \verb~1111~ is greater than 10, the coutry X becomes overly aggressive and starts bombing other countries.\newline\newline
+
+\item\label{item:3} Fix for the above counter-intuitive behaviour\newline
+
+  The techincal term for the above behaviour is called ``negative overflow''. This can be fixed by setting a minimum value which the score can take(=1) and adding an if condition which doesn't subtract 2 if score is 1 and subtracts 1 if score is 2.\newline
+\end{enumerate}
+
+\paragraph{(b)} 
+\begin{enumerate}[(i)]
+\item\label{item:3b1} Number of bits(w) to store the timing counter in w-bit signed integer\newline
+
+  The duration is stored in centiseconds
+\begin{align*}
+249\text{ days} &= 249 * 24 * 60 * 60 * 100 \text{ centiseconds}\\
+                &= 2151360000\\
+  2^{31} &\leq 2151360000 \leq 2^{32}\\
+\end{align*}
+We know that range of a w-bit signed integer is $-2^{w-1}$ to $2^{w-1} - 1$\newline
+
+Since the overflow happens at around 249 days, it should not able to be stored in the counter. Hence, if w = 32, then the max value that can be stored will be $2^{31} - 1$ which is less than 249 days. For any value of w < 32, the overflow will happen much earlier and for any value of w > 32, the overflow will happen much later.\newline
+
+$\therefore w = 32$ 
+
+
+\item\label{item:3b2} Period after which the timing counter will overflow in a w-bit unsigned integer\newline
+
+  Range for an unsigned w-bit integer is $0$ to $2^w - 1$. Since $w = 32$, The error will occur just after the timing counter reaches $2^{32} - 1$ (i.e., the error will occur at $2^{32}$ centiseconds)
+
+\item\label{item:3b3} Period after which the timing counter will overflow in a 2w-bit signed integer\newline
+
+  Range for an signed 2w-bit integer is $0$ to $2^{2w -1} - 1$. Since $w = 32$, The error will occur just after the timing counter reaches $2^{63} - 1$ (i.e., the error will occur at $2^{63}$ centiseconds)
+\end{enumerate}
+
+\paragraph{(c)} Convert 16-bit float to decimal and 16-bit signed integer\newline
+
+We know that a 16-bit floating point is represented as:
+$(-1)^s \times 1.f \times 2^{-15 + e}$, with 1 bit in s, 5 bits in e and the remaining 10 bits in f.
+
+\begin{enumerate}[(i)]
+\item\label{item:3c1} \textbf{Stage I}: 0110001111111011\newline
+
+  Representation $\rightarrow$ s: 0, e: 11000, f: 1111111011
+  \begin{align*}
+    1.1111111011 \times 2^{24 - 15} &= 1.1111111011 \times 2^9\\
+    &= 1111111101.1 = 1021 + 0.5\\
+    &= 1021.5\\
+  \end{align*}
+  Hence its decimal value is $\boxed{1021.5}$\newline
+
+  When converting to 16 bit integer, the value after the decimal point cannot be stored hence its binary representation is $\boxed{0000001111111101}$\newline\newline
+
+\item\label{item:3c2} \textbf{Stage II}: 0110011111101100\newline
+
+  Representation -> s: 0, e: 11001, f: 1111101100
+  \begin{align*}
+    1.1111101100 \times 2^{25 - 15} &= 1.1111101100 \times 2^{10}\\
+    &= 11111101100 = 2028\\
+  \end{align*}
+  Hence its decimal value is $\boxed{2028}$ and \newline
+  16 bit integer is $\boxed{0000001111101100}$\newline\newline
+
+\item\label{item:3c3} \textbf{Stage III}: 0111001101101101\newline
+
+  Representation -> s: 0, e: 11100, f: 1101101101
+  \begin{align*}
+    1.1101101101 \times 2^{28 - 15} &= 1.1101101101 \times 2^{13}\\
+    &= 11101101101000 = 15208\\
+  \end{align*}
+  Hence its decimal value is $\boxed{15208}$\newline
+  16 bit integer is $\boxed{0011101101101000}$\newline\newline
+
+\item\label{item:3c4} \textbf{Stage IV}: 0111100000011111\newline
+
+  Representation -> s: 0, e: 11110, f: 0000011111
+  \begin{align*}
+    1.0000011111 \times 2^{30 - 15} &= 1.0000011111 \times 2^{15}\\
+    &= 1000001111100000 = 33760\\
+  \end{align*}
+  Hence its decimal value is $\boxed{33760}$\newline\newline
+
+  When converting to 16 bit integer, the value is greater than the range and hence causes error. This error is denoted by $\boxed{1000000000000000}$\newline
+
+  $\therefore$ At \textbf{Stage IV}, the value of $V_H$ becomes large enough to throw an error.\newline\newline
+
+\item\label{item:3c5} \textbf{Stage V}: 0111101000111111\newline
+
+  Representation $\rightarrow$ s: 0, e: 11110, f: 1000111111
+  \begin{align*}
+    1.1000111111 \times 2^{30 - 15} &= 1.1000111111 \times 2^{15}\\
+    &= 1100011111100000 = 51168\\
+  \end{align*}
+  Hence its decimal value is $\boxed{51168}$\newline\newline
+
+  When converting to 16 bit integer, the value is greater than the range and hence causes error. This error is denoted by $\boxed{1000000000000000}$
+
+\end{enumerate}
+
+\paragraph{(d)}
+\begin{enumerate}[(i)]
+\item Binary representation of $0.1 - x$
+\begin{align*}
+  &0.1 &\rightarrow 0.00011001100110011001100[0011]..._2\\
+  &x   &\rightarrow 0.00011001100110011001100_2\\
+  \implies &0.1 - x &= 0.00000000000000000000000[0011]_2\\
+\end{align*}
+\item Approximate decimal value of $0.1 - x = 9.54 \times 10^{-8}$
+\item $\Delta t = $ (time in centiseconds)$\times (0.1 - x)$
+  
+\begin{align*}
+  &\Delta t = 60 \times 60 \times 10 \times t \times (0.1 - x)\\
+  \implies &\Delta t = 0.0034344 \times t
+\end{align*}
+For $t = 50$
+\begin{align*}
+  &\Delta t = 0.0034344 \times 50\\
+  \implies &\Delta t = 0.17172\\
+\end{align*}
+For $t = 100$
+\begin{align*}
+  &\Delta t = 0.0034344 \times 50\\
+  \implies &\Delta t = 0.34344\\
+\end{align*}
+
+\item $x_{err} = v \times \Delta t = 3000 \times \Delta t$
+  
+\begin{align*}
+x_{err} &= 3000 \times \Delta t\\
+       &= 3000 \times 0.0034344 \times t = 28.62 \times t\\
+\end{align*}
+if $x_{err} = 500 \implies 500 = 28.62 \times t \implies t = 17.470$ hours
+\end{enumerate}
+
+\pagebreak
+\section*{Question 4}
+\label{sec:question-4}
+
+\paragraph{(a)} $y = \sum_{i=1}^{\infty}d_i \times 10^{n-i},
+\psi_k(y) = \sum_{i=1}^{k-1} + d_k' \times 10^{n-k}$\\\\
+\begin{align*}
+\frac{|y - \psi_k(y)|}{|y|} &= \frac{\sum_{i=k}^{\infty} - d_k' \times 10^{n-k}}{\sum_{i=1}^{\infty} \times 10^{n-i}}\\
+\end{align*}
+
+
+\paragraph{(b)}
+\begin{align*}
+&\frac{p!}{3!(p-3)!} &\leq 0.9999 \times 10^{15}\\
+\implies &\frac{p(p-1)p-2)}{6} &\leq 9999 \times 10^{11}\\
+\implies &p(p-1)p-2) &\leq 59994 \times 10^{11}\\
+\implies &p^3 &\leq 59994 \times 10^{11}\\
+\implies &p &\leq 181706.0020\\
+\end{align*}
+\paragraph{(c)}
+
+\pagebreak
+\section*{Question 5}
+\label{sec:question-5}
+
+\paragraph{(a)} Number of FLOPS in the pseudo-code:\\
+In every iteration of the loop, $1$ multiplication and $1$ addition takes place. And since the iteration happens $n$ times\\
+\framebox[1.1\width]{Number of FLOPS: $2n$}
+
+\paragraph{(b)} Number of FLOPS in the pseudo-code:\\
+In every iteration of the inner loop, $1$ multiplication and $1$ addition takes place. And since the inner loop iteration happens $m \times n$ times\\
+\framebox[1.1\width]{Number of FLOPS: $2mn$}
+
+\paragraph{(c)} Number of FLOPS in the pseudo-code:\\
+In every iteration of the inner loop, $1$ multiplication and $1$ addition takes place. And since the inner loop iteration happens $m \times r \times n$ times\\
+\framebox[1.1\width]{Number of FLOPS: $2mrn$}
+
+\paragraph{(d)} Number of FLOPS in the pseudo-code:\\
+\begin{enumerate}[(i)]
+\item $\mathbf{ABx}:$
+\begin{align*}
+&\mathbf{AB} \rightarrow 2mnr, &(\mathbf{AB})\mathbf{x} \rightarrow 2mr,\, &Total: 2mr(n+1)\\
+&\mathbf{Bx} \rightarrow 2nr, &\mathbf{A}(\mathbf{Bx}) \rightarrow 2mn,\, &Total: 2n(m+r)\\
+\end{align*}
+If m = 10000, n = 5000, r = 500, p = 150,
+\begin{align*}
+&2mr(n+1) &= 2(10000)(500)(5001) &= 5.001 \times 10^{10}\\
+&2n(m+r) &= 2(5000)(10500) &= 1.05 \times 10^{8}\\
+\end{align*}
+Hence minimum number of operations are $1.05 \times 10^{8}$
+
+\item $\mathbf{ABC}:$
+\begin{align*}
+&\mathbf{AB} \rightarrow 2mnr, &(\mathbf{AB})\mathbf{C} \rightarrow 2mrp,\, &Total: 2mr(n+p)\\
+&\mathbf{BC} \rightarrow 2nrp, &(\mathbf{A})(\mathbf{BC}) \rightarrow 2mnp,\, &Total: 2np(r+m)\\
+\end{align*}
+If m = 10000, n = 5000, r = 500, p = 150,
+\begin{align*}
+&2mr(n+p) &= 2(10000)(500)(5150) &= 5.15 \times 10^{10}\\
+&2np(r+m) &= 2(5000)(150)(10500) &= 1.575 \times 10^{10}\\
+\end{align*}
+Hence minimum number of operations are $1.575 \times 10^{10}$
+\end{enumerate}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -1,0 +1,543 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{minted}
+
+\usepackage{fancybox}
+\setlength\parindent{0pt}
+
+\title{Assignment 1}
+\author{Lokesh Mohanty (SR no: 21014)}
+\date{September 2022}
+
+\begin{document}
+\fontsize{14pt}{18pt}\selectfont
+
+\maketitle
+
+\section*{Problem 1}
+\[\begin{split}
+  &\mathbf{A} \in \mathbb{R}^{m\times n}, \mathbf{B} \in \mathbb{R}^{n\times p}\\
+  &R(.) \rightarrow \text{ range/column space of matrix}\\
+  &N(.) \rightarrow \text{ null space of matrix}\\
+  &dim(.) \rightarrow \text{ dimension of vector space}\\
+\end{split}\]
+
+\paragraph{(a)} \textbf{Prove}: $dim[R(\mathbf{AB})] \leq dim[R(\mathbf{A})]$\newline
+
+
+We can consider $\mathbf{B}$ as a group of column vectors i.e., $\{ \mathbf{b_1} | \mathbf{b_2} | ... | \mathbf{b_p} \}$ where $\mathbf{b_i} \in \mathbb{R}^n$, which implies that, $\mathbf{AB} = \{ \mathbf{Ab_1} | \mathbf{Ab_2} | ... | \mathbf{Ab_p} \}$ where $\mathbf{Ab_i} \in \mathbb{R}^m$ and we know that every $\mathbf{Ab_i}$ is a linear combination of the columns of $\mathbf{A}$.
+\newline
+
+Hence, all the columns of $\mathbf{AB}$ are some linear combinations of the columns of $\mathbf{A}$.
+\newline
+
+$\therefore$ The maximum dimension they can span is the dimension of $\mathbf{A}$.
+\newline
+
+$\implies$ Column space/Range of \textbf{AB} $\leq$ Column space/Range of \textbf{A}\\
+$\implies$ $\boxed{dim[R(\mathbf{AB})] \leq dim[R(\mathbf{A})]}$
+
+\paragraph{(b)} Given that the matrix \textbf{B} is non singular, \textbf{prove} $dim[R(\mathbf{AB})] = dim[R(\mathbf{A})]$\newline
+
+From problem $1.a$, we know that
+\begin{equation}\label{1b0}
+  dim[R(\mathbf{AB})] \leq dim[R(\mathbf{A})]
+\end{equation}
+
+Since \textbf{B} is non singular, its inverse exists hence from equation \ref{1b0}, if we replace \textbf{A} with \textbf{AB} and \textbf{B} with $\mathbf{B}^{-1}$, we get
+\begin{equation}\label{1b1}
+  \begin{split}
+    dim[R((\mathbf{AB})\mathbf{B}^{-1})] &\leq dim[R(\mathbf{AB})]\\
+    dim[R(\mathbf{A})] &\leq dim[R(\mathbf{AB})]\\
+  \end{split}
+\end{equation}
+$\therefore$ From equations \ref{1b0} and \ref{1b1} we can confirm that
+\[\boxed{dim[R(\mathbf{AB})] = dim[R(\mathbf{A})]}\]
+
+\paragraph{(c)} \textbf{Prove} $dim[N(\mathbf{AB})] \leq dim[N(\mathbf{A})] + dim[N(\mathbf{B})]$
+\newline\newline
+We know that for a matrix $\mathbf{A}$ its null space is the set of $\mathbf{x}$ that satisfy $\mathbf{Ax} = 0$.
+Hence the null space of $\mathbf{A}$ is the set of $\mathbf{x}$ that satisfy $\mathbf{ABx} = 0$
+\newline\newline
+Which can be written as $\mathbf{A}(\mathbf{Bx}) = \mathbf{0}$
+which implies that all $\mathbf{x}$ in $N(\mathbf{B})$ are also in $N(\mathbf{AB})$ i.e., $N(\mathbf{B}) \subseteq N(\mathbf{AB})$ as $ \forall \mathbf{A}, \mathbf{A0} = \mathbf{0}$.
+And $\forall \mathbf{x} \not\in N(\mathbf{B}), \mathbf{x} \in N(\mathbf{AB})$, $\mathbf{Bx}$ must belong to $N(\mathbf{A})$
+\[
+  \begin{split}
+    \implies &N(\mathbf{AB}) - N(\mathbf{B}) \subseteq N(\mathbf{A})\\
+    \implies &N(\mathbf{AB}) \subseteq N(\mathbf{A}) + N(\mathbf{B})\\
+    \implies &\boxed{dim(N(\mathbf{AB})) \leq dim(N(\mathbf{A})) + dim(N(\mathbf{B}))}\\
+  \end{split}
+\]
+
+\paragraph{(d)} \textbf{Prove} $dim[R(\mathbf{A})] + dim[N(\mathbf{A})] = n$
+\newline\newline
+We know that $\mathbf{Ax}$ can be considered as a linear combination of the columns of $\mathbf{A}$ with their coefficients as the elements of $\mathbf{x}$.
+Assuming there are $a$ linearly independent columns in A, we know that other than the trivial case, for all other coefficients, the linear combination will be non zero. That is, for any values of the corresponding $a$ elements(coefficients) in $\mathbf{x}$ the linear combination will not be zero. Only by modifying the other $n - a$ elements in $\mathbf{x}$ can we make the resultant zero as those are the coefficients of the $n - a$ columns which are linearly dependent on the $a$ columns.
+\newline\newline
+From this we can say that the dimension of null space of $\mathbf{A}$ is $n - a$ as we can select any values for the $n - a$ elements and we can select the other $a$ elements such that their linear combination with the corresponding $a$ columns of $\mathbf{A}$ sums up to be the negative of the linear combination of the $n - a$ elements with the $n - a$ columns which sum up to zero.
+\newline\newline
+Hence if there are $a$ linearly independent columns in $\mathbf{A}$, then $dim[R(\mathbf{A})] = a$ and $dim[N(\mathbf{A})] = n - a$ which implies that $\boxed{dim[R(\mathbf{A})] + dim[N(\mathbf{A})] = n}$
+
+\paragraph{(e)} \textbf{Prove} $rank(\mathbf{A}) + rank(\mathbf{B}) - n \leq rank(\mathbf{AB}) \leq min(rank(\mathbf{A}), rank(\mathbf{B}))$
+\newline\newline
+From $1.c$ and $1.d$ we know that,
+\[
+  \begin{split}
+    &dim[N(\mathbf{AB})] \leq dim[N(\mathbf{A})] + dim[N(\mathbf{B})]\\
+    \implies &r - dim[R(\mathbf{AB})] \leq n - dim[R(\mathbf{A})] + r - dim[R(\mathbf{B})]\\
+    \implies &dim[R(\mathbf{A})] + dim[R(\mathbf{B})] \leq dim[R(\mathbf{AB})]
+  \end{split}
+\]
+And since $rank(\mathbf{A}) = dim[R(\mathbf{A})]$,
+\begin{equation}
+  \label{eq:1}
+  \implies \boxed{rank(\mathbf{AB}) \geq rank(\mathbf{A}) + rank(\mathbf{B})}
+\end{equation}
+\newline\newline
+From the $1.c$ and $1.d$ we know that,
+\[
+  \begin{split}
+    &dim[N(\mathbf{AB})] \geq dim[N(\mathbf{B})]\\
+    \implies &r - dim[R(\mathbf{AB})] \geq r - dim[R(\mathbf{B})]\\
+    \implies &dim[R(\mathbf{AB})] \leq dim[R(\mathbf{B})]
+  \end{split}
+\]
+But from $1.a$ we know that,
+\[
+  \begin{split}
+    &dim[R(\mathbf{AB})] \leq dim[R(\mathbf{A})]\\
+    \implies &dim[R(\mathbf{AB})] \leq min(dim[R(\mathbf{A})], dim[R(\mathbf{B})])\\
+  \end{split}
+\]
+And since $rank(\mathbf{A}) = dim[R(\mathbf{A})]$,
+\begin{equation}
+  \label{eq:2}
+    \implies \boxed{rank(\mathbf{AB}) \leq min(rank(\mathbf{A}), rank(\mathbf{B}))}\\
+\end{equation}
+
+\paragraph{(f)} \textbf{Prove} $rank(\mathbf{uu}^T) = 1, \mathbf{u} \in \mathbb{R}^n$
+\newline\newline
+From $1.a$, we know that $dim(R(\mathbf{uu}^T)) \leq dim(R(\mathbf{u}))$ and since $dim(R(\mathbf{u})) = 1$, $dim(R(\mathbf{uu}^T)) \leq 1$,
+which implies that $rank(\mathbf{uu}^T) \leq 1$ but for a vector to have rank = 0, all its elements should
+be 0.
+\newline
+Hence $\boxed{\forall \mathbf{u} \in \mathbb{R}^n - \{\mathbf{0}\},\, rank(\mathbf{uu}^T) = 1}$ and for $\mathbf{u} = \mathbf{0},\, rank(\mathbf{uu}^T) = 0$
+
+\paragraph{(g)} \textbf{Prove} row rank = column rank
+\newline\newline
+We know that a matrix $\mathbf{A}$ can be written as $\mathbf{A} = \mathbf{CR}$, where the columns of $\mathbf{C}$ are the linearly independent columns of $\mathbf{A}$ and the rows of $\mathbf{R}$ are the respective coefficients which generate the matrix $\mathbf{A}$. We also know that every matrix multiplication can viewed in 2 ways i.e., linear combinations of the columns of the first matrix and also as the linear comibnations of the rows of the second matrix. Which implies that all the columns in the resultant matrix (here it's $\mathbf{A}$) are some linear combinations of the columns of the first matrix (here it's $\mathbf{C}$) and all the rows in the resultant matrix  are some linear combinations of the columns of the second matrix (here it's $\mathbf{R}$). This implies that dimension of range of rows of $\mathbf{A}$ is equal to the dimension of range of rows of $\mathbf{R}$ and dimension of range of columns of $\mathbf{A}$ is equal to the dimension of range of columns of $\mathbf{C}$. And since for it to be possible to multiply the matrices $\mathbf{C}$ and $\mathbf{R}$, the number of columns in $\mathbf{C}$ should be equal to the number of rows in $\mathbf{R}$. And since all rows in $\mathbf{R}$ and all columns in $\mathbf{C}$ are linearly independent, dimension of range of columns in $\mathbf{C}$ is equal to the dimension of range of rows in $\mathbf{R}$.
+
+\begin{align*}
+ \therefore \boxed{\text{row rank of a matrix} = \text{column rank of a matrix}}
+\end{align*}
+
+\pagebreak
+\section*{Problem 2}
+\label{sec:prob2}
+
+\paragraph{(a)}
+Given that, there always exists a set of real coefficients $c_1, c_2, c_3, ...c_{10}$ for any set of real numbers $d_1, d_2, d_3, ...d_{10}$, such that
+\[
+  \sum_{j=1}^{10}c_jf_j(i) = d_i, \text{ where } i \in \{1,2,...10\}
+\]
+
+This can be framed as a matrix vector multiplication, i.e.,
+\[\begin{split}
+  \text{Let } &\mathbf{F} =
+  \begin{pmatrix}
+    f_1(1) &f_2(1) &... &f_{10}(1)\\
+    f_1(2) &f_2(2) &... &f_{10}(2)\\
+    ... &... &... &...\\
+    f_1(10) &f_2(10) &... &f_{10}(10)\\
+  \end{pmatrix}, \mathbf{c} =
+  \begin{pmatrix}
+    c_1\\c_2\\...\\c_{10}\\
+  \end{pmatrix}, \mathbf{d} =
+  \begin{pmatrix}
+    d_1\\d_2\\...\\d_{10}\\
+  \end{pmatrix}\\
+  \implies &\mathbf{Fc} = \mathbf{d}\\
+\end{split}\]
+
+Since there always exists a set of real coefficients $c_1, c_2, ...c_{10}$ for any set of real numbers $d_1, d_2, ...,d_{10}$ (i.e., $\exists$ \textbf{c} for every \textbf{d}). It implies that the range of the matrix \textbf{F} is atleast 10. And since \textbf{F} is a $10 \times 10$ matrix, for it to have a range of atleast 10, there should be atleast 10 linearly independent columns. Hence we can say that all the columns of \textbf{F} are linearly independent (i.e., full rank matrix) and since it is a square matrix, we can also say that it is a non-singular matrix. \newline
+
+We know that for a full rank matrix, the null space is $0$. Hence for every unique $\mathbf{c}$ there exists a unique $\mathbf{d}$. And since \textbf{F} is non-singular, it has an inverse which can be used to uniquely determine \textbf{c} when \textbf{d} is known.
+\[
+  \text{i.e.,}\, \boxed{\mathbf{c} = \mathbf{F}^{-1}\mathbf{d}},
+  \text{ where } \mathbf{F}_{i,j} = f_j(i), \mathbf{c}_j = c_j, \mathbf{d}_i = d_i
+\]
+
+\paragraph{(b)} Given that \textbf{A} is $10 \times 10$ matrix representing linear mapping from \textbf{d} (i.e., $d_1, d_2, ..., d_{10}$) to \textbf{c} (i.e., $c_1, c_2, ..., c_{10}$)
+
+\[\begin{split}
+    \implies &\mathbf{Ad} = \mathbf{c}
+    \implies \mathbf{d} = \mathbf{A}^{-1}\mathbf{c}\\
+    \implies &\mathbf{A}^{-1}\mathbf{c} = \mathbf{d}
+\end{split}\]
+We know from the solution of \textit{Problem 2 (a)} that,
+\[\begin{split}
+    \mathbf{Fc} = \mathbf{d} \implies \mathbf{A}^{-1} = \mathbf{F}
+\end{split}\]
+
+Since we know that
+\[\begin{split}
+  \mathbf{F}_{i,j} = f_j(i)
+    \implies \mathbf{A}^{-1}_{i,j} = f_j(i)\\
+    \boxed{\therefore \text{ i,j th entry of }\mathbf{A}^{-1} = f_j(i)}
+\end{split}\]
+
+\pagebreak
+\section*{Problem 3}
+\label{sec:prob3}
+
+\paragraph{(a)} Prove that \textbf{Q} is orthogonal given that ,
+\begin{equation}\label{3a0}
+  \mathbf{S}^T = -\mathbf{S},\,
+  \mathbf{Q} = (\mathbf{I} - \mathbf{S})^{-1}(\mathbf{I} + \mathbf{S})
+\end{equation}
+\newline
+We know that for an orthogonal matrix \textbf{Q},
+\begin{equation}\label{3a1}
+  \mathbf{QQ}^T = \mathbf{Q}^T\mathbf{Q} = \mathbf{I}
+\end{equation}
+
+Computing $\mathbf{Q}^T$,
+
+\begin{equation}\label{3a2}
+  \begin{split}
+    \mathbf{Q}^T &= ((\mathbf{I} - \mathbf{S})^{-1}(\mathbf{I} + \mathbf{S}))^T\\
+    &= (\mathbf{I}^T + \mathbf{S}^T)(\mathbf{I}^T - \mathbf{S}^T)^{-1}\\
+    \implies \mathbf{Q}^T&= (\mathbf{I} - \mathbf{S})(\mathbf{I} + \mathbf{S})^{-1}\\
+  \end{split}
+\end{equation}
+
+Multiplying equations \ref{3a0} and \ref{3a2},
+\begin{equation}\label{3a3}
+  \begin{split}
+    \mathbf{Q}\mathbf{Q}^T
+    &= (\mathbf{I} - \mathbf{S})^{-1}(\mathbf{I} + \mathbf{S})(\mathbf{I} - \mathbf{S})(\mathbf{I} + \mathbf{S})^{-1}\\
+    &= (\mathbf{I} - \mathbf{S})^{-1}(\mathbf{I} + \mathbf{S} - \mathbf{S} - \mathbf{S}\mathbf{S})(\mathbf{I} + \mathbf{S})^{-1}\\
+    &= (\mathbf{I} - \mathbf{S})^{-1}(\mathbf{I}(\mathbf{I} + \mathbf{S}) - \mathbf{S}(\mathbf{I} + \mathbf{S}))(\mathbf{I} + \mathbf{S})^{-1}\\
+    &= (\mathbf{I} - \mathbf{S})^{-1}(\mathbf{I} - \mathbf{S})(\mathbf{I} + \mathbf{S})(\mathbf{I} + \mathbf{S})^{-1}\\
+    \implies \mathbf{QQ}^T &= I
+  \end{split}
+\end{equation}
+
+Similarly multiplying equations \ref{3a2} and \ref{3a0},
+\begin{equation}\label{3a4}
+  \begin{split}
+    \mathbf{Q}^T\mathbf{Q}
+    &= (\mathbf{I} - \mathbf{S})(\mathbf{I} + \mathbf{S})^{-1}(\mathbf{I} - \mathbf{S})^{-1}(\mathbf{I} + \mathbf{S})\\
+    &= (\mathbf{I} - \mathbf{S})((\mathbf{I} - \mathbf{S})(\mathbf{I} + \mathbf{S}))^{-1}(\mathbf{I} + \mathbf{S})\\
+    &= (\mathbf{I} - \mathbf{S})(\mathbf{I} + \mathbf{S} -\mathbf{S} - \mathbf{SS})^{-1}(\mathbf{I} + \mathbf{S})\\
+    &= (\mathbf{I} - \mathbf{S})(\mathbf{I}(\mathbf{I} - \mathbf{S}) + \mathbf{S}(\mathbf{I} - \mathbf{S}))^{-1}(\mathbf{I} + \mathbf{S})\\
+    &= (\mathbf{I} - \mathbf{S})((\mathbf{I} + \mathbf{S})(\mathbf{I} - \mathbf{S}))^{-1}(\mathbf{I} + \mathbf{S})\\
+    &= (\mathbf{I} - \mathbf{S})(\mathbf{I} - \mathbf{S})^{-1}(\mathbf{I} + \mathbf{S})^{-1}(\mathbf{I} + \mathbf{S})\\
+    \implies \mathbf{Q}^T\mathbf{Q} &= I
+  \end{split}
+\end{equation}
+
+$\boxed{\text{Hence as per equations \ref{3a1}, \ref{3a3} and \ref{3a4}, it is proved that \textbf{Q} is orthogonal}}$
+
+\paragraph{(b)} Prove that $\mathbf{u}^T\mathbf{Au} = 0, \forall \mathbf{u} \in \mathbb{R}^m$ if and only if $\mathbf{A} = 0$, given that $\mathbf{A}$ is a symmetric matrix and it can be written as
+
+\begin{equation}\label{3b0}
+    \mathbf{A} = \mathbf{QDQ}^T,\,
+    \text{ where \textbf{D} is a diagonal matrix}
+\end{equation}
+From equation \eqref{3b0},
+\begin{align*}
+  \mathbf{u}^T\mathbf{Au} &= 0\\
+  \implies \mathbf{u}^T\mathbf{QDQ}^T\mathbf{u} &= 0\\
+\end{align*}
+
+Let $\mathbf{x} = \mathbf{Q}^T\mathbf{u}$
+\begin{align*}
+  \implies \mathbf{x}^T\mathbf{Dx} &= 0\\
+\end{align*}
+Let the diagonal elements in $\mathbf{D}$ be $d_1, d_2, ..., d_m$ and the elements of $\mathbf{x}$ be $x_1, x_2, ..., x_m$. Then the above equation can be transformed as
+\begin{align*}
+  &\begin{pmatrix} x_1&x_2&...&x_m \end{pmatrix}
+    \begin{pmatrix}
+      d_1& ...&0\\ \vdots&\ddots&\vdots\\ 0  & ...&d_m\\
+    \end{pmatrix}
+    \begin{pmatrix} x_1\\x_2\\...\\x_m \end{pmatrix} = 0\\
+  \implies &\begin{pmatrix} d_1x_1&d_2x_2&...&d_mx_m \end{pmatrix}
+            \begin{pmatrix} x_1\\x_2\\...\\x_m \end{pmatrix} = 0\\
+  \implies &\begin{pmatrix} d_1&d_2&...&d_m \end{pmatrix}
+             \begin{pmatrix}
+               x_1& ...&0\\ \vdots&\ddots&\vdots\\ 0  & ...&x_m\\
+             \end{pmatrix}
+             \begin{pmatrix} x_1\\x_2\\...\\x_m \end{pmatrix} = 0\\
+  \implies &\begin{pmatrix} d_1&d_2&...&d_m \end{pmatrix}
+            \begin{pmatrix} x_1^2\\x_2^2\\...\\x_m^2 \end{pmatrix} = 0\\
+\end{align*}
+
+For the above equation to be always zero, the null space of the matrix
+$\begin{pmatrix} d_1&d_2&...&d_m \end{pmatrix}$ should be zero i.e., for i from 1 to m, $d_i = 0$. Which implies that the diagonal matrix $\mathbf{D}$ is a zero matrix and since $\mathbf{A} = \mathbf{QDQ}^T$, $\mathbf{A}$ is also a zero matrix.
+\[\therefore \boxed{\mathbf{A} = 0}\]
+
+The reverse can be easily proved as if $\mathbf{A} = 0$, then
+\[
+  \begin{split}
+  &\mathbf{u}^T\mathbf{A} = 0\\
+    \implies &\boxed{\mathbf{u}^T\mathbf{Au} = 0}\\
+  \end{split}
+\]
+
+\paragraph{(c)} \textbf{Prove} $\mathbf{u}^T\mathbf{Su} = 0\,\forall \mathbf{u} \in \mathbb{R}^m$ if and only if $\mathbf{S} + \mathbf{S}^T = 0$
+\newline\newline
+Let $\mathbf{u}^T\mathbf{Su} = 0$. Then,
+\begin{equation}
+  \label{eq:3}
+  \begin{split}
+    (\mathbf{u}^T\mathbf{Su})^T &= 0\\
+    \implies \mathbf{u}^T\mathbf{S}^T\mathbf{u} &= 0\\
+    \implies \mathbf{u}^T(\mathbf{S} - \mathbf{S}^T)\mathbf{u} &= 0\\
+\end{split}
+\end{equation}
+
+We know that any matrix can be written as the sum of a symmetric and a skew-symmetric matrix
+\begin{align*}
+  \implies \mathbf{u}^T\left(
+    \left(\frac{\mathbf{S} + \mathbf{S}^T}{2}\right)
+    + \left(\frac{\mathbf{S} - \mathbf{S}^T}{2}\right)
+  \right)\mathbf{u} = 0\\
+\end{align*}
+From equation~\eqref{eq:3} 
+\begin{align*}
+  \implies \mathbf{u}^T\left(
+    \left(\frac{\mathbf{S} + \mathbf{S}^T}{2}\right)
+  \right)\mathbf{u} = 0\\
+  \implies \mathbf{u}^T\left(\mathbf{S} + \mathbf{S}^T \right)\mathbf{u} = 0\\
+\end{align*}
+From $3.b$ we know that if $\mathbf{u}^T(\mathbf{S} + \mathbf{S}^T)\mathbf{u} = 0$ then $\mathbf{S} + \mathbf{S}^T = 0$
+\[\boxed{\therefore \text{ if }\mathbf{u}^T\mathbf{Su} = 0\text{ then }\mathbf{S}\text{ is a skew-symmetric matrix}}\]
+\newline
+
+Let $\mathbf{S}$ be a skew-symmetric matrix (i.e., $\mathbf{S} + \mathbf{S}^T = 0$). Multiplying with $\mathbf{u}^T$ from left and with $\mathbf{u}$ from right we get
+\begin{equation}
+  \label{eq:4}
+  \begin{split}
+  \mathbf{u}^T\left(\mathbf{S} + \mathbf{S}^T \right)\mathbf{u} &= 0\\
+  \implies \mathbf{u}^T\mathbf{Su} + \mathbf{u}^T\mathbf{S}^T\mathbf{u} &= 0\\
+  \end{split}
+\end{equation}
+Since $\mathbf{u}^T\mathbf{Su}$ is a 1 dimensional matrix, it is equal to its transpose
+\[\mathbf{u}^T\mathbf{Su} = \mathbf{u}^T\mathbf{S}^T\mathbf{u}\]
+But from equation \eqref{eq:4}
+\begin{align*}
+  &\mathbf{u}^T\mathbf{Su} + \mathbf{u}^T\mathbf{Su} = 0\\
+  \implies &\mathbf{u}^T\mathbf{Su} = 0\\
+\end{align*}
+\[\boxed{\therefore \text{ if }\mathbf{S}\text{ is a skew-symmetric matrix}\text{ then }\mathbf{u}^T\mathbf{Su} = 0}\]
+
+\pagebreak
+\section*{Problem 4}
+\label{sec:problem-4}
+
+Given that $\mathbf{x} \in \mathbb{R}^m$ and $\mathbf{A} \in \mathbb{R}^{m \times n}$
+
+\paragraph{(a)} \textbf{Prove} $||\mathbf{x}||_\infty \leq ||\mathbf{x}||_2$
+Let $x_k$ be the maximum element in $\mathbf{x}$. Then
+\begin{align*}
+  &||x||_\infty = |x_k| = \sqrt{x_k^2} \leq \sqrt{x_1^2 + ... + x_{k-1}^2 + x_k^2 + x_{k+1}^2 + ... + x_m} = ||x||_2\\
+  &\boxed{||x||_\infty \leq ||x||_2}\\
+\end{align*}
+The equality holds when all elements other than the maximum element are 0.
+
+\paragraph{(b)} \textbf{Prove} $||\mathbf{x}||_2 \leq \sqrt{m}||\mathbf{x}||_\infty$
+Let $x_k$ be the maximum element in $\mathbf{x}$. Then
+\begin{align*}
+  &||x||_2 = \sqrt{x_1^2 + ... + x_{k-1}^2 + x_k^2 + x_{k+1}^2 + ... + x_m} \leq \sqrt{x_k^2 + ... + x_k^2 + ... + x_k^2}\\
+  \implies &||x||_2 \leq \sqrt{mx_k^2} = \sqrt{m}|x_k| = \sqrt{m}||x||_\infty\\
+  \implies &\boxed{||x||_2 \leq \sqrt{m}||x||_\infty}\\
+\end{align*}
+The equality holds when all elements are equal.
+
+\paragraph{(c)} \textbf{Prove} $||\mathbf{A}||_\infty \leq \sqrt{n}||\mathbf{A}||_2$
+We know that
+\begin{equation}
+  \label{eq:5}
+  ||\mathbf{A}||_2 = \max_{x, ||x|| \not = 0}\frac{||\mathbf{Ax}||_2}{||\mathbf{x}||_2}
+\end{equation}
+From $(a)$ and $(b)$ we know that,
+\begin{align*}
+  ||\mathbf{Ax}||_2 &\geq ||\mathbf{Ax}||_{\infty}\\
+  ||\mathbf{x}||_2 &\leq \sqrt{n}||\mathbf{x}||_{\infty}\text{, as $\mathbf{x}$ is $n \times 1$ vector}\\
+\end{align*}
+
+By substituting this in \eqref{eq:5}, we get
+\begin{align*}
+  &||\mathbf{A}||_2 = \max_{x, ||x|| \not = 0}\frac{||\mathbf{Ax}||_2}{||\mathbf{x}||_2}
+  \geq \max_{x, ||x|| \not = 0}\frac{||\mathbf{Ax}||_{\infty}}{\sqrt{n}||\mathbf{x}||_{\infty}}
+  = \frac{1}{\sqrt{n}}||\mathbf{A}||_{\infty}\\
+  \implies &\boxed{||\mathbf{A}||_\infty \leq \sqrt{n}||\mathbf{A}||_2}
+\end{align*}
+
+\paragraph{(d)} \textbf{Prove} $||\mathbf{A}||_2 \leq \sqrt{m}||\mathbf{A}||_\infty$
+We know that
+\begin{equation}
+  \label{eq:5}
+  ||\mathbf{A}||_2 = \max_{x, ||x|| \not = 0}\frac{||\mathbf{Ax}||_2}{||\mathbf{x}||_2}
+\end{equation}
+From $(a)$ and $(b)$ we know that,
+\begin{align*}
+  ||\mathbf{Ax}||_2 &\leq \sqrt{m}||\mathbf{Ax}||_{\infty}\text{, as $\mathbf{Ax}$ is $m \times 1$ vector}\\
+  ||\mathbf{x}||_2 &\geq ||\mathbf{x}||_{\infty}\\
+\end{align*}
+
+By substituting this in \eqref{eq:5}, we get
+\begin{align*}
+  &||\mathbf{A}||_2 = \max_{x, ||x|| \not = 0}\frac{||\mathbf{Ax}||_2}{||\mathbf{x}||_2}
+  \leq \max_{x, ||x|| \not = 0}\frac{\sqrt{m}||\mathbf{Ax}||_{\infty}}{||\mathbf{x}||_{\infty}}
+  = \sqrt{m}||\mathbf{A}||_{\infty}\\
+  \implies &\boxed{||\mathbf{A}||_2 \leq \sqrt{m}||\mathbf{A}||_\infty}
+\end{align*}
+
+
+\paragraph{(e)} \textbf{Prove} $||\mathbf{A}||_F = \sqrt{tr(\mathbf{A}^T\mathbf{A})}$\newline
+We know that for a matrix $\mathbf{A} =
+\begin{pmatrix}
+  a_{11} & a_{12} & \dots & a_{1n}\\
+  a_{21} & a_{22} & \dots & a_{2n}\\
+  \vdots & \vdots & \ddots & \vdots\\
+  a_{m1} & a_{m2} & \dots & a_{mn}\\
+\end{pmatrix}
+$,
+\begin{equation}\label{eq:4e}
+||\mathbf{A}_F|| = \sqrt{\sum_{i=1}^m\sum_{j=1}^na_{ij}^2}
+\end{equation}
+
+And,
+\begin{align*}
+\label{eq:4e1}
+\mathbf{A}^T\mathbf{A} &= 
+\begin{pmatrix}
+  a_{11} & a_{21} & \dots & a_{m1}\\
+  a_{12} & a_{22} & \dots & a_{m2}\\
+  \vdots & \vdots & \ddots & \vdots\\
+  a_{1n} & a_{2n} & \dots & a_{mn}\\
+\end{pmatrix}
+\begin{pmatrix}
+  a_{11} & a_{12} & \dots & a_{1n}\\
+  a_{21} & a_{22} & \dots & a_{2n}\\
+  \vdots & \vdots & \ddots & \vdots\\
+  a_{m1} & a_{m2} & \dots & a_{mn}\\
+\end{pmatrix}\\
+\implies tr(\mathbf{A}^T\mathbf{A}) &= \sum_{i=1}^m\sum_{j=1}^na_{ij}^2\\
+\implies \sqrt{tr(\mathbf{A}^T\mathbf{A})} &= \sqrt{\sum_{i=1}^m\sum_{j=1}^na_{ij}^2}\\
+\end{align*}
+
+$\therefore \boxed{||\mathbf{A}||_F = \sqrt{tr(\mathbf{A}^T\mathbf{A})}}$
+
+
+\paragraph{(f)} \textbf{Prove} $\frac{1}{\sqrt{m}}||\mathbf{A}||_1 \leq ||\mathbf{A}||_2 \leq \sqrt{n}||\mathbf{A}||_1$
+
+Let $\mathbf{x}$ be $\begin{pmatrix} x_1\\x_2 \\\vdots\\x_m \end{pmatrix}$, then
+\begin{equation}
+\label{eq:7}
+\begin{split}
+  \left(\sum_{i = 1}^mx_i\right)^2 &= \left(\sum_{i = 1}^mx_i^2 + 2\sum_i^m\sum_j^mx_ix_j \right)\\
+                                   &\geq \left(\sum_{i = 1}^mx_i^2\right) = ||\mathbf{x}||_2^2\\
+  \implies ||\mathbf{x}||_1^2 &\geq ||\mathbf{x}||_2^2\\
+  \implies ||\mathbf{x}||_1 &\geq ||\mathbf{x}||_2
+\end{split}
+\end{equation}
+We know that arithmetic mean $\geq$ geometric mean,
+\begin{equation}
+\label{eq:8}
+\begin{split}
+  &\implies x_ix_j \leq (x_i^2 + x_j^2)/2\\
+  &\implies 2x_ix_j \leq x_i^2 + x_j^2\\
+  &\implies 2\sum_i^m\sum_j^mx_ix_j \leq (m-1)\sum_i^mx_i^2\\
+  &\implies \left(\sum_{i = 1}^mx_i\right)^2 
+    \leq \left(\sum_{i = 1}^mx_i^2 + (m-1)\sum_i^mx_i^2\right)
+    = m\left(\sum_{i = 1}^mx_i\right)^2\\
+  &\implies ||\mathbf{x}||_1^2 \leq m||\mathbf{x}||_2^2\\
+  &\implies ||\mathbf{x}||_1 \leq \sqrt{m}||\mathbf{x}||_2\\
+\end{split}
+\end{equation}
+
+Hence from \eqref{eq:7} and \eqref{eq:8} we get,
+\begin{align*}
+  ||\mathbf{Ax}||_2 &\leq ||\mathbf{Ax}||_1\\
+  ||\mathbf{Ax}||_2 &\geq \frac{1}{\sqrt{m}}||\mathbf{Ax}||_1\text{, as $\mathbf{Ax}$ is $m \times 1$ vector}\\
+  ||\mathbf{x}||_2 &\geq \frac{1}{\sqrt{n}}||\mathbf{x}||_1\text{, as $\mathbf{x}$ is $n \times 1$ vector}\\
+  ||\mathbf{x}||_2 &\leq ||\mathbf{x}||_1\\
+\end{align*}
+
+By substituting these in \eqref{eq:5} (definition of induced matrix norm), we get
+\begin{align*}
+
+  \implies \max_{x, ||x|| \not = 0}\frac{||\mathbf{Ax}||_1}{\sqrt{m}||\mathbf{x}||_1}
+  &\leq \max_{x, ||x|| \not = 0}\frac{||\mathbf{Ax}||_2}{||\mathbf{x}||_2}
+  &\leq \max_{x, ||x|| \not = 0}\frac{\sqrt{n}||\mathbf{Ax}||_1}{||\mathbf{x}||_1}\\
+
+  \implies &\boxed{\frac{1}{\sqrt{m}}||\mathbf{A}||_1 \leq ||\mathbf{A}||_2 \leq \sqrt{n}||\mathbf{A}||_1}$& \\
+\end{align*}
+
+\paragraph{(g)} \textbf{Prove} $||\mathbf{A}||_2 \leq \sqrt{||\mathbf{A}||_1||\mathbf{A}||_\infty}$
+
+
+\pagebreak
+\section*{Problem 5}
+\label{sec:problem-5}
+
+\textbf{Python Code:}
+% \begin{minted}{python}
+\begin{verbatim}
+import numpy as np
+from numpy.random import randn
+from numpy.linalg import norm
+
+def custom_norm(x, p):
+    if p in [1, 2, np.inf]:
+        return norm(x, p)
+    return (sum([abs(elem)**p for elem in x])**(1/p))[0]
+
+def induced_norm(A, p = 1):
+    norm_Ax = 0
+    for _ in range(1000):
+        temp = randn(2, 1)
+        x = temp/norm(temp)
+        norm_Ax = max(norm_Ax, custom_norm(A.dot(x), p))
+    return norm_Ax
+
+A = randn(100, 2)
+for p in [1, 2, 3, 4, 5, 6, np.inf]:
+    norm_A = norm(A, p) if p in [1, 2, np.inf] else "-"
+    norm_A_empirical = induced_norm(A, p)
+    print("p: {0}, norm_A_empirical: {1}, norm_A: {2}".format(
+        p,
+        norm_A_empirical,
+        norm_A,
+    ))
+\end{verbatim}
+% \end{minted}
+\vspace{2em}
+
+\textbf{Results:}
+\begin{verbatim}
+p:   1, norm_A_empirical: 87.146911949156820, norm_A: 82.279901918493500
+p:   2, norm_A_empirical: 11.268824198434068, norm_A: 11.268895430353254
+p:   3, norm_A_empirical:  6.248385753051110, norm_A: _
+p:   4, norm_A_empirical:  4.863832530448054, norm_A: _
+p:   5, norm_A_empirical:  4.258207420557078, norm_A: _
+p:   6, norm_A_empirical:  3.930596904232219, norm_A: _
+p: inf, norm_A_empirical:  3.211614621668861, norm_A:  4.369508729553038
+\end{verbatim}
+\vspace{2em}
+
+\textbf{Comments:}
+As we can see from the results of 1st, 2nd and $\infty$ norm that the norm calculated empirically using a random numbers is very close to the actual norm. As per the definition of induced norm, it should be the maximum stretch that a matrix can apply to any vector. And the empirical results show us exactly that. The reason for them to be slightly less than the actual norm is because of the number of iterations that we have considered. The larger the number of iterations, the larger is the chance to pick the vector which is stretched the most. But in any case the empirical norm will never be more than that of the actual norm and that is clearly observed from the results above.
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

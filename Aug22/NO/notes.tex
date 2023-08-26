@@ -1,0 +1,273 @@
+% Created 2022-10-17 Mon 22:12
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{Lokesh Mohanty}
+\date{\today}
+\title{DS 211: Numerical Optimization}
+\hypersetup{
+ pdfauthor={Lokesh Mohanty},
+ pdftitle={DS 211: Numerical Optimization},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 28.2 (Org mode 9.5.5)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{Introduction}
+\label{sec:org280abc1}
+Optimization:
+objective -> function of decision variables
+
+Data-driven modelling (machine learning) -> used where forward modelling is not practical
+
+\section{Linear Algebra}
+\label{sec:orge6fb0e5}
+\begin{itemize}
+\item functions: maps an input space to an output space
+\item scalar valued function: output is a scalar
+\item vector valued function: output is a vector
+\item countour map -> contour line(iso line) -> scalar representation for a vector (using a function)
+\item in a countour map, derivative always moves in the direction the function value increases
+\item finite derivative, finite volume, finite element methods -> methods to solve derivative numerically
+\item Tesselation: dividing a domain into a finite number of grid points
+\item Automatic differentiation
+\item Ax = \(\lambda\) x (eigen value decomposition)
+\item Av = \(\sigma\) u (singular value decomposition)
+\item 
+
+\item Pseudo inverse -> S.V.D. (singular value decomposition) -> Moore-Penrose
+\item Matrix vector multiplication is a linear combination of matrix columns with the weights as the entries of the vector
+\item Matrix -> sum of eigen vector * eigen value -> E.V.D. (eigen value decomposition) -> dimension reduction
+\item Rectangular (Au = sigma v) -> S.V.D.
+\item Vector Norm -> L1(|x\textsubscript{1}| + |x\textsubscript{2}| + |x\textsubscript{3}|), L2(\sqrt{x_1^2 + x_2^2 + x_3^2}), Lp(\sqrt[p]{sum of pth power of all entries})
+\item Matrix Norm -> Frobenius norm (\sqrt{sum of squares of all entries})
+\end{itemize}
+\section{Optimization}
+\label{sec:orga6c427b}
+Standard ML algorithm: output = function (input/features), function is not known
+error/loss = |output' - output|, output' is computed using the trained model (function)
+
+\textbf{Convex function}
+
+\section{Unconstrained optimization algorithms}
+\label{sec:org0bcc8b6}
+\subsection{Empirical risk minimization method}
+\label{sec:orgb0bc7c3}
+\subsection{Forward Modelling}
+\label{sec:org950d2fd}
+\subsubsection{Cholesky Factorization}
+\label{sec:org5136faa}
+\subsubsection{QR Factorization}
+\label{sec:org77885c5}
+\subsubsection{SVD Factorization}
+\label{sec:org3dd4adc}
+\subsection{Backtracking (step length selection)}
+\label{sec:orgccad2d9}
+Rules: wolfe, goldstein
+\subsection{Iterative Algorithms}
+\label{sec:org679853f}
+\subsubsection{Line Search Method}
+\label{sec:org4f43abc}
+Choose a direction and then the length to move
+\begin{enumerate}
+\item Gradient Descent (1st order)
+\label{sec:org47906a5}
+\begin{enumerate}
+\item Steepest Descent Algorithm
+\label{sec:orge639a1b}
+\[P_k = \frac{-\nabla f(\theta^k)}{||\nabla f(\theta^k)||}\]
+\item Batch Gradient Descent
+\label{sec:org38c1bd1}
+\begin{itemize}
+\item BGD: batch gradient descent
+\item mini BGD: mini batch gradient descent
+\item SGD: stochastic gradient descent
+\end{itemize}
+\item Faster Optimizers
+\label{sec:orgf6552fe}
+\begin{enumerate}
+\item Momentum Optimization (momentum based)
+\label{sec:org792e2ba}
+\item Nesterov Accelerated Gradient (momentum based)
+\label{sec:orgc7aafb3}
+\item Ada Grad (adaptive learn based)
+\label{sec:orgcac9df4}
+\item RMS Prop (adaptive learn based)
+\label{sec:org1d66123}
+\item ADAM, Adamax, Nadam, Adam W (adaptive moment acceleration)
+\label{sec:orgc6099ee}
+\end{enumerate}
+\end{enumerate}
+
+\item Newton Method (2nd order)
+\label{sec:org0847911}
+
+Newtons direction: \[P_{k} = -\nabla^{2}f_{k}^{-1}\nabla f_{k}\]
+
+\item Quasi-Newton Method (2nd order)
+\label{sec:org6ccb7a2}
+\item Conjugate Gradient
+\label{sec:org36bc342}
+\[ x_{k+1} = x_k + \alpha_k p_{k} \]
+
+Coordinate Descent
+\begin{enumerate}
+\item p\textsubscript{k} to be one of the coordinate
+\item \[\alpha : \min f(x_k + \alpha p_k)\]
+\end{enumerate}
+
+Problem 1: minimize f(x), \(f(x) = 4x_1^2 + x_2^2\), (Separable function)
+Let \(x^{(1)} = (-1, -1)\) and \(p^{(1)} = (1,0)\)
+\[
+\implies x^{(2)} = (-1 + \alpha, -1) \implies f(x^{(1)}) = 4(-1 + \alpha)^2 + (-1)^2, \frac{\partial f(x)}{\partial \alpha} = 8(-1 + \alpha) = 0 \implies \alpha = 1 \implies x^{(2)} = (0, -1)
+\]
+
+Problem 2: minimize f(x), \(f(x) = 4x_1^2 + x_2^2 -2x_{1}x_2\), (Non Separable function)
+Let \(x^{(1)} = (-1, -1)\) and \(p^{(1)} = (1,0)\)
+\[
+\implies x^{(2)} = (-1 + \alpha, -1) \implies f(x^{(1)}) = 4(-1 + \alpha)^2 + (-1)^2 -2(-1 + \alpha)(-1), \frac{\partial f(x)}{\partial \alpha} = 8(-1 + \alpha) + 2 = 0 \implies \alpha = 3/4 \implies x^{(2)} = (1/4, -1)
+\]
+
+for non separable funcitons coordinate descent doesn't converge easily hence we need to go along the H-conjugate directions to converge fast.
+
+Conjugate Gradient: \[ f(x) = \frac{1}{2}x^{T}Hx + c^{T}x + d \]
+\[x = x^{(0)} + \sum_{1=0}^{n-1}\alpha^{(i)}p^{(i)} \]
+
+\[ \psi(\alpha) = \frac{1}{2}(x^{(0)} + \alpha^{(0)}p^{(0)})^TH(x^{(0)} + \alpha^{(0)}p^{(0)}) + c^T(x^{(0)}(x^{(0)} + \alpha^{(0)}p^{(0)})\]
+
+\[ \psi(\alpha) = \frac{1}{2}\alpha^TP^THP\alpha + (Hx^{(0)} + c)^TP\alpha + \frac{1}{2}x^{(0)} + c^Tx^{(0)} \]
+
+A convex quadratic functions can be minimized in atmost n steps provided we search along the conjugate direction. It converges much faster if the eigen values are clustered together.
+
+Pre-conditioned Conjugate Gradient (PCG): minimize \[ f(x) = \frac{1}{2}||Ax - b||_{grid}^{2} = \frac{1}{2}(Ax-b)^T(Ax-b)\] to find x. Here f(x) is called the residual
+
+\[ \min f(x) = \frac{1}{2}x^THx + c^Tx \] -> \[ \nabla f(x) = Hx + c = 0 \implies Hx^* = -c \]
+Residual is \(r_k = Hx_k - Hx^*\)
+
+\(P_iHP_j = \{0, i \not = j; NZ, i = j\}\)
+
+Search Direction: \(x_{k+1} = x_k - \alpha_kr_k\)
+Conjugate Gradient:
+\(x_{k+1} = x_k + \alpha_k[-r_k + \beta_kP_{k-1}]\)
+\(x_{k+1} = x_k + \alpha_kP_k\), \(P_k = -r_k + \beta_kP_{k-1}\)
+
+\(\phi(\alpha) = \frac{1}{2}(x_k + \alpha_kP_k)^TH(x_k + \alpha_kP_k) + c^T(x_k + \alpha_kP_k)\)
+\(\min_{\alpha}\phi(\alpha)\) -> \(\frac{\partial \phi}{\partial \alpha} = 0 \implies \alpha_k = \frac{-c^Tp_k - P_k^THx_k}{P_k^THP_k} = \frac{-(c + Hx_k)^TP_k}{P_k} = \frac{-r_k^TP_k}{P_k^THP_k}\) 
+
+\[ P_{k-1}^THp_k = 0 \implies P_{k-1}^TH(-r_k + \beta_kP_{k-1}) = 0 \implies \beta_k = \frac{P_{k-1}^THr_k}{P_{k-1}^THP_{k-1}} \]
+
+\textbf{Conjugate Gradient Algorithm:}
+\(P_0 = -r_0\), steepest descent
+Given \(x_0\), \(r_0 = Hx_0 + c\)
+while \(||r_k|| > \epsilon_{thresold}\)
+\begin{enumerate}
+\item \(\alpha_k = \frac{-r_k^TP_k}{P_k^THP_k}\), [Exact min of f along \(P_k\)]
+\item \(x_{k+1} = x_k + \alpha_kP_k\)
+\item \(r_{k+1} = Hx_{k+1} + c\)
+\item \(\beta_{k+1} = \frac{P_{k-1}^THr_k}{P_{k-1}^THP_{k-1}} = \frac{r_{k+1}^THP_k}{P_k^THP_k}\)
+\item \(P_{k+1} = -r_{k+1} + \beta_{k+1}P_k\)
+\item \(k + k + 1\)
+\end{enumerate}
+end while
+
+\begin{itemize}
+\item White noise
+\item Red noise
+\end{itemize}
+
+\textbf{Pre-conditioned Conjugate Gradient:}
+\(Hx = -c\) (when small changes in c causes large changes in x i.e., unstable)
+-> \(M^{-1}H = -M^{-1}c\), M: SPD and invertible
+
+\(k(M^{-1}H) << k(H)\) or \(M^{-1}H\) has ev clusters for easier computation
+\end{enumerate}
+
+\subsubsection{Trust Region Method}
+\label{sec:orgb776142}
+Define a trust region and an approximation for the function in the trust region which can easily be minimized to find the direction
+\subsubsection{Derivative Free Method}
+\label{sec:orge77d565}
+\begin{enumerate}
+\item Evolution Method (genetic)
+\label{sec:orga03fcf9}
+\item Bayesian Method (probabilistic)
+\label{sec:org7b763af}
+\end{enumerate}
+
+\section{Machine Learning}
+\label{sec:org1ee5538}
+\subsection{Fitting the model}
+\label{sec:org7dc7bac}
+\begin{itemize}
+\item the data is divided into batches and the model is trained for every batch
+\item epochs: number of times the model is trained with the same training set
+\end{itemize}
+\subsection{Backpropagation}
+\label{sec:org994c48d}
+\subsubsection{Algorithm runs for one mini-batch at a time}
+\label{sec:org4d4b58c}
+\begin{enumerate}
+\item All mini-batches that result in a pass through the entire dataset is called an epoch
+\item 
+\end{enumerate}
+\subsubsection{Forward pass}
+\label{sec:orgb0a4212}
+\begin{enumerate}
+\item Mini-batch is passed to the input layer, which sends it to the first hidden layer
+\item Output from each neuron of the hidden layer is calculated and passed to the next layer (for every instance in a mini-batch)
+\item Process is repeated until the mini-batch reaches the output layer
+\item This process is similar to prediction, but now all intermediate results are saved
+\end{enumerate}
+\subsubsection{Loss calculation}
+\label{sec:org6471420}
+Use a loss function to quantify the error of prediction with respect to the ground truth
+\subsubsection{Backward pass (Reverse pass)}
+\label{sec:orgd9a3135}
+\begin{enumerate}
+\item Apply chain rule and calculate how sensitive is the error to each prarmeters in all layers by working backwards from the output layer to the input layer
+\item Evaluate the gradient for the mini-batch loss with respect to the parameters in the backward pass
+\end{enumerate}
+\subsubsection{Gardient descent step}
+\label{sec:org790a5f5}
+Apply the SGD algorithm (or ts variant) to update the parameters
+\subsubsection{Iterate}
+\label{sec:org8685164}
+
+\subsection{Example}
+\label{sec:org6fd2914}
+\subsubsection{Autodiff}
+\label{sec:org1c24f75}
+\(f(x, y) = x^2y + y + 2\)
+
+\subsubsection{Autodiff for Logistic Regression}
+\label{sec:org2528614}
+\(f(w_1, w_2, b) = ylog(\sigma (x_1w_1 + x_2w_2 + b)) - (1-y)log(1 - \sigma (x_1w_1 + x_2w_2 + b))\)
+
+\section{Notes}
+\label{sec:org05ea5fd}
+\textbf{BLAS}: Basic Linear Algebra Set
+sklearn -> scipy -> BLAS -> FORTRAN -> Machine Language
+
+\section{Tasks [0/3]}
+\label{sec:orgbf2498f}
+\begin{itemize}
+\item[{$\square$}] Read NW chapter 3
+\item[{$\square$}] Finish Assignment 1
+\item[{$\square$}] Revise whats taught till now
+\end{itemize}
+\end{document}

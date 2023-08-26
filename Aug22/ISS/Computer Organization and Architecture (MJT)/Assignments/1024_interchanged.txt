@@ -1,0 +1,188 @@
+-O2
+Time Taken: 4.428050s
+Time Taken: 4.366664s
+Time Taken: 4.405955s
+Time Taken: 4.410286s
+Time Taken: 4.296107s
+Time Taken: 4.286772s
+Time Taken: 4.272492s
+Time Taken: 4.329623s
+Time Taken: 4.306670s
+Time Taken: 4.344350s
+
+real	0m43.490s
+user	0m43.430s
+sys	0m0.056s
+-O2 -floop-interchange
+Time Taken: 4.591861s
+Time Taken: 4.578088s
+Time Taken: 4.447540s
+Time Taken: 4.361770s
+Time Taken: 4.414971s
+Time Taken: 4.376060s
+Time Taken: 4.354619s
+Time Taken: 4.258115s
+Time Taken: 4.344919s
+Time Taken: 4.303276s
+
+real	0m44.075s
+user	0m44.019s
+sys	0m0.055s
+-O2 -fpeel-loops -funroll-loops
+Time Taken: 4.638422s
+Time Taken: 4.678635s
+Time Taken: 4.632004s
+Time Taken: 4.642740s
+Time Taken: 4.901298s
+Time Taken: 4.711027s
+Time Taken: 4.925197s
+Time Taken: 4.841127s
+Time Taken: 4.748236s
+Time Taken: 4.699856s
+
+real	0m47.462s
+user	0m47.403s
+sys	0m0.059s
+-O2 -floop-interchange -fpeel-loops -funroll-loops
+Time Taken: 4.829513s
+Time Taken: 4.879090s
+Time Taken: 4.675984s
+Time Taken: 4.740909s
+Time Taken: 4.783496s
+Time Taken: 4.607111s
+Time Taken: 4.726639s
+Time Taken: 4.675995s
+Time Taken: 4.655319s
+Time Taken: 4.648482s
+
+real	0m47.267s
+user	0m47.201s
+sys	0m0.065s
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+-O2 -ftree-vectorize -fopt-info-vec
+Time Taken: 4.403498s
+Time Taken: 4.430519s
+Time Taken: 4.496244s
+Time Taken: 4.297827s
+Time Taken: 4.360999s
+Time Taken: 4.405979s
+Time Taken: 4.346040s
+Time Taken: 4.211439s
+Time Taken: 4.436301s
+Time Taken: 4.401588s
+
+real	0m43.831s
+user	0m43.774s
+sys	0m0.055s
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+-O2 -floop-interchange -fpeel-loops -funroll-loops -ftree-vectorize -fopt-info-vec
+Time Taken: 4.701577s
+Time Taken: 4.911566s
+Time Taken: 4.653126s
+Time Taken: 4.667993s
+Time Taken: 4.668792s
+Time Taken: 4.652868s
+Time Taken: 4.668588s
+Time Taken: 4.707461s
+Time Taken: 4.908892s
+Time Taken: 4.584160s
+
+real	0m47.165s
+user	0m47.104s
+sys	0m0.060s
+-O3
+Time Taken: 4.318471s
+Time Taken: 4.331504s
+Time Taken: 4.364614s
+Time Taken: 4.379971s
+Time Taken: 4.395742s
+Time Taken: 4.402978s
+Time Taken: 4.382140s
+Time Taken: 4.345056s
+Time Taken: 4.315223s
+Time Taken: 4.324863s
+
+real	0m43.601s
+user	0m43.544s
+sys	0m0.056s
+-O3 -floop-interchange
+Time Taken: 4.460792s
+Time Taken: 4.338455s
+Time Taken: 4.428747s
+Time Taken: 4.432033s
+Time Taken: 4.427088s
+Time Taken: 4.336113s
+Time Taken: 4.331436s
+Time Taken: 4.300239s
+Time Taken: 4.259330s
+Time Taken: 4.834777s
+
+real	0m44.188s
+user	0m44.146s
+sys	0m0.042s
+-O3 -fpeel-loops -funroll-loops
+Time Taken: 4.791163s
+Time Taken: 4.653163s
+Time Taken: 4.666831s
+Time Taken: 4.670199s
+Time Taken: 4.731139s
+Time Taken: 4.804522s
+Time Taken: 4.974709s
+Time Taken: 4.621663s
+Time Taken: 4.679431s
+Time Taken: 4.721711s
+
+real	0m47.354s
+user	0m47.303s
+sys	0m0.050s
+-O3 -floop-interchange -fpeel-loops -funroll-loops
+Time Taken: 4.650636s
+Time Taken: 4.717642s
+Time Taken: 4.561310s
+Time Taken: 4.647274s
+Time Taken: 4.631293s
+Time Taken: 4.824644s
+Time Taken: 4.900527s
+Time Taken: 4.936045s
+Time Taken: 4.760249s
+Time Taken: 4.686425s
+
+real	0m47.355s
+user	0m47.290s
+sys	0m0.064s
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+-O3 -ftree-vectorize -fopt-info-vec
+Time Taken: 4.458468s
+Time Taken: 4.304106s
+Time Taken: 4.413778s
+Time Taken: 4.379045s
+Time Taken: 4.436606s
+Time Taken: 4.380573s
+Time Taken: 4.355460s
+Time Taken: 4.317373s
+Time Taken: 4.283851s
+Time Taken: 4.304314s
+
+real	0m43.674s
+user	0m43.607s
+sys	0m0.066s
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+Ass3.c:8:5: optimized: loop vectorized using 16 byte vectors
+-O3 -floop-interchange -fpeel-loops -funroll-loops -ftree-vectorize -fopt-info-vec
+Time Taken: 4.831370s
+Time Taken: 4.764600s
+Time Taken: 4.962996s
+Time Taken: 4.834408s
+Time Taken: 4.929504s
+Time Taken: 4.685623s
+Time Taken: 4.721652s
+Time Taken: 4.655368s
+Time Taken: 4.682738s
+Time Taken: 5.52908s
+
+real	0m48.164s
+user	0m48.099s
+sys	0m0.062s

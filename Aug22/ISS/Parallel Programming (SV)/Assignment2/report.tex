@@ -1,0 +1,162 @@
+% Created 2022-11-02 Wed 22:29
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{Lokesh Mohanty (lokeshm@iisc.ac.in)}
+\date{November 2022}
+\title{Strong Scaling and Weak Scaling Results}
+\hypersetup{
+ pdfauthor={Lokesh Mohanty (lokeshm@iisc.ac.in)},
+ pdftitle={Strong Scaling and Weak Scaling Results},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 28.2 (Org mode 9.5.5)}, 
+ pdflang={English}}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    urlcolor={blue!80!black}
+}
+\begin{document}
+
+\maketitle
+
+\section{\href{https://ieeexplore.ieee.org/document/9820712}{Shared-Memory Parallel Algorithms for Fully Dynamic Maintenance of 2-Connected Components}}
+\label{sec:org7df2844}
+
+\textbf{Reference}: \textit{C. A. Haryan, G. Ramakrishna, K. Kothapalli and D. S. Banerjee, "Shared-Memory Parallel Algorithms for Fully Dynamic Maintenance of 2-Connected Components," 2022 IEEE International Parallel and Distributed Processing Symposium (IPDPS), 2022, pp. 1195-1205, doi: 10.1109/IPDPS53621.2022.00119.}
+
+\subsection*{Strong Scaling}
+\label{sec:org3f355b6}
+\begin{itemize}
+\item \textbf{Application}: Fully Dynamic Maintenance of 2 connected components 
+\item \textbf{Number of cores}: 128
+\item \textbf{Kind of scaling}: Linear
+\item \textbf{Speedup}: 4
+\end{itemize}
+
+\subsection*{Weak Scaling}
+\label{sec:org021e417}
+\begin{itemize}
+\item \textbf{Application}: Fully Dynamic Maintenance of 2 connected components 
+\item \textbf{Methodology}: decrease batch size while keeping the number of threads fixed.
+\item \textbf{Number of cores}: 128
+\item \textbf{Comments}:
+Incrementalbatch exhibits good weak-scaling property as its run time decreases proportionately as the batch size decreases while keeping the number of threads fixed.
+\end{itemize}
+
+\pagebreak
+\section{\href{https://ieeexplore.ieee.org/document/9820664}{AxoNN: An asynchronous, message-driven parallel framework for extreme-scale deep learning}}
+\label{sec:org9189eba}
+
+\textbf{Reference}: \textit{S. Singh and A. Bhatele, "AxoNN: An asynchronous, message-driven parallel framework for extreme-scale deep learning," 2022 IEEE International Parallel and Distributed Processing Symposium (IPDPS), 2022, pp. 606-616, doi: 10.1109/IPDPS53621.2022.00065.}
+
+\subsection*{Strong Scaling}
+\label{sec:org2bfbf7b}
+\begin{itemize}
+\item \textbf{Application}: Message driven parallel framework for exteme-scale deep learning
+\item \textbf{Number of cores}: 384 GPU
+\item \textbf{Kind of scaling}: Linear
+\item \textbf{Speedup}: 4
+\end{itemize}
+
+\subsection*{Weak Scaling}
+\label{sec:org9db5d54}
+\begin{itemize}
+\item \textbf{Application}: Message driven parallel framework for exteme-scale deep learning
+\item \textbf{Methodology}: optimal number of GPU for the data size
+\item \textbf{Number of cores}: 384 GPU
+\item \textbf{Comments}:
+Data parallelism is embarrassingly parallel, this ends up substantially improving AxoNN's performance
+\end{itemize}
+
+\pagebreak
+\section{\href{https://ieeexplore.ieee.org/document/9355236}{High-Performance Parallel Graph Coloring with Strong Guarantees on Work, Depth, and Quality}}
+\label{sec:org900e9c3}
+
+\textbf{Reference}: \textit{M. Besta, A. Carigiet, K. Janda, Z. Vonarburg-Shmaria, L. Gianinazzi and T. Hoefler, "High-Performance Parallel Graph Coloring with Strong Guarantees on Work, Depth, and Quality," SC20: International Conference for High Performance Computing, Networking, Storage and Analysis, 2020, pp. 1-17, doi: 10.1109/SC41405.2020.00103.}
+
+\subsection*{Strong Scaling}
+\label{sec:orgb65e27b}
+\begin{itemize}
+\item \textbf{Application}: Graph coloring
+\item \textbf{Number of cores}: 32
+\item \textbf{Kind of scaling}: Linear
+\item \textbf{Speedup}: 1.7
+\end{itemize}
+
+\subsection*{Weak Scaling}
+\label{sec:orgbdf903a}
+\begin{itemize}
+\item \textbf{Application}: Graph coloring
+\item \textbf{Methodology}: Kronecker graphs of the increasing sizes by varying the number of edges/vertex
+\item \textbf{Number of cores}: 32
+\item \textbf{Comments}:
+From the weak scaling graph we can tell that the application has bad weak scaling since the time increases with increases in problem size and threads due to memory bottleneck
+\end{itemize}
+
+\pagebreak
+\section{\href{https://ieeexplore.ieee.org/document/9355277}{Distributed-Memory Parallel Symmetric Nonnegative Matrix Factorization}}
+\label{sec:org2901233}
+
+\textbf{Reference}: \textit{S. Eswar, K. Hayashi, G. Ballard, R. Kannan, R. Vuduc and H. Park, "Distributed-Memory Parallel Symmetric Nonnegative Matrix Factorization," SC20: International Conference for High Performance Computing, Networking, Storage and Analysis, 2020, pp. 1-14, doi: 10.1109/SC41405.2020.00078.}
+
+\subsection*{Strong Scaling}
+\label{sec:org95ecc38}
+\begin{itemize}
+\item \textbf{Application}: Distributed-memory parallel symmetric non-negative matrix factorization
+\item \textbf{Number of cores}: 4096
+\item \textbf{Kind of scaling}: Linear at low data size, slightly super linear for large data
+\item \textbf{Speedup}: 4505.6
+\end{itemize}
+
+\subsection*{Weak Scaling}
+\label{sec:org5789991}
+\begin{itemize}
+\item \textbf{Application}: Distributed-memory parallel symmetric non-negative matrix factorization 
+\item \textbf{Methodology}: Matrix dimensions are increased proportionally to the square root of the number of nodes as we scale up
+\item \textbf{Number of cores}: 4096
+\item \textbf{Comments}:
+It is expected that the computation will be bottlenecked by matrix multiplication call which is confirmed by the observation on results of weak scaling
+\end{itemize}
+
+\pagebreak
+\section{\href{https://ieeexplore.ieee.org/document/9355320}{A Parallel Framework for Constraint-Based Bayesian Network Learning via Markov Blanket Discovery}}
+\label{sec:org89e71b5}
+
+\textbf{Reference}: \textit{A. Srivastava, S. P. Chockalingam and S. Aluru, "A Parallel Framework for Constraint-Based Bayesian Network Learning via Markov Blanket Discovery," SC20: International Conference for High Performance Computing, Networking, Storage and Analysis, 2020, pp. 1-15, doi: 10.1109/SC41405.2020.00011.}
+
+\subsection*{Strong Scaling}
+\label{sec:org314cd7e}
+\begin{itemize}
+\item \textbf{Application}: Constraint-based Bayesian Network Learning
+\item \textbf{Number of cores}: 1024
+\item \textbf{Kind of scaling}: Linear
+\item \textbf{Speedup}: 845
+\end{itemize}
+
+\subsection*{Weak Scaling}
+\label{sec:org6a153fd}
+\begin{itemize}
+\item \textbf{Application}: Constraint-based Bayesian Network Learning
+\item \textbf{Methodology}: Approximately same work load per core
+\item \textbf{Number of cores}: 1024
+\item \textbf{Comments}:
+Degradation in scaling efficiency is due to communication overhead being the limiting factor for weak scaling
+\end{itemize}
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

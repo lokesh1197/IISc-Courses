@@ -1,0 +1,364 @@
+#+title: Data Structures and Algorithms
+#+author: Lokesh Mohanty
+#+instructor: Chiraj Jain
+
+* Introduction
+:PROPERTIES:
+:Created: <2022-08-30 Tue>
+:END:
+- Algorithm: step by step instructions
+- Program: implementation of an algorithm
+- Data structure: organisation of data needed to solve a problem
+- Algorithm analysis: expected behaviour of the algorithm, before running it
+- Empirical analysis: measure behaviour of an algorithm by running it
+  - limitations:
+    - time consuming, need to implement the algorithm
+    - cannot exhaust all possible inputs (i.e., may not be indicative of running time of other inputs)
+    - harder to compare two algorithms
+ - Abstract data type: handles the properties and operations of a data type but not the actual data structure behind it.
+
+* Algorithm Analysis
+:PROPERTIES:
+:Created: <2022-09-01 Thu>
+:END:
+Time, space, I/O, communication complexities
+
+Space:
+- Peak memory requirement for a given input size
+- fixed, variable (dynamic memory allocation, recursion stack space)
+- measure (eg: top, valgrind)
+
+Primitive operations: data movement, control, arithmetic
+
+** O notation
+q(n) = O(p(n)); q(n) $\leq$ c.p(n) $\forall$ n $\geq$ $n_0$
+** $\omega$ notation
+q(n) = $\omega$(p(n)); q(n) $\geq$ c.p(n) $\forall$ n $\geq$ $n_0$
+** $\theta$ notation
+q(n) = $\theta$(p(n)); $c_1 p(n) \leq q(n) \leq c_2p(n)$ $\forall$ n $\geq$ $n_0$
+** Empirical validation
+- Time: static overheads, asymptotic behaviour, locality efforts, disk thrashing
+- Memory: deep vs shallow, padding for struct, to align with word length
+
+* Stacks
+:PROPERTIES:
+:Created: <2022-09-06 Tue>
+:END:
+** Methods
+- *new*: creates a new stack
+- *push*: inserts the item onto top of stack
+- *pop*: removes and returns the top item of stack
+- *top*: returns the top
+- *size*: returns the current length of the stack
+** Invariants
+- push(v); top(); -> returns the value v
+- push(v); pop();-> same stack state as before push
+* Queue ADT
+:PROPERTIES:
+:Created: <2022-09-06 Tue>
+:END:
+- FIFO
+- inserted only at rear (tail) (enqueue)
+- removed only from front (head) (dequeue)
+** Methods
+- *New*: creates and returns an empty queue
+- *Enqueue(item v)*: inserts object v at the tail
+- *item Dequeue()*: removes the head and returns it
+- *item Front()*: returns the head without removing it
+- *int Sizl)*: number of items in queue
+* Trees
+** General
+- Linear lists are useful for serially ordered data
+- Trees are useful for hierarchicaly ordered data
+
+*root*: element at the top of the hierarchy
+*child*: elements next in the  hierarchy
+*leaf*: element with no children
+*depth*: number of edges from the root to that node
+*height*: number of edges from root to the farthest leaf
+*number of levels of a tree* = height + 1
+*node degree*: number of children
+=diameter=: longest path between two nodes (number of edges between them)
+
+*Height in average case of a binary tree*: $2\sqrt{\pi n}$
+
+*Traversals:* preorder (root left rightl, inorder (left root right), postorder (left right root), levelorder ()
+
+| Complexity | Worst | Average | Best |
+|------------+-------+---------+------|
+| Time       |       |         |      |
+| Space      |       |         |      |
+
+#+begin_src cpp
+  void levelOrder(BinTreeNode *t) {
+    Queue<BinTreeNode*> q;
+
+    while(t != NULL) {
+      visit(t);
+
+      if (t->left) q.enqueue(t->left);
+      if (t->right) q.enqueue(t->right);
+
+      t = q.dequeue();
+    }
+  }
+#+end_src
+
+*Diameter of binary tree*:
+| Complexity | Worst | Average | Best | Remarks               |
+|------------+-------+---------+------+-----------------------|
+| Time       |   | O(n)    | O(n) | total number of nodes |
+| Space      |   | O(n)    | O(n) | max width of tree     |
+
+#+begin_src cpp
+  int diameter(BinTreeNode *t) {
+    return max(all longestPathThroughNode);
+  }
+
+  int longestPathThroughNode(BinTreeNode *t) {
+    return 2 + height(t->left) + height(t->right);
+  }
+
+  int height(BinTreeNode *t) {
+    if (t == NULL) return -1;
+    return 1 + max(height(t->left), height(t->right));
+  }
+#+end_src
+
+** B-Tree
+- helpful when the RAM is limited
+- data structure for external memory, not main memory
+- goal is to reduce number of block accesses, not number of comparisons
+- each node is one disk block with data records plus block address of children
+
+- Number of children = number of records + 1
+- Keys within a node are in increasing order
+* Big Data
+Refers to approach to data of 'collect now, sort out later'. Low cost of storage and better methods of analysis mean that you generally don't need to hae a specific purpose for the data in mind before you collect it.
+
+Analysis of data that's really messy 
+
+Data whose characteristics exceeds the capabilities of conventional algorithms, systems and techinques to derive useful value.
+
+** Lifecycle
+- Acquire data
+- Define Analysis and Analytics
+- Translate to Scalable Applications
+
+** Distributed Systems
+*** Distributed Computing
+clusters of machines connected over network
+*** Distributed Storage
+disks attached to clusters of machines, network attached storage
+*** Cloud Computing
+- large data centers
+- virtualized infrastructure (on-demand)
+- much cheaper due to economies of scale
+** Performance
+Scalability metric: Speedup  (processors: p, problem: x)
+\[ Speedup(p, x) = \frac{time(1, x)}{time(p, x)} \]
+
+Speedup efficiency: how good is the speedup relative to perfect linear speedup
+\[ Speedup\,Efficiency = \frac{speedup(p, x)}{p} \]
+
+** Amdahl's law of strong scaling (fixed total problem size)
+Amdahl's law for application stability
+- total problem size is fixed
+- speedup limited by sequential bottleneck
+
+let s be the serial fraction of application that cannot be prallelized, if p is the number of processors and t is the time taken to process input of size x on 1 processor
+\[ Speedup(p, x) = \frac{time(1, x)}{time(p, x)} = \frac{t}{s.t + \frac{(1-s)}{p}.t} = \frac{1}{s + \frac{(1-s)}{p}} \]
+
+** Gustafson's Law of weak scaling (fixed problem size per processor)
+Gustafson's Law of Application Scalability
+- problem size (p.x) increases with number of processors(p)
+- scaled speedup
+
+\[ Speedup(p, x.p) = \frac{time(1, p.x)}{time(p,p.x)} = \frac{s.p.t + (1-s).p.t}{s.p.t + \frac{(1-s).p.t}{p}} \]
+
+If s.p.t \approx s.t, i.e., only the parallelizable fraction of input work increases with number of processors
+
+\[ Speedup(p, x.p) = \frac{s.p.t + (1-s).p.t}{s.p.t + \frac{(1-s).p.t}{p}} \]
+
+* Big Data with Apache SPARK
+- Volume (Scale of data)
+- Variety (different forms of data)
+- Velocity (analysis of streaming data)
+- Veracity (uncertainity of data)
+
+*Motivation: Store*
+- Build Index
+- Build Graph
+- Page Rank
+- Search (inverted index)
+
+*Motivation: Web Crawl and Search*
+- Build inverted index of words to URLs
+- Extract URL and Title
+- Extract links, build graph adjacency list
+- Word co-occurrence and clustering
+
+*Google's MapReduce*
+A simple and powerful interface that enables automatic parallelization and distribution of large-scale computations, combined with an implementation of this interface that achieves high performance on large clusters of commodity PCs.
+
+- Programming model for distributed applications
+  - clean abstraction for programmers
+  - automatic parallelization & distribution
+- Fault tolerance
+- Batch data processing system (Large inputs sizes)
+- Simple data-intensive applications
+  - Distributed Grep: Document list -> Occurrence of search term
+  - URL Access Frequency
+  - Reverse Web-link graph
+
+  Limitations:
+- Multi-stage computing not simple (many different jobs)
+- Complex code for simple transformations (repetitive)
+- Poor performance (complex, multi-stage applications, ad-hoc queries)
+
+*Latency & Bandwidth*
+| L1 cache reference                | 0.5ns  |
+| L2 cache reference                | 7ns    |
+| Main Memory                       | 100ns  |
+| Send 1K bytes over 1Gbps          | 10\mu s  |
+| Read 1MB sequentially from memory | 250\mu s |
+| Read 1MB over 1 Gbps network      | 8ms    |
+| Read 1MB sequentially from disk   | 20ms   |
+
+From MapReduce to Apache Spark
+
+** Spark Ecosystem
+*** Core Spark Engine (RDDs, Transformations, ...)
+*** Higher level abstractions
+** Spark: distributed execution engine
+*** Driver
+User program for application, uses Spark Context
+** Spark RDD (Resilient Distributed Dataset)
+- Collection of homo-geneous objects (order not preserved)
+- Distributed on workers (1 or more partitions)
+- Read-only, immutable
+- Can be rebuilt
+- Can be cached
+- MR like data-parallel operations (execute on workers)
+** Common Actions
+- collect
+- take(n)
+- takeOrdered(num, order?)
+- takeSample(withReplace, num, seed)
+- top(n)
+- reduce(mergeFunc)
+- reduceByKey(mergeFunc)
+** Lineage Graph
+inputRDD -(filter)-> errorsRDD|warningsRDD -(union)-> badLinesRDD -(count)-> countOutput
+*** RDD Persistence
+- Dependent RDDs recomputed for each action
+- need to persist RDDs to reuse without recompute
+
+When we need rdd we need to use functions
+RDD persistance
+need to persist rdd to reuse without compute
+* Graphs
+G = (V,E); G: graph, V:vertices, E:edges
+(directed) e = <u,v>; e: edge, u: from vertex, v: to vertex
+(undirected) e = <u,v>; e: edge, u,v: neighbours
+
+*simple path*: no repeated vertices
+*cycle*: simple path with the last and first vertex being the same
+*shortest path*: path between 2 vertices such that the sum of weights is the smallest
+*connected graph*: any two vertices are connected by some path
+*graph diameter*: distance of the longest shortest path
+*subgraph*: subset of vertices and edges forming a graph
+*tree*: connected graph without cycles
+*forest*: collection of trees
+*fully connected graph*: all vertices are connected to each other
+*connected component*: maximal set of nodes such that each pair of nodes is connected by a path
+*clique*: fully connected subgraph
+*maximal clique*: a clique that is not part of a large clique
+
+** Graph Search and Traversal
+*** Breadth First Search (BFS) (Queue)
+*Time Complexity*:
+- each visited vertes is added to the queue exactly once
+- when a vertex is removed from the queue, we examine its adjacent vertices
+  - O(v) if adjacency matrix is used, where v is the number of vertices in whole graph
+  - O(d) if adjacency list is used where d is edge degree
+- Total time
+  - adjacency matrix: O(w.v) where w is number of vertices in the connected component that is searched
+  - adjacency list:  O(w + f), where f is the number of edges in the connected component that is searched
+*** Depth First Search (DFS) (Stack)
+Same time and space complexity as BFS
+Can be used to detect cycles
+*** Dijkstra
+linked list queue: O(v^2 + e)
+Min heap/priority queue: O((v+e)logv)
+Fibonacce heap: O(e + vlogv)
+* Algorithm Classification
+** Simple recursive
+*Eg*: Tree traversal, Binary Search
+** Backtracking
+*Eg*: Depth First Search, Sudoku
+** Divide and conquer
+It should have atleast 2 independent recursive calls *Eg*: Merge Sort,
+Quick Sort
+** Greedy
+*Eg*: Dijkstra's Shortest Path, Fractional Knapsack Problem
+** Dynamic Programming
+Memoization
+*Eg*: 0-1 Knapsack Problem, Fibonacci numbers
+** Brute force
+Heuristics and Optimizations can be used
+** Branch and bound
+** Randomized
+Uses a random number at least once during the computation to make a decision
+* Topological Sorting
+
+#+begin_src C++ :results verbatim
+  #include <iostream>
+
+  class Node {
+  private:
+    val
+    Node left = NULL;
+    Node right = NULL;
+    Node() {}
+  }
+
+  int main() {
+    std::cout << "Test" << std::endl;
+    return 0;
+  }
+#+end_src
+
+* Closest pair of points
+
+# Linear time bounds for median computations
+
+#+begin_src C++ :results verbatim
+  #include <iostream>
+  #include <utility>
+
+  using namespace std;
+
+  pair<pair<int,  int>, pair<int,  int>> closest_pair(pair<int, int> a[], int n) {
+    return make_pair(a[0], a[1]);
+  }
+
+  int main() {
+    int n = 5;
+    pair<int, int> a[n];
+    a[0] = make_pair(0,1);
+    a[1] = make_pair(0,2);
+    a[2] = make_pair(2,3);
+    a[3] = make_pair(2,4);
+    a[4] = make_pair(5,1);
+    pair<pair<int,int>,pair<int,int>> closest = closest_pair(a, n);
+    cout << "(" << closest.first.first << ", " << closest.first.second << ")" << endl;
+    cout << "(" << closest.second.first << ", " << closest.second.second << ")" << endl;
+    return 0;
+  }
+#+end_src
+
+#+RESULTS:
+: (0, 1)
+: (0, 1)
+

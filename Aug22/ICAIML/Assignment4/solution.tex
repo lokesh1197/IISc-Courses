@@ -1,0 +1,127 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyvrb}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\title{Assignment 4}
+\author{Lokesh Mohanty (SR no: 21014)}
+\date{November 2022}
+
+\begin{document}
+
+\maketitle
+
+\section*{Question 1}
+
+\begin{itemize}
+\item Predicted outputs as a function of inputs,
+\begin{align*}
+  h_1 &= sigmoid(w_{21}^1x_2 + B) \\
+  h_2 &= sigmoid(w_{12}^1x_1 + w_{22}^1x_2 + B) \\
+  h_3 &= ReLU(w_{23}^1x_2 + w_{33}^1x_3 + B) \\
+  h_4 &= ReLU(w_{24}^1x_2 + B) \\
+  \hat{y_1} &= w_{11}^2h_1 + w_{31}^2h_3 \\
+  &= w_{11}^2sigmoid(w_{21}^1x_2 + B) + w_{31}ReLU(w_{23}^1x_2 + w_{33}^1x_3 + B) \\
+  \hat{y_2} &= w_{22}^2h_2 + w_{42}^2h_4 \\
+  &= w_{22}^2sigmoid(w_{12}^1x_1 + w_{22}^1x_2 + B) + w_{42}^2ReLU(w_{24}^1x_2 + B) \\
+\end{align*}
+
+\item After one forward pass,
+\begin{align*}
+  h_1 &= sigmoid(w_{21}^1x_2 + B) = sigmoid(0.25 * 0.1 + 0.6) \\
+  &= sigmoid(0.625) = 0.6513\\
+  h_2 &= sigmoid(w_{12}^1x_1 + w_{22}^1x_2 + B) = sigmoid(0.55 * 0.15 + 0.6) \\
+  &= sigmoid(0.7025) = 0.6687\\
+  h_3 &= ReLU(w_{23}^1x_2 + w_{33}^1x_3 + B) = ReLU(0.1*0.1 + 0.6*0.05 + 0.6) \\
+  &= ReLU(0.64) = 0.64\\
+  h_4 &= ReLU(w_{24}^1x_2 + B) = ReLU(0.05*0.1 + 0.6) \\
+  &= ReLU(0.605) = 0.605\\
+  \hat{y_1} &= w_{11}^2h_1 + w_{31}^2h_3 = 0.7*0.6513 + 0.33*0.64 = 0.6671\\
+  \hat{y_2} &= w_{22}^2h_2 + w_{42}^2h_4 = 0.45*0.6687 + 0.8*0.605 = 0.7849\\
+\end{align*}
+
+\item Mean-squared error,
+\begin{align*}
+  mse &= \frac{1}{2}(y_1 - \hat{y}_1)^2 + \frac{1}{2}(y_2 - \hat{y}_2)^2 \\
+  &= \frac{1}{2}(0.31 - 0.6671)^2 + \frac{1}{2}(0.27 - 0.7849)^2 = 0.1963 \\
+\end{align*}
+
+\item One pass of backpropagation,
+\begin{align*}
+  L(loss) &= mse = 
+  \frac{1}{2}(0.31 - \hat{y}_1)^2 + \frac{1}{2}(0.27 - \hat{y}_2)^2 \\
+  w_{31}^2 &= w_{31}^2 - \alpha \frac{\partial L}{\partial w_{31}^2} \\
+  w_{21}^1 &= w_{21}^1 - \alpha \frac{\partial L}{\partial w_{21}^1} \\
+  \frac{\partial L}{\partial w_{31}^2} &= \frac{\partial L}{\partial \hat{y}_1}
+                                       \frac{\partial \hat{y}_1}{\partial w_{31}^2}
+                                      = (0.6671 - 0.31)(0.64) = 0.2285 \\
+  \frac{\partial L}{\partial w_{21}^1} &= \frac{\partial \hat{y}_2}{\partial \hat{y}_1}
+                                       \frac{\partial \hat{y}_1}{\partial h_1}
+                                       \frac{\partial h_1}{\partial w_{21}^1}
+                                      = (0.6671 - 0.31)(0.7)(0.02271) = 0.0056 \\
+  \therefore w_{31}^2 &= 0.33 - 0.5 * 0.2285 = 0.2157 \\
+             w_{21}^1 &= 0.25 - 0.5 * 0.0056 = 0.2472 \\
+\end{align*}
+
+\end{itemize}
+
+\pagebreak
+\section*{Question 2}
+
+\begin{align*}
+  f(x_1, x_2) = tanh \left( \frac{x_1}{x_2} \right) + sigmoid(x_1)
+\end{align*}
+
+The above function can be considered as neural network with the type, \\
+Input Layer: $x_1$, $x_2$ \\
+Hidden Layer: $h_1$, $h_2$, where $h_1 = x_1/x_2$, $h_2 = x_1$ \\
+Output Layer: $y$, where $y = \phi_1(h_1) + \phi_2(h_2)$,
+$\phi_1(x) = tanh(x)$, $\phi_2(x) = sigmoid(x)$\\
+
+\paragraph{Reverse mode automatic differentiation}
+
+\begin{enumerate}
+\item Derivative of output node with respect to the nearest layer: \\
+\begin{align*}
+  \frac{\partial y}{\partial \phi_1(h_1)} = 1, 
+  \frac{\partial y}{\partial \phi_2(h_2)} = 1 \,
+  \text{ as the output node activation function is the identity function}
+\end{align*}
+
+\item Derivative of activation function with respect to corresponding node:
+\begin{align*}
+  \frac{\partial \phi_1(h_1)}{\partial h_1} &= \frac{\partial tanh(h_1)}{\partial h_1} \\
+  \frac{\partial \phi_2(h_2)}{\partial h_2} &= \frac{\partial sigmoid(h_2)}{\partial h_2}
+\end{align*}
+
+\item Derivative of hidden layers with respect to input:
+  
+\begin{align*}
+  \frac{\partial h_1}{\partial x_1} = \frac{1}{x_2},\,
+  \frac{\partial h_1}{\partial x_2} = -\frac{x_1}{x_2^2} \\
+  \frac{\partial h_2}{\partial x_1} = 1,\,
+  \frac{\partial h_2}{\partial x_2} = 0 \\
+\end{align*}
+\end{enumerate}
+
+The final derivative can be computed by
+\begin{align*}
+  \frac{\partial f(x_1, x_2)}{\partial x_1} &= \frac{\partial y}{\partial x_1}
+  = \frac{\partial y}{\partial \phi_1(h_1)}.\frac{\partial \phi_1(h_1)}{\partial h_1}.
+  \frac{\partial h_1}{\partial x_1} + \frac{\partial y}{\partial \phi_2(h_2)}.
+  \frac{\partial \phi_2(h_2)}{\partial h_2}.\frac{\partial h_2}{\partial x_2} \\
+  \frac{\partial f(x_1, x_2)}{\partial x_2} &= \frac{\partial y}{\partial x_2}
+  = \frac{\partial y}{\partial \phi_1(h_1)}.\frac{\partial \phi_1(h_1)}{\partial h_1}.
+  \frac{\partial h_1}{\partial x_2} \left(\text{ as } \frac{\partial h_2}{\partial x_2} = 0 \right)\\
+\end{align*}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

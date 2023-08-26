@@ -1,6 +1,0 @@
-#+title: DS 221 Introduction to Scalable Systems (August 2022)
-#+author: Lokesh Mohanty
-
-* Architecture (MJT)
-* Data structures, algorithms and big data (CJ)
-* Parallel Programming (VSS)

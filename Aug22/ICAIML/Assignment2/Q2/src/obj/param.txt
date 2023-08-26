@@ -1,0 +1,12 @@
+Vector_1_Source:
+vector_a.txt
+Vector_2_Source:
+vector_b.txt
+Vector_Length:
+3
+Matrix_Source:
+matrix.txt
+Matrix_Rows:
+3
+Matrix_Columns:
+3

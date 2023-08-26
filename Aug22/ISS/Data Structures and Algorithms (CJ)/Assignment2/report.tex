@@ -1,0 +1,440 @@
+\documentclass{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[ruled]{algorithm2e}
+
+\title{DS 221: Midterm Exam}
+\author{Lokesh Mohanty (lokeshm@iisc.ac.in)}
+
+% insert a dot after the number and before the title
+\renewcommand{\thesection}{\arabic{section}.}
+
+\begin{document}
+\maketitle
+
+\section{Set data structure}
+\label{sec:1}
+
+\textbf{Design}: Store in a sorted Array. Insert/delete by searching with binary search.\\
+\textbf{Justification}:
+This design has $O(n)$ add, $O(log(n))$ exists and $O(n)$ delete complexities. It has fast read and check for existence. And also since the data is stored sorted, we can get the elements in sorted order in $O(n)$ time. Using linked list would have $O(n)$ add, $O(n)$ exists and $O(n)$ delete complexities. It would have slow read and check for existence. Hence I have used the sorted array design.
+
+
+\begin{algorithm}[H]
+  \caption{public Set(int capacity)}\label{alg:1.1}
+  \DontPrintSemicolon
+  \eIf{\verb~capacity~ is a non-negative integer}{
+    int array[capacity]\;
+    \verb~this->data~ $\gets array$\;
+    \verb~this->capacity~ $\gets capacity$\;
+  }{
+    int array[1]\;
+    \verb~this->data~ $\gets array$\;
+    \verb~this->capacity~ $\gets 1$\;
+  }
+  \verb~this->size~ $\gets 0$\;
+\end{algorithm}
+\textbf{Steps:}
+\begin{enumerate}
+\item Check if capacity is non-negative.
+\item If true, initialize an array with the specified capacity.
+\item Assign the location of the array to the class data property.
+\item Set class property capacity and size.
+\item In case of negative capacity, repeat the above steps for capacity 1.
+\end{enumerate}
+
+\begin{algorithm}[H]
+  \caption{public boolean add(int item)}\label{alg:1.2}
+  \DontPrintSemicolon
+  $first \gets 0$\;
+  $last \gets$ \verb~this->size~\;
+  \While{$first \not = last$}{
+    $index \gets \frac{first + last}{2}$\;
+    \uIf{\verb~this->data[index]~ $> item$}{
+      $last \gets index$\;
+    }
+    \uElseIf{\verb~this->data[index]~ $< item$}{
+      $first \gets index + 1$\;
+    }\Else{
+      return \verb~False~\;
+    }
+  }
+  \eIf{\verb~this->capacity = this->size~}{
+    \verb~this->capacity~ $\gets$ \verb~this-capacity~ $\times 2$\;
+    int array[\verb~this->capacity~]\;
+    \For{$i=0$ \KwTo $first-1$}{
+      $array[i] \gets$ \verb~this->data[i]~\;
+    }
+    $array[first] \gets item$\;
+    \For{$i=first+1$ \KwTo \verb~this->size~}{
+      $array[i] \gets$ \verb~this->data[i-1]~\;
+    }
+    \verb~this->data~ $\gets array$\;
+  }{
+    \For{$i=$\verb~this->size~ \KwTo $first + 1$}{
+      \verb~this->data[i]~ $\gets$ \verb~this->data[i-1]~\;
+    }
+    \verb~this->data[first]~ $\gets item$\;
+  }
+  return \verb~True~\;
+\end{algorithm}
+\textbf{Steps:}
+\begin{enumerate}
+\item Do a binary search to find the index of the item.
+\item If found return False.
+\item If not found, move all elements from the index to right by 1.
+\item Store the new item at the index.
+\item In case of max size, create a new array and move all elements there.
+\end{enumerate}
+
+\begin{algorithm}[H]
+  \caption{public boolean exists(int item)}\label{alg:1.3}
+  \DontPrintSemicolon
+  $first \gets 0$\;
+  $last \gets$ \verb~this->size~\;
+  \While{$first \not = last$}{
+    $index \gets \frac{first + last}{2}$\;
+    \uIf{\verb~this->data[index]~ $> item$}{
+      $last \gets index$\;
+    }
+    \uElseIf{\verb~this->data[index]~ $< item$}{
+      $first \gets index + 1$\;
+    }\Else{
+      return \verb~True~\;
+    }
+  }
+  return \verb~False~\;
+\end{algorithm}
+\textbf{Steps:}
+\begin{enumerate}
+\item Do a binary search to find the index of the item.
+\item If found, move all elements after the index to left by 1.
+\item If not found, return False
+\end{enumerate}
+
+\begin{algorithm}[H]
+  \caption{public boolean delete(int item)}\label{alg:1.4}
+  \DontPrintSemicolon
+  $first \gets 0$\;
+  $last \gets$ \verb~this->size~\;
+  \While{$first \not = last$}{
+    $index \gets \frac{first + last}{2}$\;
+    \uIf{\verb~this->data[index]~ $> item$}{
+      $last \gets index$\;
+    }
+    \uElseIf{\verb~this->data[index]~ $< item$}{
+      $first \gets index + 1$\;
+    }\Else{
+      \verb~this->size~ $\gets$ \verb~this->size~ $-1$\;
+      \For{$i=index$ \KwTo \verb~this->size~$-1$}{
+        \verb~this->data[i]~ $\gets$ \verb~this->data[i+1]~\;
+      }
+      return \verb~True~\;
+    }
+  }
+  return \verb~False~\;
+\end{algorithm}
+
+\textbf{Steps:}
+\begin{enumerate}
+\item Do a binary search to find the index of the item.
+\item If found, move all elements after the index to left by 1.
+\item If not found, return False
+\end{enumerate}
+
+\pagebreak
+\section{Sort Stack}
+\label{sec:2}
+
+\textbf{Algorithm}:
+Use bubble sort. That is, pop the top element of the stack and compare with the next element and push the minimum into the temporary stack. Repeat this till the stack becomes empty. Then pop all elements from temporary stack and push into the main stack. This is same as one iteration of bubble sort. Repeat this till there are no swaps or n(length of stack) times.
+
+\begin{algorithm}[H]
+  \caption{void sort(stack st)}\label{alg:2}
+  \DontPrintSemicolon
+  Initialize $tempStack$\;
+  $numberOfSwaps \gets 1$\;
+  \While{$numberOfSwaps \not = 0$}{
+    $numberOfSwaps \gets 0$\;
+    $top \gets st.pop()$\;
+    \While{st.isEmpty() = False}{
+      \eIf{$top < st.peek()$}{
+        $tempStack.push(top)$\;
+        $top \gets st.pop()$\;
+      }{
+        $tempStack.push(st.pop())$\;
+        $numberOfSwaps \gets numberOfSwaps + 1$\;
+      }
+    }
+    \While{tempStack.isEmpty() = False}{
+      $st.push(tempStack.pop())$\;
+    }
+  }
+\end{algorithm}
+
+\pagebreak
+\section{Adjacency Matrix vs Adjacency List}
+\label{sec:3}
+
+Adjacency List is good for sparse graphs (i.e., graphs with less number of edges but more vertices) as in this we only store the edges which exist.\\
+
+Adjacency Matrix is good for dense graphs as we don't have to deal with the overhead of lists which become substantial for dense graphs and also reading takes O(max out degree) in case of adjacency list which become close to $n$ in the case of dense graphs.
+
+\begin{algorithm}
+  \caption{bool detectCycle(graph)}\label{alg:3}
+  \DontPrintSemicolon
+  \tcc{Assuming graph to be an adjacency list}
+  Initialize Set $notVisited$\;
+  Initialize Queue $toVisit$\;
+  \For{$i=0$ \KwTo $graph.size() - 1$}{
+    \tcc{Add all nodes to the $notVisited$ set}
+    $notVisited.add(graph[i])$\;
+  }
+  \While{$notVisited.size() > 0$}{
+    \tcc{Add unconnected nodes}
+    $toVisit.enqueue(notVisited[0])$\;
+    $parent \gets$ null\;
+    \While{$toVisit$ is not empty}{
+      $current \gets toVisit.dequeue()$\;
+      $notVisited.delete(current)$\;
+      \For{$node$ in $graph[current]$}{
+        \If{$node$ is not $parent$}{
+          \eIf{$node$ is not in $notVisited$}{
+            \tcc{Cycle exists}
+            \Return True\;
+          }{
+            $toVisit.enqueue(node)$\;
+          }
+        }
+      }
+      $parent \gets current$\;
+    }
+  }
+  \tcc{No cycle found after traversing all the nodes}
+  \Return False
+\end{algorithm}
+\textbf{Steps:}
+\begin{itemize}
+\item Store all non visited nodes and remove each one on visit.
+\item Until all nodes are visited, enqueue the first non visited node to a queue.
+\item Then remove it from non visited nodes and add all its neighbours other than its parent(the node which put it in the queue).
+\item If one of the nodes added by it is already visited then there is a cycle.
+\item Repeat this till a cycle is found or all the nodes are visited.
+\item No cycle exists if all the nodes are visited and no cycle is found.
+\end{itemize}
+
+\pagebreak
+\section{Hash Table}
+\label{sec:4}
+
+\paragraph{(a)}
+
+\textbf{Best time complexity} will be \verb~O(1)~ as when every key has a unique hash as when the index is known, finding item by index has \verb~O(1)~ time complexity in an array.\\
+
+\textbf{Worst time complexity} will be \verb~O(k)~ as when every key has the same hash the lookup operation will traverse maximum \verb~k~ buckets to find the key.\\
+
+\textbf{Average/Expected time complexity} will be \verb~O(1)~. As we can see that the lookup operation traverses more than once if atleast 2 keys have the same hash and since its given that all the keys in the table are uniformly randomly distributed in $[0,R]$, we know that given that a particular bucket is filled, for another key to have the same hash, the probability is $\frac{\lfloor \frac{R}{b} \rfloor}{R} \approx \frac{1}{b}$. From this we can see as the number of traverses increases per lookup, its probability decreases exponentially. Since this converges to some constant we can say that it takes approximately constant time.
+
+\paragraph{(b)}
+Since Hash Table has very good lookup, it is good for storing dictionaries, implementing sets, and for all applications which require frequent lookups but less add and delete.\\
+
+Hash Table doesn't support/benefit operations such as finding smallest/largest key, iterating on some range,.. Also it is bad for applications where there is high chance of data collision.
+
+\section{Complexity Analysis}
+\label{sec:5}
+\begin{align*}
+  f_1(n) &= 10^n            &\implies log_2f_1(n) = nlog_210\\
+  f_2(n) &= n^{1/3}          &\implies log_2f_2(n) = \frac{1}{3}log_2n\\
+  f_3(n) &= n^n             &\implies log_2f_3(n) = nlog_2n\\
+  f_4(n) &= log_2n          &\implies log_2f_4(n) = log_2log_2n\\
+  f_5(n) &= 2^{\sqrt{log_2n}} &\implies log_2f_5(n) = \sqrt{log_2n}\\
+\end{align*}
+
+From this we can see that,
+\begin{align*}
+  &O(log_2f_4(n))<O(log_2f_5(n))<O(log_2f_2(n))<O(log_2f_1(n))<O(log_2f_3(n))\\
+  \implies &O(f_4(n))<O(f_5(n))<O(f_2(n))<O(f_1(n))<O(f_3(n)), 
+\end{align*}
+\[\boxed{\therefore \text{growth rate: }f_4(n)<f_5(n)<f_2(n)<f_1(n)<f_3(n)}\]
+
+
+\pagebreak
+\section{Complexity Analysis vs Empirical Analysis}
+\label{sec:6}
+
+\paragraph{Complexity Analysis}
+\begin{itemize}
+\item Complexity Analysis is done for an algorithm.
+\item It is independent of the machine/hardware and can be used to universally compare algorithms.
+\item It allows to analyse the algorithm for all possible input.
+\item It can be used as a filter for most of the algorithms as it is not possible to do empirical analysis for all possible algorithms.
+\end{itemize}
+
+\paragraph{Empirical Analysis}
+\begin{itemize}
+\item Empirical Analysis is done for an implementation of an algorithm
+\item In practice, we will often need to resort to empirical
+rather than complexity analysis to compare programs.
+\item It tells us about performance of the
+algorithm “on average” for real instances.
+\item The algorithm may not capture important effects of the hardware architecture that arise in practice.
+\item There may be implementational details that affect constant factors and are not captured by asymptotic analysis.
+\item But since it is machine dependent, it cannot be used to compare algorithms universally.
+\item The performance analysis may not be accurate as it depends on the data used. And it is generally impossible to check for all possible data.
+\end{itemize}
+
+\pagebreak
+\section{In Order traversal without recursion}
+\label{sec:7}
+
+\begin{algorithm}
+  \caption{void inorderTraversal(root)}\label{alg:7}
+  \DontPrintSemicolon
+  Initialize Stack $st$\;
+  $top \gets root$\;
+  \While{$top$ is not null}{
+    \tcc{add root to stack if left exists}
+    \While{\verb~top->left~ exists}{
+      $st.push(top)$\;
+      $top \gets$ \verb~top->left~\;
+    }
+    \tcc{print root if left doesn't exist}
+    print \verb~top->data~\;
+    \tcc{pop from stack and print if right doesn't exist and stack is not empty}
+    \While{\verb~top->right~ doesn't exist and $st.isEmpty() = False$}{
+      $top \gets stack.pop()$\;
+      print \verb~top->data~\;
+    }
+    \tcc{run the loop for right sub-tree if it exists}
+    $top \gets$ \verb~top->right~\;
+  }
+\end{algorithm}
+\textbf{Steps:}
+\begin{enumerate}
+\item Set root as the current node.
+\item If left node exists, make it current and add root to stack.
+\item Print the current node if left node doesn't exist.
+\item If right node doesn't exist, pop the stack, set it as current node and print it.
+\item Repeat the above step until the current node has a right node or the stack is not empty.
+\item If right node exists for a node, goto step 1 with the right node as root.
+\end{enumerate}
+
+\pagebreak
+\section{PySpark}
+\label{sec:8}
+
+\textbf{Pseudo Code}:
+\begin{verbatim}
+marksRDD = sc.textFile(“marks.csv”); 
+courseRDD = marksRDD.filter(lambda x : x.split(“,”)[1] == “DS221”); 
+pairRDD = courseRDD.map(lambda y :  
+( y.split(“,”)[0], float(y.split(“,”)[2]) ) ); 
+gradesRDD = pairRDD.map(lambda k,v:  
+  (k, “A”) if v > 80 else  
+    ((k, “B”) if v > 70 else  
+       ((k, “C”) if v > 60 else (k, “D”)) 
+    ) 
+  ); 
+ 
+gradesRDD.collect(); 
+\end{verbatim}
+
+\textbf{Example}:
+\begin{verbatim}
+1,DS221,90
+2,DS211,85
+3,DS221,50
+4,DS211,40
+5,DS221,70
+6,DS220,72
+7,DS221,65
+8,DS220,69
+9,DS221,75
+\end{verbatim}
+
+\begin{itemize}
+\item \textbf{marksRDD} contains an array of ``studentID,courseID,marks''
+\begin{verbatim}
+["1,DS221,90",
+"2,DS211,85",
+"3,DS221,50",
+"4,DS211,40",
+"5,DS221,70",
+"6,DS220,72",
+"7,DS221,65",
+"8,DS220,69",
+"9,DS221,75"]
+\end{verbatim}
+\item \textbf{courseRDD} contains an array of ``studentID,courseID,marks'' with courseID as ``DS221''
+\begin{verbatim}
+["1,DS221,90",
+"3,DS221,50",
+"5,DS221,70",
+"7,DS221,65",
+"9,DS221,75"]
+\end{verbatim}
+\item \textbf{pairRDD} contains an array of ``(studentID,marks)'' of course ``DS221''
+\begin{verbatim}
+[("1",90),
+("3",50),
+("5",70),
+("7",65),
+("9",75)]
+\end{verbatim}
+\item \textbf{gradesRDD} contains an array of ``studentID,grades'' based on the their marks
+\begin{verbatim}
+[("1","A"),
+("3","D"),
+("5","C"),
+("7","C"),
+("9","B")]
+\end{verbatim}
+\item \verb~gradesRDD.collect()~ displays the contents of \verb~gradesRDD~
+\end{itemize}
+\textbf{Output}
+\begin{verbatim}
+[("1","A"),
+("3","D"),
+("5","C"),
+("7","C"),
+("9","B")]
+\end{verbatim}
+
+\pagebreak
+\section{Arrange 8 queens in a chess board}
+\label{sec:9}
+
+\textbf{Algorithm}:
+Start placing the queens from left to right. The first queen has 8 chances. Then next queen (in the second column) has 8 - places prohibited by 1st. The third queen has 8 - places prohibited by 1st and 2nd and so on.. Once all the 8 queens are placed, the list of queens is printed.\\
+\begin{algorithm}[H]
+  \caption{void arrangeQueens(queens)}\label{alg:9}
+  \DontPrintSemicolon
+  $currentColumn \gets queens.size()$\;
+  \eIf{$currentColumn = 8$}{
+    print $queens$\;
+  }{
+    Initialize Set $set$\;
+    \For{$i=0$ \KwTo $currentColumn - 1$}{
+      $set.add(queens[i])$\;
+      \If{$queens[i] + currentColumn - i \leq 7$}{
+        $set.add(queens[i] + currentColumn - i)$\;
+      }
+      \If{$queens[i] - currentColumn + i \geq 0$}{
+        $set.add(queens[i] - currentColumn + i)$\;
+      }
+    }
+    \For{$i=0$ \KwTo $7$}{
+      \If{$i$ doesn't exist in $set$}{
+        $arrangeQueens(queens.push(i))$\;
+      }
+    }
+  }
+\end{algorithm}
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

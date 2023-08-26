@@ -1,0 +1,396 @@
+\documentclass{article}
+
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancybox}
+\setlength\parindent{0pt}
+
+\newcommand{\T}[1]{\underset{\sim}{#1}}
+% \newcommand{\T}[1]{\stackrel{#1}{\sim}}
+
+\begin{document}
+\fontsize{14pt}{18pt}\selectfont
+
+\section*{Machine Epsilon}
+\label{sec:machine-epsilon}
+
+Consider the discrete subset \textbf{F} of real numbers \textbf{R} to be our floating point number system depending on the precision we choose then for all $x \in \mathbf{R}$, there exists $x' \in \mathbf{F}$ such that
+\begin{equation}\label{mac-eps_1}
+  \frac{|x - x'|}{|x|} \leq \epsilon_{machine}
+\end{equation}
+
+$f:\mathbb{R} \rightarrow \mathbb{F}$ is a round off function then 
+\begin{equation}\label{mac-eps_2}
+  f'(x) = x(1 + \epsilon)
+\end{equation}
+i.e., there exists an $\epsilon$ with $|\epsilon| \leq \epsilon_{machine}$ such that equation \ref{mac-eps_2} is true.
+
+\begin{equation}
+  \begin{split}
+    \text{In single precision: } &\epsilon_{machine} \approx \frac{2^{-23}}{2} \approx 5.96 \times 10^{-8}\\
+    \text{In double precision: } &\epsilon_{machine} \approx \frac{2^{-52}}{2} \approx 1.11 \times 10^{-16}
+  \end{split}
+\end{equation}
+
+\section*{Fundamental operations in floating point arithmetic}
+\label{sec:fun-op}
+
+Classical arithmetic operations are $+,-,\times$ and $/$
+\newline
+One a computer, we have analogous operations on $\mathbb{F}$, denote these operations
+---------------------Missing-------------
+\newline
+
+Let us consider $x, y \in \mathbb{F}$ and * denotes the arithmetic operations, there exists $\epsilon$ with $|\epsilon| \leq \epsilon_{machine}$ such that
+\begin{equation}
+  x * y = f'(x * y) = (x * y)(1 + \epsilon)
+\end{equation}
+i.e., every operation of \index{floating}floating point arithmetic is exact upto a relative error $\epsilon$ of size atleast $\epsilon$
+
+\section*{Conditioning and Stability}
+\label{sec:con-stab}
+
+Conditioning: sensitivity of a mathematical problem to perturbations in input
+\newline\newline
+y = f(x),
+\begin{itemize}
+  \item x $\rightarrow$ input to the problem (data)
+  \item f $\rightarrow$ represents the problem
+  \item y $\rightarrow$ represents a solution
+\end{itemize}
+- What happens to $\mathbf{y}$ when the given input \textbf{x} is perturbed slightly?
+
+\section{Absolute contiion number}
+\label{sec:abs-cond}
+
+If the small perturbation in \textbf{x} is denoted by $\delta$x then let the resulting perturbation in the solution be represented as $\delta$\textbf{f} i.e., $\delta$f = f(x + $\delta$x) - f(x). Then the absolute condition number $k' = k(x)$ of the problem \textbf{f} at \textbf{x} is given by
+\begin{equation}
+\mathbf{K}(x) = \max_{\delta x}\left(\frac{||\delta \mathbf{f}||}{||\delta \mathbf{x}||}\right)
+\end{equation}
+for infinitesimally small $\delta$f and $\delta$x
+\newline
+If \textbf{f} has a derivative, we can evaluate Jacobian matrix J(x) as $J_{ij} = \frac{\delta \mathbf{f}_i}{\delta x_j}$
+\newline
+We have $\delta \mathbf{f} \approx J(x)\delta \mathbf{x}$, equality $||\delta \mathbf{x}|| \rightarrow 0$
+\begin{equation}
+  \begin{split}
+    K(x) &= \max_{\delta x}\frac{||J(x)\delta \mathbf{x}||}{||\delta \mathbf{x}||}\\
+    K(x) &= ||J(x)||\\
+  \end{split}
+\end{equation}
+
+\section{Relative Condition Number}
+\label{sec:rel-cond}
+
+Assume $\delta$x is infinitesimal
+\begin{equation}
+  K^2 = \max_{\delta x} \left(\frac{\frac{||\delta \mathbf{f}||}{||\mathbf{f}||}}{\frac{||\delta \mathbf{x}||}{||\mathbf{x}||}}\right)
+  = \max_{\delta x} \left(\frac{\frac{||\delta \mathbf{f}||}{||\delta \mathbf{x}||}} {\frac{||\mathbf{f}(x)||}{||\mathbf{x}||}}\right)
+  = \frac{||J(x)||}{||\frac{f(x)}{x}||}
+\end{equation}
+
+Examples:
+\begin{enumerate}
+\item f(x) = x/2 , $x \in \mathbb{R}$\\
+  Input: x, Output: x/2, J = $\frac{df}{dx}$ = 1/2\\
+  \[
+    K' = \frac{||J||}{\frac{||f(x)||}{||x||}} = \frac{1/2}{|\frac{x/2}{x}|}
+  \]
+\item $f(x) = x_1 - x_2$, where $\mathbf{x} = \begin{pmatrix} x_1\\x_2 \end{pmatrix}$\\
+  \[
+    J = \begin{pmatrix}
+          \frac{\delta\mathbf{f}}{\delta\mathbf{x}_1}
+          &\frac{\delta\mathbf{f}}{\delta\mathbf{x}_2}
+        \end{pmatrix}
+      = \begin{pmatrix} 1&-1 \end{pmatrix}
+  \]
+\end{enumerate}
+
+\[\begin{split}
+    K^R = \frac{||J||_{\infty}}{||\mathbf{f}(x)||_{\infty}/||x||_{\infty}}
+    = \frac{2}{\frac{||f(x)||}{\max\{|x_1|, |x_2|\}}}
+    = \frac{2\max\{|x_1|, |x_2|\}}{|x_1 - x_2|}
+\end{split}\]
+if $|x_1 - x_2|$ is small $\approx 0$, $K^R$ is large and is not well conditioned
+
+-----------------------Missing---
+\[\begin{split}
+    K^R = \frac{||J||_1}{||\mathbf{f}(x)||_1/||x||_1}
+    = \frac{2}{\frac{||f(x)||}{\max\{|x_1|, |x_2|\}}}
+    = \frac{2\max\{|x_1|, |x_2|\}}{|x_1 - x_2|}
+\end{split}\]
+
+\section*{Eigen values of a matrix}
+\label{sec:eigen}
+
+Input: A\\
+Output: Eigenvalues $\lambda$ of $\underset{\sim}{A}$
+\newline\newline
+Consider a symmetric matrix $\mathbf{A} = \mathbf{A}^T$
+$\lambda$ and $\lambda + \delta\lambda$ are corresponding eigen values of \textbf{A} and $\mathbf{A} + \delta\mathbf{A}$ then
+
+\begin{equation}
+|\delta\lambda| \leq ||\delta\mathbf{A}||_2
+\end{equation}
+
+Relative condition number:
+\begin{equation}
+ \begin{split}
+    &= \max_{\delta\mathbf{A}}\frac{\left(\frac{|\delta\lambda|}{|\lambda|}\right)}{\frac{||\delta\mathbf{A}||_2}{||\mathbf{A||}}}
+    = \max_{\delta\mathbf{A}}\frac{|\delta\lambda|}{|\lambda|}.\frac{||\mathbf{A}||}{||\delta\mathbf{A}||}\\
+      \text{Relative condition number}(k) &= \frac{||A||_2}{|\lambda|}
+ \end{split}
+\end{equation}
+
+\section{Conditioning of a matrix-vector multiplicatoin}
+\label{sec:cond-matr-vect}
+Fixed A:
+Input: x, Output: Ax
+y = Ax
+\[\hat{K} = \frac{||A||.||x||}{||Ax||}\]
+\newline
+
+A is non singular
+\[
+\begin{split}
+=> x = A A^{-1}x
+\implies ||x|| = ||A A^{-1} x||\\
+               = ||A^{-1} A x||\\
+               \leq ||A^{-1}||.||A x||
+\end{split}
+\]
+\newline
+
+Compute $A^{-1}b$ for a given input $b$
+Input: b
+Output: $A^{-1}b = x$
+\begin{align*}
+  &\hat{k} = \frac{||A^{-1}||.||b||}{||A^{-1}b||} = \frac{||A^{-1}||.||b||}{||x||}\\
+  \implies &\hat{k} \leq \Vert A^{-1}\Vert\Vert A\Vert
+\end{align*}
+
+Result: $A\in \mathbb{R}^{m\times n}$ and non-singular and consider $Ax = b$, the problem of computing for an input x
+\begin{align*}
+  \hat{k} = \frac{||A||.||x||}{||Ax||} \leq \Vert A\Vert\Vert A^{-1}\Vert
+\end{align*}
+
+The problem of computing of given input b has condition number 
+
+\subsection{Condition number of a matrix}
+\label{sec:cond-numb-matr}
+
+\begin{align*}
+  k(A) = \Vert A \Vert \Vert A^{-1} \Vert
+\end{align*}
+if $k(A)$ is small, A is said to be well conditioned
+\begin{align*}
+  k(A) = \Vert A \Vert_2 \Vert A^{-1} \Vert_2
+\end{align*}
+$\Vert A \Vert_2 \rightarrow \sigma_1$ (max singular matrix value of A)
+$\Vert A^{-1} \Vert_2 \rightarrow \frac{1}{\sigma_m}$ (min singular matrix value of A)
+\begin{align*}
+  \implies k(A) = \frac{\sigma_1}{\sigma_m}
+\end{align*}
+Non zero singular values of A are square roots of non-zero eigen values of $A^TA$ or $AA^T$
+\begin{align*}
+  k(A) = \frac{\sqrt{\lambda_{max}(A^TA)}}{\sqrt{\lambda_{min}(A^TA)}}
+\end{align*}
+If A is a symmetrix matrix
+\begin{align*}
+  k(A) = \frac{|\lambda_{max}(A)|}{|\lambda_{min}(A)|}
+\end{align*}
+
+If $A \in \mathbb{R}^{m \times n}$ ($m > n$), and $A^+ = (A^TA)^{-1}A^T$ (pseudo inverse of A)
+\begin{align*}
+  k(A) = \Vert A \Vert \Vert A^+ \Vert
+\end{align*}
+
+\subsection{Conditioning of a system of equations}
+\label{sec:cond-syst-equat}
+
+Fix b:
+Consider $f: A \rightarrow x = A^{-1}b$
+Input: A
+Output: x
+
+% Allowing perturbations in A
+\begin{align*}
+  &(A + \delta A)(x + \delta x) = b\\
+  \implies &Ax + A \delta x + \delta Ax + \delta A \delta x = b\\
+  \implies &A \delta x + \delta Ax = 0\\
+  \implies &\delta x = -A^{-1}(\delta A)x\\
+  \implies &\Vert \delta x \Vert = \Vert -A^{-1}(\delta A)x \Vert
+             \leq \Vert A^{-1} \Vert \Vert \delta Ax \Vert\\
+  \implies &\boxed{\Vert \delta x \Vert
+             \leq \Vert A^{-1} \Vert \Vert \delta A \Vert \Vert x \Vert}\\
+\end{align*}
+
+\begin{align*}
+  \hat{k} = \max_{\delta A}\frac{\frac{\Vert \delta x \Vert}{\Vert x \Vert}}{\frac{\Vert \delta A \Vert}{\Vert A \Vert}}
+  \implies \frac{\frac{\Vert \delta x \Vert}{\Vert x \Vert}}{\frac{\Vert \delta A \Vert}{\Vert A \Vert}} \leq \Vert A \Vert \Vert A^{-1} \Vert\\
+\end{align*}
+Perturbation of $\delta A$ exists, which makes above inequality an equality
+\begin{align*}
+  \hat{k} = \Vert A \Vert \Vert A^{-1} \Vert = k(A)
+\end{align*}
+
+\section{Stability of Algorithms}
+\label{sec:stability-algorithms}
+
+Getting the best answer for a given problem though it is not an exact answer for the problem
+
+\underline{\textbf{Algorithm}}:
+$f: X \rightarrow Y$,
+where X is the vector space of data, 
+and Y is the vector space of solution
+
+$y = f(x)$, where $x \in X, y \in Y$
+An algorithm can be viewed as a function $\tilde{f}$ which takes the same input $x \in X$
+and maps it to a result which is a collection of floating point numbers that belongs to Y
+
+\underline{\textbf{Accuracy}}: A good algorithms $\tilde{f}$ should be designed in a way
+such that it closely approximates the underlying problem f.
+
+Absolute error of computation: $\Vert \tilde{f}(x) - f(x) \Vert$
+Relative error of computation: $\frac{\Vert \tilde{f}(x) - f(x) \Vert}{\Vert f(x) \Vert}$
+
+We say that $\tilde{f}$ is an accurate algorithm for $f$ for all relevant input x
+\begin{align*}
+  2\frac{\Vert \tilde{f}(x) - f(x) \Vert}{\Vert f(x) \Vert} = O(\epsilon_{M})
+\end{align*}
+
+Forward relative error:
+If f is ill-conditioned
+\begin{align*}
+  \max_{\delta x} \frac{
+  \frac{\Vert \delta f \Vert}{\Vert f \Vert}
+  }{
+  \frac{\Vert \delta x \Vert}{\Vert x \Vert}
+  }
+  = \hat{k} \text{ is very large}
+\end{align*}
+
+Since $\frac{\Vert \delta x \Vert}{\Vert x \Vert} = O(\epsilon_M)$, $\frac{\Vert \delta f \Vert}{\Vert f \Vert} \leq \hat{k}O(\epsilon_M)$
+
+We can say an algorithm $\tilde{f}$ for solving a problem $f$ is stable for all input data $x$ if
+\begin{align*}
+\frac{||\tilde{f}(x) - f(\tilde{x})||}{||f(\tilde{x})||} = O(\epsilon_M)
+\end{align*}
+for some $\tilde{x}$ satisfying
+\begin{align*}
+\frac{||\tilde{x} - x||}{||x||} = O(\epsilon_M)
+\end{align*}
+
+A stable algorithm gives nearly right answer to nearly right question. $||\tilde{f}(x) - f(\tilde{x})||$ is called backward error
+
+\subsection{Backward Stability}
+\label{sec:backward-stability}
+
+$\tilde{f}$ for a problem $f$ such that $\boxed{\tilde{f}(x) = f(\tilde{x})}$. That is exactly right answer for n nearly right question
+
+\subsubsection{Stability of floating point arithmetic operation}
+\label{sec:stab-float-point}
+
+\begin{align*}
+  & f'(x) = x(1 + \epsilon),     &\text{ where } |\epsilon| < \epsilon_M\\
+  & x * y = x * y(1 + \epsilon), &\text{ where } |\epsilon| < \epsilon_M\\
+\end{align*}
+
+\paragraph{Example}: Foating point arithmetic for $-$
+\begin{align*}
+  &f(\T{x}) = x_1 - x_2\\
+  &x_1 \rightarrow f'(x_1), x_2 \rightarrow f'(x_2)\\
+  &f'(x_1) = x_1(1 + \epsilon_1), f'(x_2) = x_2(1 + \epsilon_2)\\
+\end{align*}
+Algorithm:
+\begin{align*}
+f'(x_1) -' f'(x_2) &= \tilde{f}\\
+  &= x_1(1 + \epsilon_1) -' x_2(1 + \epsilon_2)\\
+  &= (x_1(1 + \epsilon_1) - x_2(1 + \epsilon_2))(1 + \epsilon_3)\\
+  &= x_1(1 + \epsilon_1)(1 + \epsilon_3) - x_2(1 + \epsilon_2)(1 + \epsilon_3)\\
+  &= x_1(1 + \epsilon_1)(1 + \epsilon_3) - x_2(1 + \epsilon_2)(1 + \epsilon_3)\\
+  &= x_1(1 + \epsilon_1 + \epsilon_3) - x_2(1 + \epsilon_2 + \epsilon_3)\\
+  &= x_1(1 + \epsilon_4) - x_2(1 + \epsilon_5)\\
+  \implies f'(x_1) - f'(x_2) &= x_1(1 + \epsilon_4) - x_2(1 + \epsilon_5)\\
+  &= \tilde{x}_1 - \tilde{x}_2\\
+  &= f(\tilde{x}_1, \tilde{x}_2) = f(\tilde{x})\\
+\end{align*}
+
+\paragraph{Example 2}: Outer product between 2 vectors $\T{x} \in \mathbb{R}^m$, $\T{y} \in \mathbb{R}^m$ and $\T{A} = \T{x}\T{y}^T$ i.e., $A_{ij} = x_iy_j$
+\begin{align*}
+  \tilde{f}(\T{x}, \T{y}) &= \tilde{A}_{ij} = f'(x_i) \times f'(y_j)\\
+                          &= f'(x_i) \times f'(y_j) \times (1 + \epsilon_3^{ij})\\
+                          &= x_i(1 + \epsilon_1^i) \times y_j(1 + \epsilon_2^j) \times (1 + \epsilon_3^{ij})\\
+                          &= x_iy_j(1 + \epsilon_1^i)(1 + \epsilon_2^j)(1 + \epsilon_3^{ij})\\
+                          &= x_iy_j(1 + \epsilon_1^i + \epsilon_2^j)(1 + \epsilon_3^{ij})\\
+                          &= x_iy_j(1 + \epsilon_4^{ij})(1 + \epsilon_3^{ij})\\
+\end{align*}
+\paragraph{Verify:} $\tilde{f}(\T{x}, \T{y}) = f(\tilde{x}, \tilde{y}) = \T{\tilde{x}}\T{\tilde{y}}^T = (\T{x} + \delta \T{x})(\T{y} + \delta \T{y})^T$
+
+\paragraph{Exercise:} Adding 1 to a real number i.e., $f(x) = x + 1$, $x \in \mathbb{R}$
+\begin{align*}
+  \tilde{f}(x) &= f'(x) +' 1\\
+               &= (f'(x) + 1)(1 + \epsilon_1)\\
+               &= (x(1 + \epsilon_2) + 1)(1 + \epsilon_1)\\
+               &= (x + x\epsilon_2 + 1)(1 + \epsilon_1)\\
+               &= x + x\epsilon_2 + 1 + x\epsilon_1 + x\epsilon_1\epsilon_2 + \epsilon_1\\
+               &= (1 + \epsilon_1) + x(1 + \epsilon_1 + \epsilon_2 + \epsilon_1\epsilon_2)\\
+\end{align*}
+Is it stable?
+
+\subsubsection{Unstable Algorithms}
+\label{sec:unstable-algorithms}
+
+Computing eigen values of symmetric matrix
+Algorithm:
+\begin{itemize}
+\item Find the coefficients of $p(\lambda) = det(\T{A}-\lambda \T{I})$
+\item Roots of $p(\lambda)$
+\end{itemize}
+
+\paragraph{Example} $\T{A} = \begin{pmatrix} 1&0\\0&1 \end{pmatrix}$,
+\begin{align*}
+  \implies & \lambda^2 - p\lambda + 1; \text{ Roots} \rightarrow \frac{p \pm \sqrt{p^2 - 4}}{2};
+             \text{ where }\tilde{p} = p(1 + \epsilon), |\epsilon| < \epsilon_M\\
+  \implies & \text{Roots: } \frac{p(1 + \epsilon) \pm \sqrt{(p(1 + \epsilon)^2 - 4}}{2}\\
+\end{align*}
+If $p = 2$, then the roots are $(1 + \epsilon) \pm \sqrt{2\epsilon}$. This implies that $error \approx ()(\sqrt{\epsilon}) > O(\epsilon_M)$
+
+\subsubsection{Accuracy of a backward stable algorithm}
+\label{sec:accur-backw-stable}
+
+If a backward stable algorithm is applied to solve a problem $f$ with condition number $\kappa$, the relative forward errors satisfy
+\begin{align*}
+\frac{||\tilde{f}(x) - f(x)||}{||f(x)||} = O(\kappa\epsilon_M)\\
+\end{align*}
+Proof: Since $f$ is backward stable, $\tilde{f}(x) = f(\tilde{x})$ where $\frac{||\T{x} - \T{\tilde{x}}||}{||\T{x}||} = O(\epsilon_M)$
+\begin{align*}
+  \kappa(x) &= \max_{\delta x}\frac{\frac{||\delta f||}{||f||}}{\frac{||\delta x||}{||x||}}\\
+  \implies \frac{\frac{||f(\tilde{x}) - f(x)||}{||f(x)||}}{\frac{||\tilde{x} - x||}{||x||}} &\leq \kappa(x)\\
+  \implies \frac{||f(\tilde{x}) - f(x)||}{||f(x)||} &\leq \kappa(x).\frac{||\tilde{x} - x||}{||x||}\\
+  \implies \frac{||f(\tilde{x}) - f(x)||}{||f(x)||} &\leq O(\kappa\epsilon_M)\\
+\end{align*}
+
+\section{Singular Value Decomposition (SVD)}
+\label{sec:svd}
+
+\subsection{Geometric Intuition}
+\label{sec:svd:intuition}
+
+$\T{u}_1 ,\T{u}_2$ are the principal semi-axes of an ellipse with lengths $\sigma_1, \sigma_2$. $\tilde{v}_1, \tilde{v}_2$ are the pre-image vectors generating $\tilde{u}_1, \tilde{u}_2$ as the axes of ellipse
+
+\begin{align*}
+  \implies \tilde{A}\tilde{v}_1 &= \sigma_1\tilde{u}_1,
+  \tilde{A}\tilde{v}_1 = \sigma_1\tilde{u}_1\\
+  \implies \tilde{A}[\tilde{v}_1\,\tilde{v}_2]
+\end{align*}
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

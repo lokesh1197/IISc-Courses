@@ -1,0 +1,51 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyvrb}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\title{Q3 Assignment 3}
+\author{Lokesh Mohanty (SR no: 21014)}
+\date{November 2022}
+
+\begin{document}
+
+\maketitle
+
+\section*{Normal Equation}
+
+\begin{align*}
+  \mathbf{\hat{Y}} &= \mathbf{X}\mathbf{\hat{w}} \\
+  \text{least squares: } &\min_{\mathbf{\hat{w}}} \frac{1}{2}(\mathbf{Y} - \mathbf{\hat{Y}})^T(\mathbf{Y} - \mathbf{\hat{Y}}) \\
+  \implies &\min_{\mathbf{\hat{w}}} \frac{1}{2}(\mathbf{Y} - \mathbf{X}\mathbf{\hat{w}})^T(\mathbf{Y} - \mathbf{X}\mathbf{\hat{w}}) \\
+  \implies &\frac{d}{d\mathbf{\hat{w}}}\frac{1}{2}(\mathbf{Y} - \mathbf{X}\mathbf{\hat{w}})^T(\mathbf{Y} - \mathbf{X}\mathbf{\hat{w}}) = 0\\
+  \implies &\frac{d}{d\mathbf{\hat{w}}}(\mathbf{Y}^T\mathbf{Y} - \mathbf{Y}^T\mathbf{X}\mathbf{\hat{w}} - \mathbf{\hat{w}}^T\mathbf{X}^T\mathbf{Y} + \mathbf{\hat{w}}^T\mathbf{X}^T\mathbf{X}\mathbf{\hat{w}} = 0\\
+  \implies &\frac{d}{d\mathbf{\hat{w}}} (\mathbf{X}\mathbf{\hat{w}})^T(\mathbf{X}\mathbf{\hat{w}}) - (\mathbf{X}\mathbf{\hat{w}})^T\mathbf{Y} = 0 \\
+  \implies &\mathbf{X}^T\mathbf{X}\mathbf{\hat{w}} - \mathbf{X}^T\mathbf{Y} = 0 \\
+  \implies &\mathbf{\hat{w}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{Y} \\
+\end{align*}
+
+\section*{Linear Regression 1D}
+
+\begin{align*}
+  \hat{y} &= \hat{w}_0 + x\hat{w}_1 \\
+  \text{As per least squares method, } \mathbf{\hat{w}} &= (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{Y} \\
+  \implies &(\mathbf{X}^T\mathbf{X})\mathbf{\hat{w}} = \mathbf{X}^T\mathbf{Y} \\
+  \implies &\begin{pmatrix} N & \sum{x^i} \\ \sum{x^i} & \sum{(x^i)^2} \end{pmatrix}
+           \begin{pmatrix} \hat{w}_0 \\ \hat{w}_1 \end{pmatrix} =
+           \begin{pmatrix} \sum{y^i} \\ \sum{x^iy^i}\end{pmatrix} \\
+  \implies &N\hat{w}_0 + \hat{w}_1\sum{x^i} = \sum{y^i}, \hat{w}_0\sum{x^i} + \hat{w}_1\sum{(x^i)^2} = \sum{x^iy^i} \\
+  &\text{Solving the above 2 equations, we get}\\
+  &\hat{w}_0 = \frac{\sum{y^i}\sum{(x^i)^2} - \sum{x^i}\sum{x^iy^i}}{N\sum{(x^i)^2} - (\sum{x^i})^2} \\
+  &\hat{w}_1 = \frac{N\sum{x^iy^i} - \sum{x^i}\sum{y^i}}{N\sum{(x^i)^2} - (\sum{x^i})^2} \\
+\end{align*}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
