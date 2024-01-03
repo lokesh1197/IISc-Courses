@@ -1,0 +1,294 @@
+% Created 2023-04-11 Tue 05:29
+% Intended LaTeX compiler: pdflatex
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usetheme{Madrid}
+\author{Lokesh Mohanty}
+\date{GTMD 2023}
+\title{Optimality and Stability in Federated Learning}
+\institute[IISc]{ Department of Computational and Data Sciences\\ Indian Institute of Science}
+\logo{\includegraphics[height=1cm]{logo.png}}
+\hypersetup{
+ pdfauthor={Lokesh Mohanty},
+ pdftitle={Optimality and Stability in Federated Learning},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.0.60 (Org mode 9.7-pre)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\makeatletter
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor\expandafter\ifblank\expandafter{\beamer@shortinstitute}{}{~~(\insertshortinstitute)}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle%
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+
+\begin{frame}[label={sec:org49560a8}]{Why is Federated Learning important?}
+\begin{itemize}
+\item Local learning with insufficient data leads to high variance
+\item Transferring data from multiple locations is expensive
+\item Data privacy can also be a huge concern
+\item Solution: Share the parameters obtained by local learning and take their weighted average to get the global parameters
+\end{itemize}
+
+\footnotetext{Li et al , Federated learning: Challenges, methods, and future directions, IEEE 2020}
+
+\begin{example}[Group of Hospitals]\label{sec:orgb2d6dc7}
+\begin{itemize}
+\item Data: Patients information
+\item Problem: Diagnosing the patients
+\item Issue:
+\begin{itemize}
+\item Patients data at a single hospital might not be sufficient due the problem having huge number of parameters
+\item Patients information cannot be shared with others
+\end{itemize}
+\end{itemize}
+\end{example}
+\end{frame}
+
+\begin{frame}[label={sec:org313ae7e}]{Limitations of Federated Learning}
+\begin{itemize}
+\item In federated learning, all the agents need not have the same underlying distribution
+\item This causes an increase in bias on joining a federation which leads to bias/variance trade-off
+\item Hasan\textsuperscript{1} formulated this as a hedonic game where the agents can choose to join a federation
+\item Hedonic game allows to analyze the incentives of agents to contribute resources towards federated learning
+\item This study considers federated learning as a hedonic game
+\end{itemize}
+
+\footnotetext[1]{Cengis Hasan, Incentive mechanism design for federated learning: Hedonic game approach, arXiv 2021}
+\note{Notes
+\begin{itemize}
+\item The global model obtained by federated learning might perform worse than the local models for some agents
+\item Here error-minimizing agents arrange themselves into disjoint federated coalitions
+\end{itemize}}
+\end{frame}
+
+\begin{frame}[label={sec:orgd230bfb}]{Overview}
+\begin{itemize}
+\item To analyze optimality and stability of federated learning, we need to make some assumptions on the agents and also we require a mathematical model of federated learning.
+\item Donahue\textsuperscript{1} formulated a model for error in federated learning and the stability of federated learning
+\item Donahue\textsuperscript{2} derived an algorithm to find an optimal arrangement and also analyzed optimality of federated learning
+\item Donahue\textsuperscript{2} then related stability and optimality by giving bounds for Price of Anarchy(PoA)
+\item Then we will go over some studies related to our project.
+\item We will then conclude by stating the limitations and future directions.
+\end{itemize}
+
+\footnotetext[1]{Kate Donahue and Jon Kleinberg, Model-sharing games: Analyzing federated learning under voluntary participation, AAAI 2021}
+\footnotetext[2]{Kate Donahue and Jon Kleinberg, Optimality and Stability in Federated Learning: A Game-theoretic Approach, NeurIPS 2021}
+\end{frame}
+
+\begin{frame}[label={sec:orgd507399}]{Assumptions on the agents}
+\begin{itemize}
+\item The assumptions made by Donahue\textsuperscript{1} on the agents are
+\begin{itemize}
+\item There are a fixed number of agents participating in federated learning
+\item Each agents has access to local data and can contribute resources towards learning a global model
+\item Agents are rational and self-interested (minimize their own error, while contributing as little as possible)
+\item Agents can communicate with each other to form coalitions, this allows them to increase their overall performance
+\item Error rates of each agent are known to all other agents. This allows for accurate calculation of optimal player arrangements
+\item All agents have equal bargaining power. This ensures that no single agent can dominate the coalition formation
+\end{itemize}
+\end{itemize}
+
+\footnotetext[1]{Kate Donahue and Jon Kleinberg, Optimality and Stability in Federated Learning: A Game-theoretic Approach, NeurIPS 2021}
+\end{frame}
+
+\begin{frame}[label={sec:org6a5dafc}]{Model of federated learning}
+\begin{itemize}
+\item Donahue\textsuperscript{1} analyzed 3 variations of federated learning
+\end{itemize}
+
+\footnotetext[1]{Kate Donahue and Jon Kleinberg, Model-sharing games: Analyzing federated learning under voluntary participation, AAAI 2021}
+
+\begin{columns}
+\begin{column}{0.45\columnwidth}
+\begin{block}{Uniform federation}
+Single global federation, all agents join this global federation
+\[ \hat{\theta}^f = \frac{1}{\sum_{i=1}^M n_i} \sum_{i=1}^M \hat{\theta}_i . n_i \]
+\end{block}
+\end{column}
+
+\begin{column}{0.45\columnwidth}
+\begin{block}{Coarse-grained federation}
+Single global federation, agents have the option to not join this federation
+\[ \hat{\theta}^w_j = w_j . \hat{\theta}_j + (1 - w_j) . \frac{1}{N} \sum_{i=1}^M \hat{\theta}_i . n_i \]
+\end{block}
+\end{column}
+\end{columns}
+\begin{block}{Fine-grained federation}
+\begin{columns}
+\begin{column}{0.6\columnwidth}
+Multiple federations, agents can choose to join any federation. Most generalized variation
+\end{column}
+
+\begin{column}{0.3\columnwidth}
+\[ \hat{\theta}^v_j = \sum_{i=1}^M v_{ji} \hat{\theta}_i \]
+\end{column}
+\end{columns}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org94e75b2}]{Stability}
+\begin{itemize}
+\item Donahue\textsuperscript{1} framed federated learning through the lens of cooperative game theory
+\item Each player wants to minimize their expected Mean-Squared-Error \(err_i(C_i)\)
+\item Derived exact terms for \(err_i(C_i)\)(
+\item Gave conditions for which arrangements will be individually stable
+\end{itemize}
+
+\footnotetext[1]{Kate Donahue and Jon Kleinberg, Model-sharing games: Analyzing federated learning under voluntary participation, AAAI 2021}
+\end{frame}
+
+\begin{frame}[label={sec:org1044ef3}]{Optimality Model}
+C \(\rightarrow\) Coalition, \(\theta_i \rightarrow\) Parameters of agent \(i\), \(n_i \rightarrow\) Data size of agent \(i\)
+
+\begin{block}{Error of a coalition for a particular agent}
+\[ err_j(C) = \frac{\mu_e}{\sum_{i \in C}n_i} + \sigma^2 . \frac{\sum_{i \in C, i \neq j} n_i^2 + \left( \sum_{i \in C, i \neq j} n_i \right)^2}{\left( \sum_{i \in C} n_i \right)^2}\]
+\end{block}
+
+\begin{columns}
+\begin{column}{0.45\columnwidth}
+\begin{block}{Parameter estimation of a coalition}
+Weighted average of parameters of all agents in the coalition
+ \[ \hat{\theta}_C = \frac{1}{\sum_{i \in C} n_i} . \sum_{i \in C} n_i . \hat{\theta}_i\]
+\end{block}
+\end{column}
+
+\begin{column}{0.45\columnwidth}
+\begin{block}{Optimality}
+Minimizes weighted average of errors across all agents
+\[ \frac{1}{\sum_{i=1}^M n_i} . \sum_{i=1}^M n_i . err_j(C_i) \]
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:org8fa5023}]{Optimality}
+\begin{itemize}
+\item It is first shown that either local learning or federation can be arbitrarily far from the optimal. This shows that optimal arrangement is not necessarily a trivial case
+\end{itemize}
+\begin{block}{Lemma}
+\(\forall \rho > 1\), there exists a setting where \alert{local learning} gives average error more than \(\rho\) times higher than optimal.
+\end{block}
+
+\begin{block}{Lemma}
+\(\forall \rho > 1\), there exists a setting where \alert{federating in the grand coalition} gives average error more than \(\rho\) times higher than optimal.
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org73a30ce}]{Optimality}
+\begin{itemize}
+\item An efficient algorithm for calculating an optimal arrangement is then derived
+\end{itemize}
+\begin{theorem}[Algorithm]\label{sec:orgfd9fe4b}
+Given a set of agents \(\{i\}\) with data size \(\{ n_i \}\)
+\begin{itemize}
+\item Start with every agent doing local learning
+\item Begin grouping agents in ascending order of size
+\item Stop when the first player would increase its error by joining
+\item Resulting arrangement is optimal
+\end{itemize}
+\end{theorem}
+\end{frame}
+
+\begin{frame}[label={sec:orgb798a08}]{Optimality}
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{itemize}
+\item The algorithm is proved by using building block lemmas which allows us to move from an arbitrary arrangement to an optimal one, in a cost-reducint way.
+\item This shows the correctness of the algorithm for calculating an optimal arrangement
+\end{itemize}
+\end{column}
+
+\begin{column}{0.4\columnwidth}
+\begin{block}{Building block lemmas}
+\begin{itemize}
+\item Stability
+\item Swapping
+\item Monotonicity of joining
+\item Monotonicity of leaving
+\item Merging
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:orgeb6cb62}]{Price of Anarchy}
+There are two cases where the Price of Anarchy is 1 (i.e., the optimal arrangement is stable)
+\begin{definition}[Price of Anarchy]\label{sec:orgd9785ec}
+Price of Anarchy describes trade-off 
+\[\text{Price of Anarchy (PoA)} = \frac{\text{Error of worst stable arrangement}}{\text{Error of optimal arrangement}}\]
+\end{definition}
+
+\begin{block}{Lemma}
+When all players are \alert{sufficiently large}, local learning is both optimal and stable
+\end{block}
+
+\begin{block}{Lemma}
+When all players are \alert{sufficiently small}, federation in grand coalition is both optimal and stable
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org0ba81f0}]{Price of Anarchy}
+\begin{itemize}
+\item To find its upper bound, we need to upper bound the error of worst stable arrangement and lower bound the error of optimal arrangement
+\item From our assumptions we know that an agent's error is upper bounded by its local learning
+\item With the help of sub-lemmas relying on each agent's data size and the size of coalition it is federating with, we prove the following theorem
+\end{itemize}
+\begin{theorem}[Constant Bound]\label{sec:org8b95283}
+\[ \text{PoA} = \frac{\text{maximum cost individually stable partition}}{\text{lowest cost (optimal) partition}} \leq 9\]
+\end{theorem}
+\end{frame}
+
+\begin{frame}[label={sec:org735ed63}]{Related Work}
+\begin{itemize}
+\item Donahue and Kleinberg\textsuperscript{1} studied models of fairness
+\item Hu et al.\textsuperscript{2} models clients behaviour in network
+\item Cui et al.\textsuperscript{3} tries to find collaboration equilibrium
+\item Le et al.\textsuperscript{4} analyzes incentives for agents to contribute computational resources while using an auction approach
+\end{itemize}
+
+\footnotetext[1]{Kate Donahue and Jon Kleinberg, Models of fairness in federated learning, CoRR 2021}
+\footnotetext[2]{Hu et al., Federated Learning as a Network Effects Game. CoRR 2021}
+\footnotetext[3]{Cui et al., Collaboration equilibrium in federated learning. CoRR 2021}
+\footnotetext[4]{T. H. Thi Le et al., An Incentive Mechanism for Federated Learning in Wireless Cellular Networks: An Auction Approach. IEEE 2021}
+\end{frame}
+
+\begin{frame}[label={sec:org245f002}]{Conclusion}
+\begin{itemize}
+\item We deeply studied the paper by Donahue\textsuperscript{1} which presents a game-theoretic approach to federated learning that can improve accuracy rates while providing certain guarantees around social good properties such as total error
+\item This is a theoritical study and hence the results might be differ from acutal practice.
+\item The optimality bound has some assumptions on the cost definition and what is optimal, changing these can result in different results
+\item The construction of the framework for optimality and stability can be helpful for designing more complex models of federation with different definitions of optimality like fairness and also different notions of cost
+\end{itemize}
+
+\centering \Large \emph{--- Thank You ---}
+
+\footnotetext[1]{Kate Donahue and Jon Kleinberg, Optimality and Stability in Federated Learning: A Game-theoretic Approach, NeurIPS 2021}
+\end{frame}
+\end{document}

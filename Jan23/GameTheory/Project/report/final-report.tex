@@ -1,0 +1,586 @@
+\documentclass{article}
+
+\usepackage[final, nonatbib]{neurips_2021}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+
+\newcommand{\p}[1]{\left( #1 \right)}
+\newcommand{\br}[1]{\left[ #1 \right]}
+\newcommand{\cb}[1]{\left\{ #1 \right\}}
+\newcommand{\cd}[0]{\cdot}
+
+\usepackage{amsmath}               % Environments, etc. for typesetting math.
+\usepackage{amsthm}                % Theorem/proof environments.
+\usepackage{amssymb} 
+\usepackage{thmtools,thm-restate}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage{multirow}
+
+\usepackage{array}
+\usepackage{mathtools}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{claim}{Claim}
+\newtheorem{note}{Note}
+\newtheorem{definition}{Definition}
+
+% Notation commands specific to this paper
+\newcommand{\nplayer}[0]{\ensuremath{M}}
+\newcommand{\gendist}[0]{\ensuremath{\Theta}}
+\newcommand{\mean}[0]{\ensuremath{\theta}}
+\newcommand{\mue}[0]{\ensuremath{\mu_e}}
+\newcommand{\var}[0]{\ensuremath{\sigma^2}}
+\newcommand{\sampledist}[0]{\ensuremath{\mathcal{D}}}
+\newcommand{\xdist}[1]{\ensuremath{\mathcal{X}_{#1}}}
+\newcommand{\param}[0]{\ensuremath{\bm{\theta}}}
+\newcommand{\dimval}[0]{\ensuremath{D}}
+\newcommand{\ndraw}[0]{\ensuremath{n}}
+\newcommand{\err}[0]{\ensuremath{\epsilon^2}}
+\newcommand{\expdata}[1]{\ensuremath{\mathbb{E}_{\Ymf \sim \sampledist(\mean_{#1}, \err_{#1})}}}
+\newcommand{\expparam}[1]{\ensuremath{\mathbb{E}_{(\mean_{#1}, \err_{#1}) \sim \gendist}}}
+\newcommand{\total}[0]{\ensuremath{N}}
+\newcommand{\expXlin}[1]{\ensuremath{\mathbb{E}_{X_{#1} \sim \xdist{#1}}}}
+\newcommand{\expxlin}[1]{\ensuremath{\mathbb{E}_{x \sim \xdist{#1}}}}
+\newcommand{\expetalin}[1]{\ensuremath{\mathbb{E}_{\errval_{#1} \sim \sampledist_{#1}(0, \err_{#1})}}}
+\newcommand{\expYlin}[1]{\ensuremath{\mathbb{E}_{Y_{#1} \sim \sampledist_{#1}(X_{#1}^T \bm{\param}_{#1}, \err_{#1})}}}
+\newcommand{\errval}[0]{\ensuremath{\bm{\eta}}}
+\newcommand{\errvalmf}[0]{\ensuremath{\eta}}
+\newcommand{\X}[0]{\ensuremath{\bm{X}}}
+\newcommand{\x}[0]{\ensuremath{\bm{x}}}
+\newcommand{\Y}[0]{\ensuremath{\bm{Y}}}
+\newcommand{\Ymf}[0]{\ensuremath{Y}}
+\newcommand{\cross}[1]{\ensuremath{\Sigma_{#1}}}
+\newcommand{\crossc}[1]{\ensuremath{Cov_{#1}}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\w}[0]{\ensuremath{w}}
+\newcommand{\vm}[0]{\ensuremath{v}}
+\newcommand{\alone}[0]{\ensuremath{\pi_l}}
+\newcommand{\gcol}[0]{\ensuremath{\pi_g}}
+\newcommand{\sepcol}[0]{\ensuremath{\pi_d}}
+
+\newcommand{\s}[0]{\ensuremath{s}}
+\newcommand{\el}[0]{\ensuremath{\ell}}
+\newcommand{\ns}[0]{\ensuremath{n_{\s}}}
+\newcommand{\nlv}[0]{\ensuremath{n_{\el}}}
+\newcommand{\Sv}[0]{\ensuremath{S}}
+\newcommand{\Lv}[0]{\ensuremath{L}}
+\newcommand{\si}[0]{\ensuremath{S}}
+\newcommand{\li}[0]{\ensuremath{L}}
+\newcommand{\col}[0]{\ensuremath{C}}
+\newcommand{\colA}[0]{\ensuremath{A}}
+\newcommand{\colB}[0]{\ensuremath{B}}
+
+\newcommand{\cgeq}[0]{\ensuremath{\succeq}}
+\newcommand{\cg}[0]{\ensuremath{\succ}}
+\newcommand{\cleq}[0]{\ensuremath{\preceq}}
+\newcommand{\cl}[0]{\ensuremath{\prec}}
+
+\newcommand{\costw}[0]{\ensuremath{f_w}}
+\newcommand{\partition}[0]{\ensuremath{\Pi}}
+\newcommand{\slIS}[0]{\ensuremath{\Pi_{SI}}}
+
+% \renewcommand{\url}[1]{\texttt{#1}}
+\newcommand{\doi}[1]{doi: #1}
+
+\title{Optimality and Stability in Federated Learning}
+
+\author{
+  Lokesh Mohanty\\
+  Department of Computational and Data Sciences\\
+  Indian Institute of Science\\
+  Bangalore, 560012 \\
+  \texttt{lokeshm@iisc.ac.in} \\
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+In the distributed learning paradigm known as federated learning, multiple agents who each have access to just local data work together to collaboratively learn a global model.
+There has been a recent surge in research in this field trying to ensure socially beneficial qualities like total error as well as an increase in the accuracy rates of federated learning.
+But there is limited study on the stability and optimality of federated learning.
+In this project, we will study game-theoretic approaches to model federated learning and study the optimality and stability in federated learning.
+In this work, we will mainly study the results by (\cite{donahue2021opt}).
+(\cite{donahue2021opt}) has used a game-theoretic approach to study the optimality and the relation between optimality and stability in federated learning. Existing work has also interpreted federated learning as a hedonic game in which agents who minimise errors form federating coalitions. Using this, the authors of this study published a paper before this on a theoretical study on the stability of federated learning and also gave a model for it.
+Since work prior to this doesn't say how far from the optimal, the stable solutions are, (\cite{donahue2021opt}) tries to find a relation between the stability and optimality of federated learning. It demonstrates that there exists some stable arrangement that is optimal and also gives a upper bound for the worst stable arrangement using the notion of Price of Anarchy.
+\end{abstract}
+
+\section{Introduction}
+In recent years, due to the boom in machine learning and data science, a huge amount of data is being used to train machine learning models.
+But in real world situations, data is distributed over different locations and often expensive to gather to a central location. There are also other challenges such as data privacy, data format, missing features, etc.,.
+
+For example, consider a group of hospitals and patient information being their data. The data in each hospital may be less which can lead to high variance if a machine learning model is trained at each hospital separately which is less likely to capture the data distribution. To fix this, data from all the hospitals can be transfered to a central location and then a machine learning model can be trained on it. This decreases the variance but brings several other issues. Some of them being the huge cost of data transfer from all the hospitals, maintaining a single location with large computing capabality, different hospitals having different data format and hospitals not preferring to share the private information of the patients (data privacy).
+
+The problem with data privacy and huge data transfer can probably be handled by hashing the data before transfer but it adds its own problems. Losing interpretability is a major problem and mismatch of data format makes the training useless.
+
+(\cite{mcmahan2016communicationefficient}) solves this problem using federated learning which is a novel distributed learning paradigm. In this, instead of transfer of data, machine learning models are trained at each of the separate locations (hospitals in our example) and then the model parameters that are learnt are shared to a common location where all the parameters are averaged to form a single global model which every hospital can use. There are many studies in federated learning like (\cite{Li_2020, kairouz2019advances, fedsurvey}).
+
+However, some studies have also shown that the single global model that is trained using federated learning may not be the best option for some agents (\cite{yu2020salvaging, bagdasaryan2019differential, mohri2019agnostic, li2019fair}). This is can be caused due to the actual distributions of each agent being different. If the difference between the distributions are large, then the global model trained might actually perform worse than the local model. It is also likely that the agents will have different amount of data leading to global model shifting towards the agent with large amount of data.
+
+To handle this, instead of combining all the models, each agent can be given the choice to combine their model or not based on their local model performance and the combined model performance. Here every agent simultaneously tries to find the best federating group to join. (\cite{hasan2021incentive}) has formulated this as a hedonic game where each agent faces some cost for joining a coalition(federating group). The goal of such work is to find the groups that are stable to deviations or are in equilibrium. Since a hedonic game may not have any such stable arrangements, analysis of stability can add value to the research and give insights on incentives of the federating agents.
+
+This also leaves a lot questions. Stability of an arrangement can be studied by assuming individually rational agents and some metric like the model error. However, this is a self-interested goal. The society as a whole would also like to minimize the overall error. In the hospitals example, the state/country would like to minimize the overall error of all the hospitals. In game theory, this can be studied by analysis of optimality.
+
+Overall, this leads to requirement of study on the self-interested goals of the individual agents (stability) and minimization of the overall error (optimality). An interesting study would be to bound the optimality given that the arrangement of agents is stable. This can be achieved by the concept of Price of Anarchy which can be used to study the relation between stability and optimality of an arrangement (\cite{koutsoupias1999worst, papadimitriou2001algorithms}). Price of Anarchy (PoA) is the ratio of the highest cost/error stable arrangement to the lowest cost/error stable arrangement. Where the lowest cost stable arrangement is the optimal arrangement. We can see that the lower bound of PoA is 1 as in the best case, the highest cost stable arrangement and the lowest stable arrangement have the same cost. But finding the upper bound it not so trivial. In federated learning, there has been a lot of study on stability of agents but there are hardly any systematic studies on optimality of an arrangement.
+
+In this project, we will mainly the study the results of (\cite{donahue2021opt}). (\cite{donahue2020model}) gives a theoretical model of federating learning  with closed-form solutions for errors/cost derived by an agent for joining a coalition. It analyzes the stability of coalitions using this model. Using the results of (\cite{donahue2020model}), (\cite{donahue2021opt}) provides an efficient algorithm for finding the optimal arrangement. After that, it proves a constant upper bound for Price of Anarchy showing that the highest cost stable arrangement will be no more than 9 times the lowest cost stable arrangement (optimal arrangement). While coming up with this upper bound of 9 for Price of Anarchy, (\cite{donahue2021opt}) shows that there always exists an optimal arrangement which is stable, then there exist some stable arrangement that are not stable and finally that the worst stable arrangement has cost no more than 9 times that of the best arrangement. The proofs given by these two studies are modular and also illuminate multiple properties of the federated learning game. Hence, these could be useful for further investigating the federated learning model.
+
+First we will review the related work in this field of federated learning using game-theoretic approaches in Section 2. Then we will study in depth the work of (\cite{donahue2021opt}) and their implications in Section 3. Finally we will summarize our extension of this work and conclude in Section 4.
+
+\section{Related Work}
+
+As mentioned earlier, federated learning has recently seen rapid growth in both applied and theoretical research. Now there are also many studies applying game theory to federated learning. In this section we will highlight some of the studies that are related to this project.
+
+The notion that agent's true models may change due to non-i.i.d. data being created across many agents is widely accepted in the federated learning studies. For example (\cite{yu2020salvaging, bagdasaryan2019differential}), empirical evidence shows that federated learning, particularly privacy-related additions, can result in a substantial divergence in error rates. Some methods have been created specifically to address this issue. Hierarchical federated learning, for example, adds another layer of hierarchical structure to federated learning, which might be used to minimise latency or to group together similar agents (\cite{lin2018dont, Liu_2020}).
+
+An earlier work by (\cite{hasan2021incentive}) (Incentive Mechanism Design for Federated Learning: Hedonic Game Approach) formulates federated learning as a hedonic game where each agent has the option to choose which coalition to join and is given the cost which it would have to incur on joining it. It also gives conditions for Nash equilibrium. Using this, Donahue and Kelinberg in their study (Model-sharing Games: Analyzing Federated Learning Under Voluntary Participation)(\cite{donahue2020model}) studied stability of a coalition with the assumption that a federation is stable if an agent's error decreases by joining it.
+
+The focus of \cite{donahue2020model} is defining a theoretical model of federated learning and analyzing the stability of such an arrangement. As such, it focuses solely on individual incentives and completely omitted any analysis of overall societal welfare. Whereas (\cite{donahue2021opt}) focuses on discussions of optimality (overall welfare) and Price of Anarchy, questions that are completely distinct from (\cite{donahue2020model}). This study gave a model for three methods of federation, one being the vanilla or uniform and two other models of domain adaptation. This work studies stability of federated learning for three types of federations. The first one being the case where every agent joins the global coalition irrespective of the cost derived from it. The second one being the case where there is a single coalition but every agent has an option to join or not join it. This is termed as coarse-grained federation. The third one being the most general, multiple coalitions can be formed with every agent having the option to join any coalition or not join any at all.
+
+There are many other studies going on in this area which use the results of this study. Like (\cite{donahue2021fair}) studies and formulates models of fairness in federated learning, (\cite{hu2023network}) models clients behaviour in a network using federated learning, (\cite{cui2021}) is very similar to this work but it tries to find a collaboration equilibrium instead using the results of this study. There are also many studies whose results can be combined with this. (\cite{blum2021one}) for example analyzes fairness and efficiency in sampling additional points for federated learning while (\cite{incentivemech}) analyzes incentives for agents to contribute computational resources in federated learning while using an auction approach. There is also a study by (\cite{Anglano2018AGA}) which uses a game theoretic approach towards coalition formation in cloud computing, but with the aim of minimizing some cost besides error like electricity usage.
+
+\section{Main Contributions}
+
+The current study (\cite{donahue2021opt}), inorder to construct a framework for stability and optimality in federated learning, establishes an optimality concept based on the average error of federating agents. In first part of the study, it constructs an efficient algorithm for calculating an optimal arrangement and also the proof of its optimality.
+
+\subsection{Model and Assumptions}
+
+To construct an efficient algorithm for calculating optimal arrangement, we need a theoretical model of federation. We state below the notations that we will be using
+
+\begin{itemize}
+\item Total number of agents $\rightarrow$ $M$
+\item Number of data points shared by each agent $i$ $\rightarrow$ $n_i$
+\item True local parameters of agent $i$ $\rightarrow$ $\theta_i$
+\item True local distribution of agent $i$ $\rightarrow$ $g(\theta_i)$
+\item Local estimate of agent $i$ $\rightarrow$ $g(\hat{\theta_i})$
+\item Local error of agent $i$ $\rightarrow$ $err_i(\{i\})$
+\item A set of agents federating together (coalition) $\rightarrow$ $C$
+\item Error of agent $i$ in a coalition $C$ $\rightarrow$ $err_i(C)$
+  
+\item Collection of coalitions that partitions the $M$ agents $\rightarrow$ $\Pi$
+\end{itemize}
+
+Combination of local estimation of parameters of a set of agents forming a coalition $C$ is goverened by the weighted average of their parameters.
+
+\begin{align}\label{eq:avged}
+  \hat{\theta}_C &= \frac{1}{\sum_{i \in C} n_i} . \sum_{i \in C} n_i . \hat{\theta}_i
+\end{align}
+
+From this we can see that, the coalition parameters are weighted more towards agents with large amount of data. This will lead to lower error for agents with more number of datapoints. This weighted average method of calculating the coalition parameters estimate is commonly used in federated learning (\cite{mcmahan2016communicationefficient}). This method is also called ``vanilla'' federated learning as it is the most straightforward method. Alternative ways of federation can be considered to incentivize certain invidual agents or to make it more fair for the agents with lower number of data points. This is also called domain adaptation. Using alternative ways of federation may lead to different Price of Anarchy bounds. The vanilla federated learning is the only one considered in (\cite{donahue2021opt}). Whereas (\cite{donahue202model}) also studies two models of domain adaptation for stability analysis.
+
+\subsection{Theoretical model of federation}
+
+Both applied and theoretical analysis have been done in federated learning. But to derive an efficient algorithm to find an optimal arrangement, a model that gives exact errors for each agent is required. Such a model was developed earlier by the same authors in (\cite{donahue2020model}). (\cite{donahue2020model}) provides a closed-form error value for each agent in a coalition. (\cite{donahue2020model}) was focused on deriving a model for federating learning and analyzing the stability of federating coalitions while (\cite{donahue2021opt}) is focused on analyzing optimality and Price of Anarchy of federating coalitions.
+
+\begin{lemma}[Lemma 4.2, from \cite{donahue2020model}]\label{lem:error}
+Consider a mean estimation task as follows: agent $j$ is trying to learn its true mean $\mean_j$. It has access to $\ndraw_j$ samples drawn i.i.d. $\Ymf \sim \sampledist_j(\mean_j, \err_j)$, a distribution with mean $\mean_j$ and variance $\err_j$. Given a population of agents, each has drawn parameters $(\mean_j, \err_j) \sim \Theta$ from some common distribution $\Theta$. A coalition $\col$ federating together produces a single model based on the weighted average of local means (Eq. \ref{eq:avged}). Then, the expected mean squared error agent $j$ experiences in coalition $\col$ is:
+
+\begin{equation}\label{eq:err}
+err_j(\col) = \frac{\mue}{\sum_{i \in \col} \ndraw_i} + \var \cd \frac{\sum_{i \in \col, i \ne j}\ndraw_i^2 + \p{\sum_{i\in \col, i \ne j}\ndraw_i}^2}{\p{\sum_{i \in \col}\ndraw_i}^2}
+\end{equation}
+
+where $\mue = \expparam{i}[\err_i]$ (the average noise in data sampling) and $\var = Var(\mean_i)$ (the average distance between the true means of agents). 
+\end{lemma}
+
+\cite{donahue2020model} also analyzes a linear regression game with a similar cost function, however, in this work we will focus only on the mean estimation game.
+
+The technical assumptions that are made are:
+
+\begin{itemize}
+\item $\{\ndraw_i\}$ is fixed and known by all
+  
+\item Parameters $\mue, \var$ are approximately known (the critical threshold $\frac{\mue}{\var}$ in particular is known)
+  
+\item Agents do not know anything else about their own true parameters $\mean_i$ or the parameters of other agents
+  
+\item Every agent has a goal of obtaining a model with low expected test error on its personal distribution
+  
+\item Federating coordinator is motivated to minimize some notion of total cost, but is otherwise impartial. 
+
+\end{itemize}
+
+\subsection{Defining optimality}\label{sec:opt}
+
+With the theoretical model of federation from Lemma 1, we can start with finding and analyzing an optimal arrangement. We will start with the objective function of the most federated learning papers \cite{mcmahan2016communicationefficient}:
+
+\begin{equation*}
+    \min_\mean err_w(\mean) = \sum_{i=1}^{\nplayer}p_i \cd err_i(\mean) =^* \frac{1}{\sum_{i=1}^{\nplayer}\ndraw_i}\sum_{i=1}^{\nplayer}\ndraw_i\cd err_i(\mean)
+\end{equation*}
+
+While the weights can be any $p_i > 0, \sum_{i=1}^{\nplayer}p_i=1$, the $*$ equality reflects the common setting where they are taken to be the empirical average. In this work, we will take the empirical average as our cost function: 
+
+\begin{definition}\label{def:opt}
+
+A coalition partition $\partition$ is optimal if it minimizes the weighted sum of errors across agents, as defined below: 
+
+$$\costw(\Pi) = \sum_{\col \in \partition}\costw(\col) = \sum_{\col \in \partition}\sum_{i \in \col}\ndraw_i \cd err_{i}(\col)$$
+
+We will say that a coalition partition $\partition$ is in $OPT$ if it achieves minimal cost. Note that multiple partitions may achieve minimal cost, so $OPT$ is a set of partitions. 
+
+\end{definition}
+
+Because $\partition$ is a disjoint partition over the $\nplayer$ agents, $\costw(\partition)$ is simply the error $err_w(\mean)$ scaled by a constant. Therefore, minimizing $\costw(\partition)$ is equivalent to minimizing the weighted average of errors.
+ 
+Some machine learning papers modify the empirical average objective to achieve other goals. For example, \cite{li2019fair, mohri2019agnostic} consider variants where this goal is re-weighted in order to achieve certain fairness goals.
+
+All of the above analysis holds for any model of federated learning. Lemma \ref{lem:optdef}, below, gives the specific form of cost for federated learning using the model from \cite{donahue2020model}. The remaining analysis in this paper will assume this cost function.
+
+
+\begin{restatable}{lemma}{optdef}
+\label{lem:optdef}
+Consider a partition $\partition$ made up of coalitions $\{\col_i\}$. Then, using the error form given in Equation \ref{eq:err}, the total cost of $\partition$ is given by
+$$\costw(\partition) = \sum_{\col \in \partition}\cb{\mue + \var \cd \total_{\col} - \var \frac{\sum_{i \in \col} \ndraw_i^2}{\total_{\col}}}$$
+\end{restatable}
+
+
+%\subsection{Local learning and the grand coalition}\label{sec:optalonegcol}
+The two most common arrangements in machine learning tasks are local learning (which we will denote by $\alone$) and the federation in the \emph{grand coalition} ($\gcol$), where all of the agents are federating together in a single coalition. However, Lemmas \ref{lem:alonebad} and \ref{lem:gcolbad} demonstrate that either of these could could perform arbitrarily poorly as compared the cost-minimizing (optimal) arrangement.
+
+\begin{restatable}{lemma}{alonebad}
+\label{lem:alonebad}
+$\forall \rho>1$, there exists a setting where local learning results in average error more than $\rho$ times higher than optimal: $\frac{\costw(\alone)}{\costw(OPT)} > \rho$. 
+\end{restatable}
+
+
+\begin{restatable}{lemma}{gcolbad}
+\label{lem:gcolbad}
+$\forall \rho > 1$, there exists a setting where federating in the grand coalition results in average error more than $\rho$ times higher than optimal: $\frac{\costw(\gcol)}{\costw(OPT)} > \rho$. 
+\end{restatable}
+
+We can see that, finding a partition of agents that minimized the total error is computationaly very expensive. There are exponentially many possibilities for partitions and the above two lemmas show that either of the common choices can be far from optimal. In the next subsection an efficient algorithm to find the optimal arrangement will be derived.
+
+\subsection{Deriving an algorithm for optimal arrangement}
+
+The main contribution of this section is Theorem \ref{thrm:optcalc} gives an algorithm for minimizing the total weighted error of the federating agents. 
+
+\begin{restatable}{theorem}{optcalc}
+\label{thrm:optcalc}
+Consider a set of agents $\{\ndraw_i\}$. An optimal partition $\partition$ can be created as follows: first, start with every agent doing local learning. Then, begin by grouping the agents together in ascending order of size, stopping when the first agent would increase its error by joining the coalition from local learning. Then, the resulting partition $\partition$ is optimal.
+\end{restatable}
+
+Though the algorithm in Theorem \ref{thrm:optcalc} is straightforward, proving the optimality of the resulting partition $\partition$ requires several sub-lemmas. Each sub-lemma is a building-block that describes certain operations that either increase or decrease total cost. The proof of Theorem \ref{thrm:optcalc} largely consists of sequentially using these sub-lemmas in order to demonstrate the optimality of the calculated partition.
+
+\paragraph{\bf Statement and description of supporting lemmas} First, Lemma \ref{lem:addminsame} demonstrates a close relationship between movements of agents that reduce total cost and movements of agents that are in that agent's self-interest (recall that agents always wish to minimize their expected error). Specifically, it shows that a agent wishes to join a coalition from local learning if and only if that move would reduce total cost for the entire partition. 
+
+\begin{restatable}[Equivalence of agent preference and reducing cost]{lemma}{addminsame}
+\label{lem:addminsame}
+% {\color{red} change $Q$ to more standard notation}
+Take any coalition $Q$ and any agent $j$. Then, a agent wishes to join that coalition (from local learning) if and only if doing so would reduce total cost. That is, 
+$$\costw(\{\ndraw_j\}) + \costw(Q) \geq \costw(\{\ndraw_j\} \cup Q) \quad \Leftrightarrow \quad err_j(\{\ndraw_j\}) \geq err_j(\{\ndraw_j\} \cup Q)$$
+\end{restatable}
+
+Next, Lemma \ref{lem:swap} shows that \enquote{swapping} the roles of two agents (one doing local learning, one federating in a coalition) reduces total cost when the larger agent is removed to local learning. 
+
+\begin{restatable}[Swapping]{lemma}{swap}
+\label{lem:swap}
+Take any set $Q$ including a agent $\ndraw_j> \ndraw_k$, where the agent $\ndraw_k$ is doing local learning. Then, swapping the roles of agents $k$ and $j$ always decreases total cost. 
+$$\costw(Q \cup \{\ndraw_j\}) + \costw(\{\ndraw_k\}) >\costw(Q \cup \{\ndraw_k\}) + \costw(\{\ndraw_j\})  $$
+\end{restatable}
+
+Lemmas \ref{lem:orderjoin} and \ref{lem:wontleave} give results for when agents are incentivized to leave or join a particular coalition: they show that such incentives are monotonic in the size of the agent. By Lemma \ref{lem:addminsame}, these results also show the monotonicity of cost-reducing operations. Note that these lemmas are not equivalent: they differ in whether the reference agent $j$ is already in the coalition or not. 
+
+\begin{restatable}[Monotonicity of joining]{lemma}{orderjoin}
+\label{lem:orderjoin}
+If a agent of size $\ndraw_j$ would prefer local learning to joining a coalition $Q$, then any agent of size $\ndraw_k \geq \ndraw_j$ also prefers local learning to joining the same coalition. That is, for $\ndraw_k \geq \ndraw_j$,
+$$err_j(Q\cup \{\ndraw_j\}) \geq err_j(\{\ndraw_j\}) \quad \Rightarrow \quad err_k(Q \cup \{\ndraw_k\}) \geq err_k(\{\ndraw_k\}) $$
+Conversely, if a agent $j$ wishes to join $Q$, then any other agent of size $\ndraw_k \leq \ndraw_j$ would have also wanted to join. That is, for $\ndraw_j \geq \ndraw_k$, 
+$$err_j(Q\cup \{\ndraw_j\}) \leq err_j(\{\ndraw_j\}) \quad \Rightarrow \quad err_k(Q \cup \{\ndraw_k\}) \leq err_k(\{\ndraw_k\}) $$
+\end{restatable}
+
+
+\begin{restatable}[Monotonicity of leaving]{lemma}{wontleave}
+\label{lem:wontleave}
+Take any coalition $Q$. Then, if any agent $j \in Q$ of size $\ndraw_j$ wishes to leave $Q$ for local learning, then any agent of size $\ndraw_k \geq \ndraw_j$ also wishes to leave for local learning. That is, for $\ndraw_k \geq \ndraw_j$
+$$err_j(Q) \geq err_j(\{\ndraw_j\}) \quad \Rightarrow \quad err_k(Q) \geq err_k(\{\ndraw_k\})$$
+Conversely, if a agent $j \in Q$ of size $\ndraw_j$ does \emph{not} wish to leave $Q$ for local learning, then any agent $k \in Q$ of size $\ndraw_k \leq \ndraw_j$ also does not wish to leave. That is, for $\ndraw_k \leq \ndraw_j$
+$$err_j(Q) \leq err_j(\{\ndraw_j\}) \quad \Rightarrow \quad err_k(Q) \leq err_k(\{\ndraw_k\})$$
+\end{restatable}
+
+All of the above lemmas have analyzed situations where a single agent is moving between coalitions. Lemma \ref{lem:wontleave} analyzes cases where multiple agents are rearranged simultaneously. Specifically, it provides an algorithm for combining together two separate groups (and then removing certain agents) that is guaranteed to keep constant or reduce total cost.
+
+\begin{restatable}[Merging]{lemma}{merge}
+\label{lem:merge}
+Consider two groups of agents, $P, Q$. First, merge together the two groups to form $P \cup Q$. Then, remove agents from $P\cup Q$ to local learning, removing them in descending order of size. Stop removing agents when the first agent would prefer to stay (removing it would increase its error). Then, this overall process maintains or decreases total error. 
+In other words, 
+\begin{equation}\label{eq:submod0}
+\costw(Q) + \costw(P) \geq \costw(\{Q\cup P\}\setminus L) + \sum_{i \in L}\costw(\{\ndraw_i\})
+\end{equation}
+where $L$ is the set of large agents removed in descending order of size. The inequality is strict so long as the final structure is not identical to the first, up to renaming of agents, and it is \emph{not} the case that all the agents have the exact same size. 
+\end{restatable}
+
+The proof of Theorem \ref{thrm:optcalc} is given simply by applying the lemmas sequentially to show that any other partition $\partition'$ can be converted to the described partition $\partition$ through a series of operations that decrease or hold constant total cost. 
+
+\subsection{Price of Anarchy}\label{sec:PoA}
+
+\begin{table}[]
+\centering 
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Coalition structure    & $err_a(\cd), \ndraw_a =1$ & $err_b(\cd), \ndraw_b = 8$ & $err_c(\cd), \ndraw_c=15$ & $\costw(\partition)$ & $err_w(\partition)$ \\ \hline
+$\{a,\}, \{b\}, \{c\}$ & 10                        & 1.25                       & 0.667                     & 30                   & 1.25                \\ \hline
+$\{a\}, \{b, c\}$      & 10                        & 1.285                      & 0.677                     & 30.435               & 1.268               \\ \hline
+$\{a, c\},\{b\}$       & 2.382                     & 1.25                       & 0.633                     & 21.875               & 0.911               \\ \hline
+$\{a, b\}, \{c\}$       & 2.691                     & 1.136                      & 0.667                     & 21.778               & 0.907               \\ \hline
+$\{a, b, c\}$          & 1.834                     & 1.253                      & 0.670                     & 21.917               & 0.913               \\ \hline
+\end{tabular}
+\caption{Example with $\mue =10, \var =1$ example with three agents of size $\ndraw_a = 1, \ndraw_b = 8, \ndraw_c = 15$. Note that $\{a, b\}, \{c\}$ minimizes total cost, but is not individually stable: agent $a$ wishes to leave its coalition to join agent $c$, which welcomes that agent joining it. This produces $\{a, c\}, \{b\}$, which is the only individually stable arrangement, giving a Price of Anarchy value of $21.875/21.778 = 1.0045$. }
+\label{tab:case21}
+\end{table}
+
+The previous section defined the \enquote{optimality} of a federating arrangement as its average error, and additionally provided an efficient algorithm to calculate a lowest-cost arrangement. Given that much of prior work (\cite{donahue2020model, hasan2021incentive}) has studied the stability of cooperative games induced by federated learning, the next natural question is to study the relationship between stability and optimality. This section analyzes this relationship, using the canonical game theoretic tools of Price of Anarchy and Price of Stability. All proofs for this section are in Appendix \ref{app:poa}. 
+
+First, we will define the notions of stability under analysis, which are all drawn from standard cooperative game theory literature (\cite{BOGOMOLNAIA2002201}). A partition of agents $\partition$ is \emph{core stable} if there does not exist a set of agents that all would prefer leave their location in $\partition$ and form a coalition together. A partition is \emph{individually stable} (IS) if there does not exist a single agent $i$ that wishes to join some existing coalition $\col$, where all members of $\col$ weakly prefer that $i$ join. Our results will primarily use the notion of individual stability. %{\color{red} could I strengthen to strict core stability? I think yes, but not worth rewriting right now}
+
+As a reminder, the Price of Anarchy (PoA) is the ratio between the worst (highest-cost) stable arrangement and the best (lowest-cost) arrangement. The Price of Stability is the ratio of the best stable arrangement and the best overall arrangement (regardless of if it is stable or not) (\cite{anshelevich2008price}). Note that the Price of Stability is 1 when there exists an optimal arrangement that is also stable. 
+
+First, we will show that for certain ranges of parameter space, the Price of Anarchy and/or Price of Stability are equal to 1. Specifically, Lemma \ref{lem:gcolcore} shows that when all agents have relatively few samples (no more than $\frac{\mue}{\var}$ each), the grand coalition $\gcol$ is core stable, implying a Price of (Core) Stability of 1. Recall that $\mue$ and $\var$ are parameters of the federated learning model reflecting the average noise of the data and the average dissimilarity between federating agents, respectively. 
+
+\begin{restatable}{lemma}{gcolcore}
+\label{lem:gcolcore}
+For a set of agents with $\ndraw_i \leq \frac{\mue}{\var} \ \forall i$, the grand coalition $\gcol$ is always core stable. 
+\end{restatable}
+
+On the other hand, Lemma \ref{lem:alonecore} shows that  when all agents have relatively many samples (at least $ \frac{\mue}{\var}$ each), every core or individually stable arrangement is also optimal, which means that the Price of Anarchy for this situation is 1.  
+
+\begin{restatable}{lemma}{alonecore}
+\label{lem:alonecore}
+For a set of agents with $\ndraw_i \geq \frac{\mue}{\var} \ \forall i$, any arrangement that is core stable or individually stable is also optimal. 
+\end{restatable}
+
+However, it is \emph{not} the case that either the Price of Stability or Price of Anarchy is always 1. Table \ref{tab:case21} contains an example demonstrating this: there exists a simple three-agent case where the optimal arrangement is not individually stable. However, the Price of Anarchy value here is quite small, which suggests the prospect that the Price of Anarchy in general could be bounded.
+
+The main result of this section is Theorem \ref{thrm:PoA}, which proves a Price of Anarchy bound of 9 for this problem: the cost of the highest stable arrangement is no more than 9 times the cost of the optimal (lowest cost) arrangement. 
+
+\begin{restatable}[Price of Anarchy]{theorem}{PoA}
+\label{thrm:PoA}
+Denote $\partition_M$ to be a maximum-cost individually stable (IS) partition and $\partition_{opt}$ to be an optimal (lowest-cost) partition. Then, 
+$$PoA = \frac{\costw(\partition_M)}{\costw(\partition_{opt})} \leq 9$$
+\end{restatable}
+
+In Theorem \ref{thrm:PoA}, the numerator is the cost of $\partition_M$, a maximum-cost partition, and the denominator is $\partition_{opt}$, an optimal (lowest-cost) partition. Recall that Definition \ref{def:opt} gives the cost of an arrangement as the weighted sum of the errors of the respective agents. Therefore, to get an upper bound on the Price of Anarchy, we will upper bound the errors agents experience in $\partition_M$ and lower bound on the error agents experience in $\partition_{opt}$. 
+
+\paragraph{\bf Summary of proof technique} Again, this section will show how the larger theorem is the result of several lemmas that act as building blocks. In particular, the lemmas will take two separate approaches towards creating the bound. Lemmas of the first type (\ref{lem:betterthanalone}, \ref{lem:lowerbounderror}, \ref{lem:twcspec}) all provide upper or lower bounds on the errors certain agents can experience. These conditions depend on the size of the agent (how many samples it has) and the size of the group it is federating with (how many samples in total the rest of the coalition has). For example, Lemmas \ref{lem:betterthanalone} and \ref{lem:lowerbounderror} taken together show that a agent with at least $\frac{\mue+ \var}{2\var}$ samples has a worst-case error no more than 2 times its best-case error. The same pair of lemmas give a multiplicative bound of 9 for agents with numbers of samples that falls between $\frac{\mue}{9\cd \var}$ and $\frac{\mue+ \var}{2\var}$. Finally, Lemmas \ref{lem:twcspec} and \ref{lem:lowerbounderror} together give a factor of 7.5 for agents with fewer than $\frac{\mue}{9\cd \var}$ samples that are federating with other agents of total size at least $\frac{\mue}{3\cd \var}$. Taken together, these errors show that, for almost all cases, the highest error a agent experiences is no more than 9 times higher than the lowest error it might experience. 
+
+The final case that needs to be addressed is when a agent of size $\leq \frac{\mue}{9\cd \var}$ is federating in a group with other agents of total size $\leq \frac{\mue}{3\cd \var}$. Lemma \ref{lem:relaxed} handles this last case by an argument around stability. Specifically, it shows that any agents in such an arrangement can only be stable if all of them are grouped together into a single federating coalition. In the proof of Theorem \ref{thrm:PoA}, this result ends up enabling an additive factor to the Price of Anarchy bound, which is absorbed into the other factors for a total Price of Anarchy value of 9. 
+
+\paragraph{\bf Statement and description of supporting lemmas} Next, we will walk through each lemma specifically. Lemma \ref{lem:betterthanalone} gives an \emph{upper} bound of $\frac{\mue}{\ndraw_i}$ on the error any agent experiences in $\partition_M$. 
+
+\begin{lemma}\label{lem:betterthanalone}
+If $\partition_M$ is a maximum-cost IS partition, then $err_i(\partition_M) \leq \frac{\mue}{\ndraw_i}$ for all agents $i$.
+\end{lemma}
+\begin{proof}
+Because $\partition_M$ is individually stable, every agent must get error no more than the error it would receive alone (doing local learning). By Lemma \ref{lem:error} with $C= \ndraw_i$, a agent with samples $\ndraw_i$ agent gets error $\frac{\mue}{\ndraw_i}$ alone.  
+\end{proof}
+
+Next, Lemma \ref{lem:lowerbounderror} provides \emph{lower} bounds on the error a agent can receive in $\partition_{opt}$. It does this by bounding the minimum error a agent could get in any arrangement. Again, because the cost of $\partition_{opt}$ is simply the weighted sum of errors of each individual agent, this helps to upper bound the Price of Anarchy. First, Lemma \ref{lem:lowerbounderror} shows that for agents with at least $\frac{\mue+\var}{2\var}$ samples, the lowest possible error it could experience is $\frac{1}{2}\cd \frac{\mue}{\ndraw_j}$, which is a factor of 2 off from its worst-case error in Lemma \ref{lem:betterthanalone}. For agents with fewer samples than $\frac{\mue+\var}{2\var}$, Lemma \ref{lem:lowerbounderror} says that the lowest error a agent could experience is $\var$. This means that the ratio between the two errors is lower than 9 so long as $\ndraw_j \geq \frac{\mue}{9 \cd \var}$. Therefore, in order to get a factor of 9 bound for the overall Price of Anarchy, we need to handle the case of agents with size $\leq \frac{\mue}{9\cd \var}$, when agents have very few samples.
+
+\begin{restatable}{lemma}{lowerbounderror}
+\label{lem:lowerbounderror}
+Consider a agent $\ndraw_j$ and any set of agents $\col$. Then, we can lower bound the error agent $j$ recieves by federating with $\col$: 
+\begin{equation*}
+err_{j}(\col\cup\{\ndraw_j\})\geq \begin{cases}
+ \frac{1}{2} \cd\frac{\mue}{\ndraw_j} & \ndraw_j \geq \frac{\mue +\var}{2\var}\\
+ \var & \text{otherwise}
+\end{cases}
+\end{equation*}
+\end{restatable}
+
+Lemma \ref{lem:twcspec} is the first of two lemmas handling the case of agents with very few samples. It shows that, if a agent of size $\leq \frac{\mue}{3\cd \var}$ is federating with a set of agents of total size at least $\frac{\mue}{3\cd \var}$, it is possible to \emph{upper} bound on the error of agents in $\partition_M$ by $7.5\cd \var$. Given the lower bound of $\var$ in Lemma \ref{lem:lowerbounderror}, these together show that there is a ratio of 7.5 at most between the error this agent experiences in its best and worst-case arrangements. 
+
+\begin{restatable}{lemma}{twcspec}
+\label{lem:twcspec}
+Consider a agent $j$ federating with a coalition $\col$. If the total number of samples $\total_{\col}$ is at least $\frac{\mue}{3\var}$, then $err_j(\col \cup \{\ndraw_j\}) \leq 7.25 \cd \var$. 
+\end{restatable}
+
+However, Lemma \ref{lem:twcspec} does not handle one situation: what if a agent of size $\leq \frac{\mue}{9\cd \var}$ is federating with a group of agents of total size $\leq \frac{\mue}{3\cd \var}$? Lemma \ref{lem:relaxed} addresses this last case: it shows that the only such arrangement that is stable is one where all such agents are grouped together into a single arrangement. Note that this lemma is itself should not be obvious: it is composed of multiple sub-lemmas which are stated and proved in the appendix. The fact that there can be only one group of such agents is used in the Theorem \ref{thrm:PoA} to create an overall bound of $9$. 
+\begin{restatable}{lemma}{relaxed}
+\label{lem:relaxed}
+Consider an arrangement of agents, all of size $\leq \frac{\mue}{3\var}$, where at least one agent is in a federating cluster where the total mass of its partners is no more than $\frac{\mue}{3\var}$. Then, the only stable arrangement of these agents is to have all of them federating together. 
+\end{restatable}
+
+The full proof of Theorem \ref{thrm:PoA} uses these lemmas collectively in order to get an overall Price of Anarchy bound of 9, showing that the worst individually stable arrangement has total cost no more than 9 times the optimal cost. 
+
+\section{Conclusion}
+
+We have studied various works which are related to optimality and stability in federated learning and summarized them. We deeply studied the paper (\cite{donahue2021opt}) which gives an algorithm to find the optimal arrangement and gives a constant-factor Price of Anarchy bound for optimality which quantifies the relation between individual incentives and overall societal goals. This is a theoritical study and hence the results might be different in acutal practice. The optimality bound that (\cite{donahue2021opt}) has given has some assumptions on what is optimal. This need not be true for all cases, and where these assumptions are not valid this bound loses its value.
+
+This study is not restricted to a particular application and hence can be used for any application. Though different definitions of the cost could result in different Price of Anarchy bounds. Other than the optimality bound, the construction of the framework for optimality and stability can be helpful for designing more complex models of federation with different definitions of optimality like fairness.
+
+\begin{thebibliography}{23}
+
+\bibitem{Anglano2018AGA}
+C.~Anglano, M.~Canonico, Paolo Castagno, Marco Guazzone, and M.~Sereno.
+\newblock A game-theoretic approach to coalition formation in fog provider
+  federations.
+\newblock \emph{2018 Third International Conference on Fog and Mobile Edge
+  Computing (FMEC)}, pages 123--130, 2018.
+
+\bibitem{anshelevich2008price}
+Elliot Anshelevich, Anirban Dasgupta, Jon Kleinberg, {\'E}va Tardos, Tom
+  Wexler, and Tim Roughgarden.
+\newblock The price of stability for network design with fair cost allocation.
+\newblock \emph{SIAM Journal on Computing}, 38\penalty0 (4):\penalty0
+  1602--1623, 2008.
+
+\bibitem{bagdasaryan2019differential}
+Eugene Bagdasaryan and Vitaly Shmatikov.
+\newblock Differential privacy has disparate impact on model accuracy, 2019.
+
+\bibitem{blum2021one}
+Avrim Blum, Nika Haghtalab, Richard~Lanas Phillips, and Han Shao.
+\newblock One for one, or all for all: Equilibria and optimality of
+  collaboration in federated learning.
+\newblock \emph{arXiv preprint arXiv:2103.03228}, 2021.
+
+\bibitem{BOGOMOLNAIA2002201}
+Anna Bogomolnaia and Matthew~O. Jackson.
+\newblock The stability of hedonic coalition structures.
+\newblock \emph{Games and Economic Behavior}, 38\penalty0 (2):\penalty0 201 --
+  230, 2002.
+\newblock ISSN 0899-8256.
+\newblock \doi{https://doi.org/10.1006/game.2001.0877}.
+\newblock URL
+  \url{http://www.sciencedirect.com/science/article/pii/S0899825601908772}.
+
+\bibitem{donahue2020model}
+Kate Donahue and Jon Kleinberg.
+\newblock Model-sharing games: Analyzing federated learning under voluntary
+  participation.
+\newblock \emph{AAAI 2021}, 2021.
+\newblock URL \url{https://arxiv.org/abs/2010.00753}.
+
+\bibitem{donahue2021opt}
+Kate Donahue and Jon Kleinberg.
+\newblock Optimality and Stability in Federated Learning: A Game-theoretic Approach.
+\newblock \emph{NeurIPS 2021}, 2021.
+\newblock URL \url{https://arxiv.org/abs/2106.09580}.
+
+\bibitem{donahue2021fair}
+Kate Donahue and Jon Kleinberg.
+\newblock Models of fairness in federated learning
+\newblock \emph{CoRR}, 2021.
+\newblock URL \url{https://arxiv.org/abs/2112.00818}.
+
+\bibitem{hu2023network}
+Hu, S., Ngo, D. D., Zheng, S., Smith, V., and Wu, Z. S.
+\newblock Federated Learning as a Network Effects Game.
+\newblock \emph{CoRR}, 2021.
+\newblock URL \url{https://arxiv.org/abs/2302.08533}.
+
+\bibitem{cui2021}
+Cui, S., Liang, J., Pan, W., Chen, K., Zhang, C., \& Wang, F.
+\newblock Collaboration equilibrium in federated learning.
+\newblock \emph{CoRR}, 2021.
+\newblock URL \url{https://arxiv.org/abs/2108.07926}.
+
+\bibitem{hasan2021incentive}
+Cengis Hasan.
+\newblock Incentive mechanism design for federated learning: Hedonic game
+  approach, 2021.
+
+
+\bibitem{kairouz2019advances}
+Peter Kairouz, H.~Brendan McMahan, Brendan Avent, Aurélien Bellet, Mehdi
+  Bennis, Arjun~Nitin Bhagoji, Keith Bonawitz, Zachary Charles, Graham Cormode,
+  Rachel Cummings, Rafael G.~L. D'Oliveira, Salim~El Rouayheb, David Evans,
+  Josh Gardner, Zachary Garrett, Adrià Gascón, Badih Ghazi, Phillip~B.
+  Gibbons, Marco Gruteser, Zaid Harchaoui, Chaoyang He, Lie He, Zhouyuan Huo,
+  Ben Hutchinson, Justin Hsu, Martin Jaggi, Tara Javidi, Gauri Joshi, Mikhail
+  Khodak, Jakub Konečný, Aleksandra Korolova, Farinaz Koushanfar, Sanmi
+  Koyejo, Tancrède Lepoint, Yang Liu, Prateek Mittal, Mehryar Mohri, Richard
+  Nock, Ayfer Özgür, Rasmus Pagh, Mariana Raykova, Hang Qi, Daniel Ramage,
+  Ramesh Raskar, Dawn Song, Weikang Song, Sebastian~U. Stich, Ziteng Sun,
+  Ananda~Theertha Suresh, Florian Tramèr, Praneeth Vepakomma, Jianyu Wang,
+  Li~Xiong, Zheng Xu, Qiang Yang, Felix~X. Yu, Han Yu, and Sen Zhao.
+\newblock Advances and open problems in federated learning, 2019.
+
+\bibitem{koutsoupias1999worst}
+Elias Koutsoupias and Christos Papadimitriou.
+\newblock Worst-case equilibria.
+\newblock In \emph{Annual Symposium on Theoretical Aspects of Computer
+  Science}, pages 404--413. Springer, 1999.
+
+\bibitem{incentivemech}
+Tra Huong~Thi Le, Nguyen~H. Tran, Yan~Kyaw Tun, Minh N.~H. Nguyen, Shashi~Raj
+  Pandey, Zhu Han, and Choong~Seon Hong.
+\newblock An incentive mechanism for federated learning in wireless cellular
+  network: An auction approach.
+\newblock \emph{IEEE Transactions on Wireless Communications}, pages 1--1,
+  2021.
+\newblock \doi{10.1109/TWC.2021.3062708}.
+
+\bibitem{li2019fair}
+Tian Li, Maziar Sanjabi, Ahmad Beirami, and Virginia Smith.
+\newblock Fair resource allocation in federated learning, 2019.
+
+\bibitem{Li_2020}
+Tian Li, Anit~Kumar Sahu, Ameet Talwalkar, and Virginia Smith.
+\newblock Federated learning: Challenges, methods, and future directions.
+\newblock \emph{IEEE Signal Processing Magazine}, 37\penalty0 (3):\penalty0
+  50–60, May 2020.
+\newblock ISSN 1558-0792.
+\newblock \doi{10.1109/msp.2020.2975749}.
+\newblock URL \url{http://dx.doi.org/10.1109/MSP.2020.2975749}.
+
+\bibitem{fedsurvey}
+W.~Y.~B. {Lim}, N.~C. {Luong}, D.~T. {Hoang}, Y.~{Jiao}, Y.~C. {Liang},
+  Q.~{Yang}, D.~{Niyato}, and C.~{Miao}.
+\newblock Federated learning in mobile edge networks: A comprehensive survey.
+\newblock \emph{IEEE Communications Surveys Tutorials}, 22\penalty0
+  (3):\penalty0 2031--2063, 2020.
+\newblock \doi{10.1109/COMST.2020.2986024}.
+
+\bibitem{lin2018dont}
+Tao Lin, Sebastian~U. Stich, Kumar~Kshitij Patel, and Martin Jaggi.
+\newblock Don't use large mini-batches, use local sgd, 2018.
+
+\bibitem{Liu_2020}
+Lumin Liu, Jun Zhang, S.H. Song, and Khaled~B. Letaief.
+\newblock Client-edge-cloud hierarchical federated learning.
+\newblock \emph{ICC 2020 - 2020 IEEE International Conference on Communications
+  (ICC)}, Jun 2020.
+\newblock \doi{10.1109/icc40277.2020.9148862}.
+\newblock URL \url{http://dx.doi.org/10.1109/icc40277.2020.9148862}.
+
+\bibitem{mcmahan2016communicationefficient}
+H.~Brendan McMahan, Eider Moore, Daniel Ramage, Seth Hampson, and
+  Blaise~Agüera y~Arcas.
+\newblock Communication-efficient learning of deep networks from decentralized
+  data, 2016.
+
+\bibitem{mohri2019agnostic}
+Mehryar Mohri, Gary Sivek, and Ananda~Theertha Suresh.
+\newblock Agnostic federated learning, 2019.
+
+\bibitem{papadimitriou2001algorithms}
+Christos Papadimitriou.
+\newblock Algorithms, games, and the internet.
+\newblock In \emph{Proceedings of the thirty-third annual ACM symposium on
+  Theory of computing}, pages 749--753, 2001.
+
+\bibitem{yu2020salvaging}
+Tao Yu, Eugene Bagdasaryan, and Vitaly Shmatikov.
+\newblock Salvaging federated learning by local adaptation, 2020.
+
+\end{thebibliography}
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

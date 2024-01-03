@@ -1,0 +1,100 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2021
+
+% ready for submission
+\usepackage[final]{neurips_2021}
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2021}
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+%     \usepackage[final]{neurips_2021}
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2021}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+
+\title{Summary of "Optimality and Stability in Federated Learning: A Game-theoritic Approach"}
+
+\author{
+  Lokesh Mohanty\\
+  Department of Computational and Data Sciences\\
+  Indian Institute of Science\\
+  Bangalore, 560012 \\
+  \texttt{lokeshm@iisc.ac.in} \\
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This is a short report on the study \textbf{\emph{Optimality and Stability in Federated Learning: A Game-theoritic Approach}}.
+In the distributed learning paradigm known as federated learning, multiple agents who each have access to just local data work together to collaboratively learn a global model.
+There has been a recent surge in research trying to ensure socially beneficial qualities like total error as well as an increase in the accuracy rates of federated learning.
+This paper has used a game-theoretic approach to study the optimality and the relation between optimality and stability in federated learning. Existing work has also interpreted federated learning as a hedonic game in which players who minimise errors form federating coalitions. Using this, the authors of this study published a paper before this on a theoretical study on the stability of federated learning and also gave a model for it.
+Since work prior to this doesn't say how far from the optimal, the stable solutions are, this study tries to find a relation between the stability and optimality of federated learning. This study demonstrates that there exists some stable arrangement that is optimal and also gives a upper bound for the worst stable arrangement using the notion of Price of Anarchy.
+\end{abstract}
+
+\section{Introduction and Motivation}
+In real world situations, data is distributed and often expensive to gather to a central location. Challenges other than the data size are the data format and the data privacy. These can be solved by federated learning in which instead of transferring the raw data, local parameters can be learned from it and only these parameters can be transferred and then combined to get the expected result. The problems faced with this approach are that the local models might be vastly different from each other which might give unexpected results when combined. Solving these issues is a major area for research. There have been many studies in area but these issues still exist. Since the local agents are not i.i.d., this paper tries to use a game-theoritic approach using cooperative game theory for this study.
+
+\section{Earlier Work}
+An earlier work by Hasan (Incentive Mechanism Design for Federated Learning: Hedonic
+Game Approach)[1] formulates federated learning as a hedonic game where each agent has the option to choose which coalition to join and is given the cost which it would have to incur on joining it. It also gives conditions for Nash equilibrium. Using this, Donahue and Kelinberg in their study (Model-sharing Games:
+Analyzing Federated Learning Under Voluntary Participation)[2] studied stability of a coalition with the assumption that a federation is stable if an agent's error decreases by joining it. This study gave a model for three methods of federation, one being the vanilla or uniform and two other models of domain adaptation.
+
+\section{Current Study}
+The current study, inorder to construct a framework for stability and optimality in federated learning, establishes an optimality concept based on the average error of federating agents. In first part of the study, it constructs an efficient algorithm for calculating an optimal arrangement and also the proof of its optimality.
+
+Once a proper notion of optimality is established with exact errors, it shows that an optimal arrangement need not always be stable and also shows that there exist some arrangements of the agents where it is optimal using the Price of Anarchy as a metric. It then analyzes and optimizes Price of Anarchy showing that the worst stable arrangement has a Price of Anarchy of 9. This is a first constant-factor constraint on the performance gap between stability and optimality.
+
+\section{Limitations}
+This is a theoritical study and hence the results might be different in acutal practice. The optimality bound that this paper has given has some assumptions on what is optimal which need not be true for all cases, where this bound loses its value. This study doesn't say anything about the process to achieve the optimal and stable federation.
+
+\section{Related Work}
+There are many other studies going on in this area which use the results of this study. Like \verb~Donahue and Kleinberg~[3] studies and formulates models of fairness in federated learning, \verb~Hu et al. 2023~[4] models clients behaviour in a network using federated learning, \verb~Cui et al. 2021~[5] is very similar to this work but it tries to find a collaboration equilibrium instead using the results of this study. There are also many studies whose results can be combined with this. \verb~Blum et al. 2021~[6] for example analyzes fairness and efficiency in sampling additional points for federated learning while \verb~Le et al. 2021~[7] analyzes incentives for agents to contribute computational resources in federated learning while using an auction approach. There is also a study by \verb~Anglano et al. 2014~[8] which uses a game theoretic approach towards coalition formation in cloud computing, but with the aim of minimizing some cost besides error like electricity usage.
+
+\section{Societal Impact and Conclusion}
+This study is not restricted to a particular application and hence can be used for any application. Though different definitions of the cost could result in different Price of Anarchy bounds. Other than the optimality bound, the construction of the framework for optimality and stability can be helpful for designing more complex models of federation with different definitions of optimality like fairness.
+
+\section*{References}
+{
+\small
+
+[1] Cengis Hasan (2021) Incentive mechanism design for federated learning: Hedonic game approach. {\it Accepted for publication at OptLearnMAS-21: The 12th Workshop on Optimization and Learning in Multiagent Systems at AAMAS 2021}
+\url{https://doi.org/10.48550/arXiv.2101.09673}
+
+[2] Donahue, K., \& Kleinberg, J. (2021). Model-sharing Games: Analyzing Federated Learning Under Voluntary Participation. {\it Proceedings of the AAAI Conference on Artificial Intelligence}, 35(6), 5303-5311. \url{https://doi.org/10.1609/aaai.v35i6.16669}
+
+[3] Donahue, K., \& Kleinberg, J. (2021). Models of fairness in federated learning. {\it arXiv preprint arXiv:2112.00818}.
+
+[4] Hu, S., Ngo, D. D., Zheng, S., Smith, V., \& Wu, Z. S. (2023). Federated Learning as a Network Effects Game. {\it arXiv preprint arXiv:2302.08533}
+
+[5] Cui, S., Liang, J., Pan, W., Chen, K., Zhang, C., \& Wang, F. (2021). Collaboration equilibrium in federated learning. {\it arXiv preprint arXiv:2108.07926}.
+
+[6] Blum, A., Haghtalab, N., Phillips, R.L., \& Shao, H. (2021). One for One, or All for All: Equilibria and Optimality of Collaboration in Federated Learning. {\it International Conference on Machine Learning}.
+
+[7] T. H. Thi Le et al. (2021). An Incentive Mechanism for Federated Learning in Wireless Cellular Networks: An Auction Approach. {\it IEEE Transactions on Wireless Communications, vol. 20, no. 8, pp. 4874-4887, Aug. 2021}, doi: 10.1109/TWC.2021.3062708.
+
+[8] C. Anglano, M. Canonico, P. Castagno, M. Guazzone and M. Sereno (2018). A game-theoretic approach to coalition formation in fog provider federations. {\it Third International Conference on Fog and Mobile Edge Computing (FMEC), Barcelona, Spain, 2018}, pp. 123-130, doi: 10.1109/FMEC.2018.8364054
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

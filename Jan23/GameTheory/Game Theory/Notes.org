@@ -1,0 +1,97 @@
+#+title: Game Theory
+#+author: Lokesh Mohanty
+
+* Strategic (Normal) Form Game
+- Prisoners Dilemma
+- Braess Paradox with a high speed bridge
+- Vickrey Auction 
+* Dominant Strategy Equilibrium
+- Strongly Dominant Strategy Equilibrium (SDSE)
+- Weakly Dominant Strategy Equilibrium (WDSE)
+- Very Weakly Dominant Strategy Equilibrium (VWDSE)
+* Extensive Form Game
+Matching Pennies Game
+
+Any Extensive Form Game can be converted to a Strategic Form Game
+
+* Pure Strategy Nash Equilibrium (PSNE)
+Best response correspondence
+* Mixed Strategy & Mixed Strategy Nash Equilibrium (MSNE)
+* MaxMin and MinMax values and strategies
+Matrix games
+* Two player zero sum games
+* Correlated Strategy & Correlated Equilibrium
+Any mixed strategy can e viewed as a correlated strategy
+
+A Correlated Equilibrium is any correlated strategy which can be implemented self-enforcingly by a mediator who makes non-binding recommendations.
+
+Cooperative game theory comes up with solution concepts that describe logical final outcomes of a cooperative game
+
+** Games with contracts
+Signing a contract is included as an additional strategy
+Players will be willing to sign if the contracts form a NE (Guess)
+
+IR: Individually Rational -> utility is $\geq$ maxmin, minmax
+
+space of all IR correlated strategies $\cong$ space of all NE of contract signing games
+
+** Games with communication
+subset of games with contracts
+** Setup for correlated equilibrium
+Mediator announces to all players a correlated strategy (common knowledge)
+Mediator picks a pure strategy profile, reveals to each player the strategy $s_i$
+Player $i$ either obeys to play strategy $s_i$ or chooses any other strategy
+
+\[ \sum_{s_{-i} \in S_{-i}} \alpha (s_i, s_{-i}) \left\{ u_i(s_i, s_{-i}) - u_i(s_i', s_{-i}) \right\} \geq 0\]
+\[\forall s_i \in S_i, \forall s_i' \in S_i, \forall i \in N, \alpha (s_i) \geq 0 , \sum_{s \in S} \alpha (s_i) = 1,\]
+
+* Nash Bargaining Solution
+(F, v);  $F \subseteq \mathbb{R}^2$, $v \in \mathbb{R}^2$
+F -> feasible set, v -> disagreement (default) point
+F -> closed, convex and bounded, non-empty
+
+** Nash Axioms for a Solution
+*** Individually Rational
+Very weakly better than the default solution
+*** Storng Efficiency
+no other feasible solution that is strictly bettern for one player and no worse for the other player
+*** Scale Co-variance
+Scaling the feasible set and default point, scales the solution by the same scaling
+*** Independence of Irrelevant Alternatives
+If a subset of the feasible set contains the solution, then the solution for this subset is the solution of the whole feasible set
+*** Symmetry
+If the feasible set is symmetric and $v_1 = v_2$, then the solution will also be symmetric
+** Nash Bargaining Solution
+There exists unique solution satisfying the above axioms given by
+\[ f(F, v) \in \mathop{\arg\max}_{(x_1, x_2) \in F, x_1 \geq v_1, x_2 \geq v_2} (x_1 - v_1)(x_2 - v_2) \]
+
+* The Core
+Transferable Utility (TU) Game
+
+Coalitionally rational: \[ \sum_{i \in \mathcal{C}} x_i \geq v(\mathcal{C}), \forall \mathcal{C} \subseteq \mathcal{N} \]
+Individually rational: \[x_i \geq v(\{i\}), \forall i \in \mathcal{N} \], (special case of coalitionally rational)
+Collectively rational: \[\sum_{i \in N} x_i = v(\mathcal{N}) \]
+
+The core \((\mathcal{N}, v)\) is the collection of all collectively rational and coalitionally rational allocations.
+
+Properties of a Core
+1. No coalition can block any player in the core C(N, v)
+2. Core allocation is stable and arises out of effective negotiations. If a core allocation is recommended, no coalition will be unhappy about it
+3. C(N, v) is convex, closed and bounded
+4. C(N, v) can be empty, singleton or may consist of uncountable infinite number of elements
+
+Divide-the-Dollar
+Majority Voting Game
+
+* The Shapley Value
+Axioms
+1. Symmetry
+2. Linearity
+3. Carrier
+
+Shapley value: 
+\[ \phi_i(v) = \sum_{\mathcal{C} \subseteq N - i} \frac{|c| (n - |c| - 1)!}{n!} \left\{ v(\mathcal{C} \cup \{ i \}) - v(\mathcal{C}) \right\} \]
+It is the expected marginal contribution of player $i$ to the worth of any coalition
+
+\[ \phi_i(v) = \frac{1}{n!}\sum_{\pi \in \Pi(N)} m(\pi, i) \], \(i = 1, 2, ..., n\)
+It is the expected marginal contribution of player $i$ to its predecessors with expectation taken over all permutations

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Optimality and Stability in Federated Learning</title>
+<meta name="author" content="Lokesh Mohanty"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.css"/>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/theme/serif.css" id="theme"/>
+
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'https://cdn.jsdelivr.net/npm/reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h1 class="title">Optimality and Stability in Federated Learning</h1><p class="subtitle"></p>
+<h2 class="author">Lokesh Mohanty</h2><h2 class="date">10th March 2023</h2><p class="date">Created: 2023-04-09 Sun 23:03</p>
+</section>
+<section id="sec-table-of-contents"><div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#/slide-org7ab2731">1. Federated Learning</a></li>
+<li><a href="#/slide-org6614720">2. Hedonic Game (Game theoretic approach)</a></li>
+<li><a href="#/slide-orgd14e4e2">3. Model of federated learning</a></li>
+<li><a href="#/slide-org2618bc1">4. Stability</a>
+<ul>
+<li><a href="#/slide-org1404517">4.1. Uniform Federation</a></li>
+<li><a href="#/slide-org350c00f">4.2. Coarse-grained federation</a></li>
+<li><a href="#/slide-org828911f">4.3. Fine-grained federation</a></li>
+</ul>
+</li>
+<li><a href="#/slide-org5ddf939">5. Optimality</a></li>
+<li><a href="#/slide-org3c4903d">6. Price of Anarchy</a></li>
+<li><a href="#/slide-org7667356">7. Limitations</a></li>
+<li><a href="#/slide-org60c3cf7">8. Related Work</a></li>
+<li><a href="#/slide-org6e3c30e">9. My extension</a></li>
+<li><a href="#/slide-org60c7dba">10. Conclusion</a></li>
+</ul>
+</div>
+</div>
+</section>
+
+
+<section>
+<section id="slide-org7ab2731">
+<h2 id="org7ab2731"><span class="section-number-2">1.</span> Federated Learning</h2>
+<ul>
+<li>Data transfer, data privacy</li>
+
+</ul>
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+</section>
+<section>
+<section id="slide-org6614720">
+<h2 id="org6614720"><span class="section-number-2">2.</span> Hedonic Game (Game theoretic approach)</h2>
+<ul>
+<li>different distributions</li>
+<li>join only for benefit</li>
+
+</ul>
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+</section>
+<section>
+<section id="slide-orgd14e4e2">
+<h2 id="orgd14e4e2"><span class="section-number-2">3.</span> Model of federated learning</h2>
+<ul>
+<li>Error model for
+<ul>
+<li>Uniform federation</li>
+<li>Coarse-grained federation</li>
+<li>Fine-grained federation</li>
+
+</ul></li>
+
+</ul>
+
+<aside class="notes">
+<ul>
+<li>Explain these different types of federation</li>
+
+</ul>
+
+</aside>
+
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+</section>
+<section>
+<section id="slide-org2618bc1">
+<h2 id="org2618bc1"><span class="section-number-2">4.</span> Stability</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+<section id="slide-org1404517">
+<h3 id="org1404517"><span class="section-number-3">4.1.</span> Uniform Federation</h3>
+<ul>
+<li>Same number of samples</li>
+<li>Small/large number of samples</li>
+
+</ul>
+
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+<section id="slide-org350c00f">
+<h3 id="org350c00f"><span class="section-number-3">4.2.</span> Coarse-grained federation</h3>
+<ul>
+<li>Same number of samples</li>
+<li>Small/large number of samples</li>
+
+</ul>
+
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+<section id="slide-org828911f">
+<h3 id="org828911f"><span class="section-number-3">4.3.</span> Fine-grained federation</h3>
+
+<div id="org65c4e54" class="figure">
+<p><img src="file:///home/lokesh/Pictures/Screenshots/Screenshot from 2023-04-09 22-35-59.png" alt="Screenshot from 2023-04-09 22-35-59.png" width="45%" align="left" />
+</p>
+</div>
+
+<div id="orgcf55086" class="figure">
+<p><img src="file:///home/lokesh/Pictures/Screenshots/Screenshot from 2023-04-09 22-35-59.png" alt="Screenshot from 2023-04-09 22-35-59.png" class="fragment (fade-in)" width="45%" align="right" />
+</p>
+</div>
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+</section>
+<section>
+<section id="slide-org5ddf939">
+<h2 id="org5ddf939"><span class="section-number-2">5.</span> Optimality</h2>
+<ul>
+<li class="fragment fade-in">Optimal: minimizes weighted sum of errors across all agents</li>
+<li class="fragment fade-in">Algorithm:
+<ul>
+<li>Start with every agent doing local learning</li>
+<li>Group the agents togetner in ascending order of size, stopping when the first agent would increase its error by joining the coalition</li>
+
+</ul></li>
+<li class="fragment fade-in">Equivalence of player preference and reducing cost</li>
+
+</ul>
+
+<aside class="notes">
+<ul>
+<li>Error model taken from the paper "Model sharing games" by the same author</li>
+
+</ul>
+
+</aside>
+
+</section>
+<section id="slide-org5ddf939-split">
+<ul>
+<li>Swapping</li>
+<li>Monotonicity of joining</li>
+<li>Monotonicity of leaving</li>
+<li>Merging</li>
+
+</ul>
+
+</section>
+<section id="slide-org5ddf939-split">
+<ul>
+<li>Model
+\[ \hat{\theta}_C = \frac{1}{\sum_{i \in C} n_i} . \sum_{i \in C} n_i . \hat{\theta}_i\]
+\[ err_j(C) = \frac{\mu_e}{\sum_{i \in C}n_i} + \sigma^2 . \frac{\sum_{i \in C, i \neq j} n_i^2 + \left( \sum_{i \in C, i \neq j} n_i \right)^2}{\left( \sum_{i \in C} n_i \right)^2}\]</li>
+
+</ul>
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+</section>
+<section>
+<section id="slide-org3c4903d">
+<h2 id="org3c4903d"><span class="section-number-2">6.</span> Price of Anarchy</h2>
+<ul>
+<li class="fragment fade-in">for \(n_i \geq \frac{\mu_e}{\sigma^2}, \forall i\), the grand coalition \(\pi_g\) is always core stable</li>
+<li class="fragment fade-in">for \(n_i \leq \frac{\mu_e}{\sigma^2}, \forall i\), the individually stable or core stable is also optimal</li>
+<li class="fragment fade-in">\(\Pi_M\) is maximum cost IS partition, then \(err_i(\Pi_M) \leq \frac{\mu_e}{n_i}\) for all players \(i\)</li>
+
+</ul>
+
+</section>
+<section id="slide-org3c4903d-split">
+
+<ul>
+<li>Error lower bound when a player \(j\) joins coalition \(C\)
+\[err_j(C \cup \{n_j\}) \geq \begin{cases} \frac{1}{2}.\frac{\mu_e}{n_j}, n_j \geq \frac{\mu_e + \sigma^2}{2\sigma^2} \\ \sigma^2, \text{otherwise}\end{cases}\]</li>
+<li>Error upper bound when a player \(j\) joins coalition \(C\) if total number of samples \(N_C \geq \frac{\mu_e}{3\sigma^2}\), then
+\[err_j(C \cup \{n_j\} \leq 7.25.\sigma^2\]</li>
+
+</ul>
+
+</section>
+<section id="slide-org3c4903d-split">
+
+<ul>
+<li>\(n_i \leq \frac{\mu_e}{3\sigma^2}, \forall i\), with atleast one player in a coalition with mass of its partners no more than \(\frac{\mu_e}{3\sigma^2}\), then the only stable arrangement of these players is to have all of them federating together</li>
+<li>Price of Anarchy
+\[ PoA = \frac{f_w(\Pi_M)}{f_w(\Pi_{opt})} \leq 9\]</li>
+
+</ul>
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+</section>
+<section>
+<section id="slide-org7667356">
+<h2 id="org7667356"><span class="section-number-2">7.</span> Limitations</h2>
+<ul>
+<li>Theoretical study, results might be different in practice</li>
+<li>Optimality bound has some assumptions, this may lead to different bounds</li>
+
+</ul>
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+</section>
+<section>
+<section id="slide-org60c3cf7">
+<h2 id="org60c3cf7"><span class="section-number-2">8.</span> Related Work</h2>
+<ul>
+<li><code>Donahue and Kleinberg</code> studied models of fairness</li>
+<li><code>Hu et al. 2023</code> models clients behaviour in network</li>
+<li><code>Cui et al 2021</code> tries to find collaboration equilibrium</li>
+<li><code>Le et al. 2021</code> analyzes incentives for agents to contribute computational resources while using an auction approach</li>
+
+</ul>
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+</section>
+<section>
+<section id="slide-org6e3c30e">
+<h2 id="org6e3c30e"><span class="section-number-2">9.</span> My extension</h2>
+<ul>
+<li>Nothing as of now</li>
+
+</ul>
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+</section>
+<section>
+<section id="slide-org60c7dba">
+<h2 id="org60c7dba"><span class="section-number-2">10.</span> Conclusion</h2>
+<p>
+Thank You
+</p>
+<div class="slide-footer">Lokesh Mohanty</div>
+</section>
+</section>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+slideNumber:true,
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'https://cdn.jsdelivr.net/npm/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+
+});
+
+</script>
+</body>
+</html>

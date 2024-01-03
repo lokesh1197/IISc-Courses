@@ -1,0 +1,468 @@
+#+title: Game Theory Notes
+#+author: Lokesh Mohanty
+
+* Properties required for auction (06/03/2023)
+1. DSIC
+2. Maximize social welfare ($\sum x_i v_i$)
+3. Computational tractability
+
+* Design Approach (06/03/2023)
+Reduce mechanism design to algorithm design
+
+*Step  I*: Assume without justification, truthful bids design. (for properties 2 and 3)
+*Step II*: Given $x^{*}$, set $p^{*}$ to achieve DSIC. (for property 1)
+
+* Myerson's Lemma (06/03/2023)
+For any single parameter environment
+1. An allocation rule is implementable iff it is monotonous.
+2. If x is monotonous, then there exists a unique payment rule(p) such that (x, p) is DSIC.
+3. The payment rule (p) admits an explicit formula.
+ 
+\begin{align*}
+p_i(b_i, b_{-i}) = \int_0^{b_i} z x_i' (z, b_{-i}) dz
+\end{align*}
+
+Monotonocity:
+$x$ is said to be monotonous $\forall i$, $\forall b_i$ if $x_i(z, b_{-i})$ is non-decreasing in $Z$
+
+* Single Parameter Environment (10/03/2023)
+n Bidder each with private $v_i$ and quasi-linear utility
+
+Allocatoin Rule $x: \mathbb{R}_+^n \rightarrow X$(feasible set)
+Payment Rule $p: \mathbb{R}_+^n \rightarrow \mathbb{R}_+^n$
+
+Error of Single parameter environment
+- Single Item Auction
+  - DSIC
+  - Welfare max $\sum_i^n x_iv_i$, $\left( \sum_i^n x_ib_i \right)$
+  - computational efficient
+- Ad Auction
+
+Write $x(z) = x_i(z, b_i)$ and $p(z) = p_i(z, b_i)$
+*Proof*:
+\begin{align*}
+0 &\leq z < y \\
+z x(z) - p(z) &\geq z x(y) - p(y) \\
+y x(y) - p(y) &\geq y x(z) - p(z) \\
+\implies z (x(y) - x(z)) &\leq p(y) p(z) \leq y (x(y) - x(z))
+\end{align*}
+
+for piece-wise constant $x_i$,
+\begin{align*}
+p_i(b_i, b_{-i}) = \sum_{j=1}^l z_i\text{ jump }x_0(, b_{-i})
+\end{align*}
+
+general form:
+\begin{align*}
+p_i'(z, b_i) = z_i x_i'(z, b_i)
+\end{align*}
+
+[[./myer.svg]]
+
+*Eg:* Single Item Auction
+$\hat{x}$ = second highest bidder -> not implementable as it is not monotonous
+
+Myerson's lemma's insight: focus only on allocation rule and ignore payment rule.
+- Ensure: monotonous, welfare maximization and computational efficient
+
+
+*Eg:* Single Item single bidder (reserve price auctions) -> fixed price, the bidder gets it if he pays the price (reserve price)
+
+* Revealation Principle (10/03/2023)
+*Theorem 2*:
+for every auction $\mu$ in which every bidder has a dominant strategy (no matter the private valuation),
+there exists an equivalent truth telling DSIC auction $\mu'$
+
+* Bayesian Model (13/03/2023)
+** Revenue
+Revenue: $\sum_{i=1}^n p_i(b)$
+Myerson's law doesn't work for Revenue maximization. Due to lack of a good model, we use bayesian model
+
+*Example*: Single Item single bidder(reserve price auction) has trivial solution for welfare maximization but not for revenue maximization
+
+** Model
+- Single parameter environment
+- Known distributions ($F_i$)
+- Assume valuations ($v_i \sim F_i$) are mutually independent
+
+Maximize Expectation: $\mathbb{E}_{v \sim F} \left[ \sum_i p_i(v) \right]$, where $F = F_1 \times F_2 \times ... \times F_n$
+
+Goal: Identify DSIC auction with max expected revenue
+
+Expected Revenue for general r: $\mathbb{E} \left[ p_1 (v) \right] = r \mathbb{P}_{F_i}\{ v_i \geq r \} = r(1 - F_i(r))$
+
+*Example*: Single Item 2 bidder
+$F_1 = F_2 = \text{Unif}[0, 1]$
+Expected Revenue of second price auction: $\mathbb{E}_{v_1 \sim F_1, v_2 \sim F_2} [\sum_{i=1}^2 p_i(v)] = \mathbb{E}_{v \sim F} [min \{v_1, v_2\}] = 1/3$
+
+*Example*: Single Item 2 bidder with reserve price
+Expected Revenue of second price auction:
+\begin{align*}
+\mathbb{E}_{v_1 \sim F_1, v_2 \sim F_2} \left[ \sum_{i=1}^2 p_i(v) \right] &= 0 . Pr\{v_1 < 1/2, v_2 < 1/2\} + 1/2 . Pr\{v_1 \geq 1/2, v_2 < 1/2\} \\
+&+ 1/2 . Pr\{ v_1 < 1/2, v_2 \geq 1/2\} + \mathbb{E}[\min(v1, v2)]. Pr\{v_1 \geq 1/2, v_2 \geq 1/2\}
+\end{align*}
+
+** Revenue maximization using virtual welfare maximization (13/03/2023, 15/03/2023)
+Goal: Description of an expected revenue maximizing DSIC auction for any single parameter environment and any $F_1, F_2, ..., F_n$
+
+Result(Myerson): Expected Revenue = Expected Virtual Welfare
+Definition (Virtual welfare): For a bidder i, with value distribution $F_i$ and valuation $z_i$, their virtual value is defined as
+\begin{align*}
+\phi_i(z) = z - \frac{1 - F_i(z)}{f_i(z)}
+\end{align*}
+will assume $F_1$ is continuous throughout, r support on $[0, v_{max}]$
+we can see from the definition that $\phi_i(v_i) \leq v_i$
+
+*---------------------------------------------------- (15/03/2023)--------------------------------------------------------------*
+
+*Lemma*: For every single parameter environment with valuation distributions $F_1, F_2, ..., F_n$, every DSIC(x, p) mechanism.
+
+Every $i$, every $v_{-i}$ of the other agents
+\begin{align*}
+\mathop{\mathbb{E}}_{v_i \sim F_i} [p_i(v)] = \mathop{\mathbb{E}}_{v_i \sim F_i} [x_i(v_i, v_{-i}) \phi_i(v_i)]
+\end{align*}
+*Proof*:
+\begin{align*}
+p_i(v_i, v_{-i}) &= \int_0^{v_i} z x_i'(z, v_{-i} dz \\
+\mathop{\mathbb{E}}_{v_i \sim F_i} [p_i(v_i, v_{-i})] &= \int_0^{v_{max}} p_i (v_i, v_{-i}) f_i(v_i) dv \\
+\implies \mathop{\mathbb{E}}_{v_i \sim F_i} [p_i(v)] &= \int_0^{v_{max}} \left[ \int_0^{v_i} z x_i'(z, v_{-i})dz \right] f_i(v_i) dv_i \\
+&= \int_0^{v_{max}} \left[ \int_0^{v_{max}} f_i(v_i) dv_i \right] z x_i'(z, v_{-i})dz \\
+&= \int_0^{v_{max}} \left[ 1 - F_i(z) \right] z x_i'(z, v_{-i})dz \\
+&= \int_0^{v_{max}} \left[ 1 - F_i(z) \right] z x_i'(z, v_{-i})dz \\
+&= \left[ 1 - F_i(z) \right]z \left( x_i'(z, v_{-i}) \right)\mathop{|}_0^{v_{max}} - \int_0^{v_{max}} x_i(z, v_{-i})(1 - F_i(z)  -zf_i(z))dz \\
+&= 0 + \int_0^{v_{max}} x_i(z, v_{-i}) f_i(z) \left( z - \frac{1-F_i(z)}{f_i(z)} \right)dz \\
+&= \int_0^{v_{max}} x_i(z, v_{-i}) \phi_i(z) f_i(z) dz \\
+&= \mathop{\mathbb{E}}_{v_i \sim F_i} \left[ x_i(v_i, v_{-i}) \phi_i(v_i) \right]
+\end{align*}
+
+*Theorem*: For every single param environment with valuation distributions $F_1, F_2, ..., F_n$ and every DSIC with $(x, p)$
+\begin{align*}
+\mathop{\mathbb{E}}_{v \sim F} \left[ \sum_{i=1}^n p_i(v) \right] &= \mathop{\mathbb{E}}_{v \sim F} \left[ \sum_{i=1}^n x_i(v) \phi_i(v_i) \right] \\
+\text{Where } F &= \mathop{\Pi}_{i=1}^nF_i
+\end{align*}
+
+*Proof*:
+\begin{align*}
+\mathop{\mathbb{E}}_{v \sim F} \left[ \sum_{i=1}^n p_i(v) \right] &= \mathop{\mathbb{E}}_{v \sim F} \left[ \sum_{i=1}^n \phi_i(v_i)x_i(v) \right] \\
+\implies \mathop{\mathbb{E}}_{v \sim F} \left[ p_i(v) \right] &= \mathop{\mathbb{E}}_{v \sim F} \left[ \phi_i(v_i) x_i(v) \right] \text{  \{Linearity of expectation\}}
+\end{align*}
+
+
+*New Objective (equivalent)*: Identify DSIC mechanism $(x, p)$ that maximizes expected virtual welfare
+\begin{align*}
+\max \sum_{i=1}^n x_i \phi_i(v_i) \text{    s.t.   } (x_1, x_2, ..., x_n) \in \mathcal{X}
+\end{align*}
+This is called virtual-welfare maximizing allocation
+
+*Sufficient* condition for monotonocity of $x^{*}$
+*Definition* [Regular Distribution]: A distribution for $F_i$ is said to be regular if the
+corresponding virtual valuation function $\phi_i(z) = z - \frac{1 - F_i(z)}{f_i(z)}$ is non-decreasing
+
+Virtual Welfare maximiser $\rightarrow$ Mechanism $x^{*}$
+
+_Assumptions_: All $F_i$ are regular
+1. Transform the (truthfully) reported valuations ($v_i$) into $\phi_i(v_i)$
+2. Choose the feasible allocation $(x_1, x_2, ..., x_n) \in \mathcal{X}$ that maximizes $\sum_{i=1}^nx_i(\phi_i(v_i))$
+3. Choose payment via Myerson's Lemma
+
+*Theorem*: [Virtual welfare maximizer $x^{*}$ are revenue optimizers]
+For every single parameter environemnts and regular distributions of the corresponding virtual welfare max $x^{*}$ is a DSIC mechanism with max possible expected revenue.
+
+*Eg:* Revenue optimum mechanism for single item auction
+Consider $v_1, v_2, ..., v_n \sim F_1$, $F_1 \rightarrow$ strongly regular
+Here $x^{*}$ corresponds to
+\begin{align*}
+\max \sum_{i=1}^n x_i \phi(v_i) \text{  s.t.  } \sum_{i=1}^n x_i \leq 1
+\end{align*}
+If $v_{(1)} > v_{(2)} > ... > v_{(n)} \implies \phi(v_{(1)}) > \phi(v_{(2)}) > ... > \phi(v_{(n)})$ 
+Reserve price $(r) = \phi^{-1}(0)$
+
+Optimum: Second price auction with reserve price $\phi^{-1}(0)$
+
+*---------------------------------------------------- (20/03/2023)--------------------------------------------------------------*
+
+*Eg:* Single Item non-identical bidders (regular) $v_i \sim F_i$ can have $\phi_i(v_i) > \phi_2(v_2)$ with $v_1 < v_2$
+
+This shows that revenue optimized auctions can become complex leading to wierd auctions which are not interpretable.
+
+** Simple Near-Optimal Auctions
+This give simple, robust and practical but near-optimal auction
+
+** Prophet Inequality
+Known Distributions: $G_1, G_2, ..., G_n$ (independent)
+
+In each round $i \in \{1, 2, ..., n\}$, observe $\pi_i \sim G_i$
+After seeing $\pi_i$, irrecovable decision: accept $\pi_i$ and stop (or) discard $\pi_i$ and continue
+*Benchmark*: Fully clairvoyant prophet $\rightarrow$ $\mathbb{E}_{\pi \sim G} [\max_{i \leq i \leq n} \pi_i]$
+
+*Theorem:* For every sequence of n distributions (Samuel-Cahn) $G_1, G_2, ..., G_n$, there exists a strategy that
+guarantees expected reward at least $\frac{1}{2} \mathbb{E}[\max \pi_{i}]$. However, there is such a threshold strategy which accepts
+price $\pi_i$  iff $\pi_i \geq$ some threshold $t$
+
+*Proof:* Write $Z^{+} := \max \{Z, 0\}$, $q(t) =$ probability that all $\pi_i < t$
+
+Define:
+Event $E_i$: only price $\pi_i \geq t$ ($\pi_j < t\, \forall j \neq i)$
+
+
+Derive an linear bound on expected reward of $t$ threshold strategy:
+\begin{align*}
+\mathbb{E} \left[\text{strategy reward} \middle| E_i \right] &= \mathbb{E} \left[ \pi_i \middle| E_i \right] \\
+&= t + \mathbb{E} \left[ \pi_i - t \middle| E_i \right]\\
+\implies \mathop{\mathbb{E}}_{\pi \sim G} \left[ \text{strategy reward} \right]
+&\geq (1 - q(t))t + \sum_{i=1}^n \mathop{\mathbb{E}}_{\pi \sim G} \left[ \pi_i - t \middle| E_i \right] Pr \{E_i\}  \\
+&= (1 - q(t))t + \sum_{i=1}^n \mathop{\mathbb{E}}_{\pi \sim G} \left[ \pi_i - t \middle| \pi_i \geq t, \pi_j < t \, \forall j  \right] Pr \{\pi_i \geq t\} Pr \{\pi_j < t \, \forall j \neq i\}  \\
+&= (1 - q(t))t + \sum_{i=1}^n \mathop{\mathbb{E}}_{\pi \sim G} \left[ \pi_i - t \middle| \pi_i \geq t \right] Pr \{\pi_i \geq t\} Pr \{\pi_j < t \, \forall j \neq i\}  \\
+&= (1 - q(t))t + \sum_{i=1}^n \mathop{\mathbb{E}}_{\pi \sim G} \left[ \pi_i - t \middle| \pi_i \geq t \right] Pr \{\pi_i \geq t\} q(t)  \\
+&= (1 - q(t))t +  q(t)\sum_{i=1}^n \mathop{\mathbb{E}} \left[ \pi_i - t \right]^{+}   \\
+\implies \mathbb{E} \left[\text{strategy reward} \middle| E_i \right] &\geq (1 - q(t))t +  q(t)\sum_{i=1}^n \mathop{\mathbb{E}} \left[ \pi_i - t \right]^{+}
+\end{align*}
+
+Derive an upper bound on expected reward of prophet:
+\begin{align*}
+\mathop{\mathbb{E}} \left[ \max_i \pi_i \right] &= \mathop{\mathbb{E}}_{\pi} \left[ t + \max_{1 \leq i \leq n} (\pi_i - t) \right] \\
+&= t + \mathop{\mathbb{E}}_{\pi} \left[ \max_i (\pi_i - t) \right] \\
+&\leq t + \mathop{\mathbb{E}}_{\pi} \left[ \max_i (\pi_i - t)^+ \right] \leq t + \sum_{i=1}^n \mathop{\mathbb{E}}_{\pi} \left[ (\pi_i - t)^+ \right]
+\end{align*}
+
+Therefore for $q(t) = \frac{1}{2}$ and from lower and upper bounds we can see that
+\begin{align*}
+\mathbb{E} \left[ \text{strategy reward} \right] \geq \frac{1}{2} \mathbb{E} \left[ \max_i \pi_i \right]
+\end{align*}
+
+_Note:_ work with adversarial tie breaking
+Mechanism: virtual threshold
+1. Choose $L^*$ such that $Pr \{ \max_i\}$
+
+** Prior-Independent Mechanisms (27/03/2023)
+
+*Bulow-Klenpoon theorem '96 (Single Item Auction)*
+For a single item auction, let $F$ be a regular distribution and $n$ be a positive integer. Let $p$ and $p^*$ be payment vectors of second price auction with $(n+1)$ bidders and virtual welfare maximizer(optimal) auction with $n$ bidders, separately. Then,
+\begin{align*}
+  \mathop{\mathbb{E}}_{v \sim F^{n+1}} \left( \sum_{i=1}^{n+1}p_i(v) \right) \geq \mathop{\mathbb{E}}_{v \sim F^n} \left( \sum_{i=1}^n p_i^{*}(w) \right)
+\end{align*}
+
+*Proof*:
+Comparision via a fictitious auction $\mathcal{A}$ over $(n+1)$ bidders
+1. Simulate optimization mechanism on first $n$ bidders.
+2. If item is not allocated in Step 1, then assign it to $(n+1)$ bidder for free.
+
+Two properties of $\mathcal{A}$
+1. $Exp_{\mathcal{A}} Rev = Exp$ Revenue of optimal with $n$ bidders
+2. Item always allocated
+
+*Note*: Exp. revenue of a second price auction is al least that of $\chi$. Within all DSIC $(n+1)$ mechanisms that always allocate the item, the optimal is
+\begin{align*}
+\mathop{\arg\max}_{1 \leq i \leq n+1} \phi (v_i)
+\end{align*}
+
+(Recall equivalence of virtual welfare and expected revenue)
+
+iid -> unique $\phi(v_i)$
+regularity -> $\arg\max_{1 \leq i \leq n+1} v_i$. This is the second price auction.
+
+Hence, Expected revenue second price $(n+1)$ $\geq$ Expected revenue $\mathcal{A}$ $(n+1)$ = Expected revenue optimal $(n)$
+
+* Multi-Parameter Mechanism Design (03/04/2023)
+
+Components
+1. $n$ bidders
+2. A finite set of outcomes $\Omega$
+3. Each bidder $i$ has a _private_ non-negative valuations $v_i \in \mathbb{R}^{|\Omega|}_1$ for each $\omega \in \Omega$ ($\omega_i$ is allocation of the $i^{th}$ item)
+
+ bids $\rightarrow$ { multi parameter mechanism (x(b)) } $\rightarrow$ $\omega \in \Omega$
+
+ Social welfare of outcome $\omega \in \Omega$ is $\sum_{i=1}^n v_i(\omega)$
+
+*Eg:* Single Item Auction
+- $\Omega = \{w_0, w_1, ..., w_n\}$
+- $v_i(w_i) = \overline{v}_i \in \mathbb{R}_\perp$
+- $v_i(w_j) = 0$ $\forall j \neq i$
+
+$\omega_0 \rightarrow$ item was not sold
+$\omega_i \rightarrow$ item was sold to $i^{th}$ bidder
+
+*Eg:* Combinatorial Auctions
+- $n$ bidders, $m$ indivisible items
+- $\Omega \rightarrow$ all $n$-partitions of (m], $(S_1, S_2, ..., S_n) \in \Omega$, $S_i \leq (m]$
+- $|\Omega| = n^m$
+
+** VCG(Vickrey Clarke Groves) Mechanism
+*Theorem*: In every multi-param environment, there exists a DSIC mechanism that maximizes social welfare.
+
+*Mechanism*:
+$x(b_1, b_2, ..., b_n) \in \Omega$ -> outcomes
+$p(b_1, b_2, ..., b_n) \in \mathbb{R}^n_{\perp}$
+
+The social welfare of an outcome $w \in \Omega$ is defined as $\sum_{i=1}^n v_i(w)$
+
+As before, two-step approach,
+1. Allocation rule (assuming truthful without justification) 
+\begin{align*}
+ x(b_1, b_2, ..., b_n) = \arg\max_{w \in \Omega} \sum_{i =1}^{n} b_i(w) \rightarrow \omega^{*}
+\end{align*}
+2. Find payment rule to associate with $x$ that yields DSIC
+The welfare loss inflicted on the other $(n-1)$ bidders by its presence
+\begin{align*}
+p_i(b) = \left( \max_{w \in \Omega} \sum_{j \neq i} b_j(w) \right) - \left( \sum_{j \neq i} b_j(w^{*}) \right)
+\end{align*}
+
+*Proof:* VCG is welfare-maximizing DSIC
+
+That is, for every $i$, betting $b_i = v_i$ is a dominant strategy (utility maximizing)
+Fix $i$, Fix $b_{-i}$, utility of $i$ = $v_i(x(b_i, b_{-i})) - p_i(b_i, b_{-i})$
+\begin{align*}
+v_i(\omega) - p_i(b) &= \underbrace{v_i(\omega) + \sum_{j \neq i}b_j(\omega)}_\text{A} - \underbrace{\left( \max_{\hat{\omega} \in \Omega} \sum_{j \neq i} b_j |\hat{\omega}| \right)}_\text{B}
+\end{align*}
+Term *B* is independent of $b_i$.
+
+Mechanism objective: $\arg\max_{\omega \in \Omega} b_i(\omega) + \sum_{j \neq i} b_j(\tilde{\omega})$
+Bidder's objective: $\arg\max_{\tilde{\omega} \in \Omega} v_i(\tilde{\omega}) + \sum_{j \neq i} b_j(\tilde{\omega})$
+
+*Note:*
+\begin{align*}
+p_i(b) = b_i(w^{*}) - \overbrace{\left( \sum_{j \neq i}^n b_j(w^{*}) - \left( \max_{w \in \Omega} \sum_{j \neq i} b_j(w) \right) \right)}^{\text{REBATE, non-negative}}
+\end{align*}
+
+* Contract Theory (05/04/2023, 10/04/2023)
+#+NAME: fig:contract-theory
+[[file:figures/contract-theory.png]]
+
+*Examples:*
+- Online Marketing
+  Principal : Website Owner
+      Agent : Marketing Executive
+
+  Model Basics (Principal-Agent Model)
+  - Two Players
+  - Ingredients: Private Information (effort) and Incentives
+- Crowdsourcing Platforms
+- Complex Supply Chains
+- Pay-per Performance Medicare
+
+*Two Defining Features*
+1. Agent's actions/effort are hidden - =Moral Hazard=
+2. Principal never charges (only pays) the agent (non-negative transfers) - =Limited Liability=
+
+     Input $\rightarrow$ Mechanism $\rightarrow$ Output
+Reported by             Who gets what and
+stratigic agents         for how much?
+
+      Input $\rightarrow$ Conract $\rightarrow$ Output
+Carried out by          Who does what?
+strategic agents        and for how much?
+
+*Design Goal*: Maximize Objective (social welfare / revenue) subject to incentive constraints (truthtelling/effort)
+*Model*: [Holmstorm '79] (Principal Agent Model)
+1. Agent has n actions (effort levels) with costs $c_1, c_2, ..., c_n \in \mathbb{R}_{+}$
+2. Principal has m rewards $r_1, r_2, ..., r_m \in \mathbb{R}_{+}$
+3. Every action $i$ induces a distribution $F_i$ over $\vec{r}$, $F_{i,j}$: probability that action $i$ yields reward $r_j$
+
+\[
+< \vec{c}, \vec{r}, (F_1, F_2, ..., F_n) >
+\]
+\[R_i = \sum_{j=1}^m r_j F_{i,j}\]
+
+*Definition*: Contract is a vector $\vec{t} = (t_1, t_2, ..., t_m)$ that specifies a transfer $t_j \geq 0$ per reward $r_j$
+*Notation:* For a contract $\vec{t} \in \mathbb{R}_{+}^m$
+Expected Transfer: $T_i = \sum_{j=1}^m F_{i,j} t_j$
+
+Agent is utility maximizing, that is, it selects $i$ to maximize $T_i - c_i$
+Principal: Expected Revenue from agents choice $i$ in $R_i - T_i$
+
+_Timing_:
+---|------------------------|--------------|-----------------|-------------|------------->
+Setting                 Principal       Agent takes      Principal     Principal        Time
+$<\vec{c}, \vec{r}, (F_1, F_2, ..., F_n)>$    designs          action $\hat{i}$ =     gets reward     pays 
+known to all          contract $\vec{t} \in \mathbb{R}_{+}^m$   argmax $(T_i - c_i)$   $r_j \sim F_{i,j}$      $t_j$
+
+Principal is revenue (in exp): $R_{i*} - T_{i*}$
+Optimal contract is that which maxmizes revenue
+
+                    | Designer   | Designer      |
+                    | uninformed | informed      |
+-------------------------------------------------|
+Private Information | Mechanism  | Signalling    |
+in value            | Design     | (persuassion) |
+-------------------------------------------------|
+Private information | Contract   |     -         |
+in action           | Design     |               |
+
+*Examples*:
+First Best = $\max_{1 \leq i \leq n} (R_i - C_i)$
+
+|               | r_1 = 0 | r_2 = 3 | r_3 = 7 | r_4 = 10 |             
+|---------------+---------+---------+---------+----------|
+| Low Effect    |    0.72 |    0.18 |    0.08 |     0.02 | $R_1 = 1.3$ 
+| c_0 = 0       |         |         |         |          |             
+|---------------+---------+---------+---------+----------|
+| Medium Effect |    0.12 |    0.48 |    0.08 |     0.32 | $R_2 = 5.2$ 
+| c_1 = 0       |         |         |         |          |             
+|---------------+---------+---------+---------+----------|
+| High Effect   |    0.00 |    0.40 |    0.00 |     0.60 | $R_3 = 7.2$ 
+| c_2 = 0       |         |         |         |          |             
+|---------------+---------+---------+---------+----------|
+Example Contract $\vec{t}$: $t_1 = 0$, $t_2 = 1$, $t_3=2$, $t_4 = 5$
+Expected Transfers: $T_1 = 044$, $T_2 = 224$, $T_3 = 34$
+
+Agent's selection action $\rightarrow$ Action 3 ("High Effect")
+utility = max{044 - 0, 224 - 1, 34 - 2}
+Exp. Revenue = $R_{\hat{i}} - T_{\hat{i}} = 7.2 - 3.4 = 3.8$
+
+*Example:*
+
+|           | r_1 = 1 | r_2 = 1.1 | r_3 = 4.9 | r_4 = 5 | r_5 = 5.1 | r_6 = 5.2 |
+|-----------+---------+-----------+-----------+---------+-----------+-----------|
+| c_1 = 0   |     3/8 | 3/8       | 2/8       | 0       | 0         |         0 |
+| c_2 = 1   |       0 | 3/8       | 3/8       | 2/8     | 0         |         0 |
+| c_3 = 2   |       0 | 0         | 3/8       | 3/8     | 2/8       |         0 |
+| c_4 = 2.2 |       0 | 0         | 0         | 3/8     | 3/8       |       2/8 |
+
+*Objective:* Find contracts with optimum expected revenue
+*Subroutine*: Min pay problem
+        Goal: Find the contract with min $T_i$ that "implements" i
+          LP: \[\min_{t} \sum_{j=1}^m F_{i,j} t_j\]
+
+Linear Regression: 
+\[ \sum_{j = 1}^m F_{ij} t_j - c_i \geq \sum_{j=1}^m F_{aij} t_j - c_a\] $\forall a \neq i$
+
+*Dual of Min Pay:*
+Infeasible LP(primal) iff the following dual has obj val > 0
+\[\max c_1 - \sum_{a \neq 1}\lambda_a c_a\]
+s.t. \[\sum_{a \neq i} \lambda_a \geq F_{a_{ij}} \leq F_{ij} \forall j\], \[\lambda_a \geq 0 \],  \[\sum_{a \neq i} \lambda_a = 1\]
+
+COR: There exists an optimal contract with atmost (n - 1) non-zero transfers
+
+* Structure of Optimal Contracts
+** Optimal contracts for n=2 & m=2
+
+|            | r_1     | r_2 | (r_1 < r_2) |
+|------------+---------+-----+-------------|
+| c1 = 0     | 1 - p   | p   |             |
+| c2 = c > 0 | 1 - \pi | \pi |             |
+
+first best = \[R_2 - c = r_1(1 - \pi) + r_2 \pi - c\]
+
+\[T_2 - c \geq T_1\]
+\[(1 - \pi) t_1 + \pi t_2 - c \geq (1 - p) t_1 + t_2 p\]
+\[(\pi - p)(t_2 - t_1) \geq c\]
+
+Note: for optimality \[t_1^* = 0\], \[t_2^{*} = \frac{c}{\pi - p}\]
+Optimal expected revenue of princiapl  \[ = R_2 - T_2 = R_2 - c \left( \frac{\pi}{\pi - p} \right)\]
+
+** Optimal contracts for n=2 & m>2 rewards
+Optimal contract with 1 non-zero transfer
+
+If \(t_j > 0 \), then $(t_k = 0 \forall k \neq j)$.
+Hence, \( t_j . F_{2_{ij}} - c = t_j F_{ij}\)
+Hence, \[t_j = \frac{c}{F_{2_{ij}} - F_{ij}}\]
+Principal Revenue = \[R_2 - c . \frac{F_{2_{ij}}}{F_{2j} - F_{1j}} = R_2 - c. \frac{1}{1 - \frac{F_{1j}}{F_{2j}}}\]
+
+* Tasks
+- [ ] Assignment (Welfare maximization always leads to monotonous allocation rule)
+- [X] Homework: $X_1, X_2, ..., X_n \sim Unif[a, b]$, $\mathbb{E} [\min_{1 \leq i \leq n} X_i] = \frac{b + na}{n + 1}$, $Y = \min_{1 \leq i \leq n}X_{i}$
+- [X] Midterm 2: March 29
+- [ ] Homework: Prove DSIC in prior-independent mechanism
+  
+* Glossary
+- DSIC: Dominant Strategy Incentive Compatibility

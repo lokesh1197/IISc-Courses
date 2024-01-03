@@ -1,0 +1,97 @@
+:REVEAL_PROPERTIES:
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
+#+REVEAL_THEME: serif
+#+REVEAL_INIT_OPTIONS: slideNumber:true
+#+OPTIONS: toc:1
+:END:
+
+#+title: Optimality and Stability in Federated Learning
+#+author: Lokesh Mohanty
+#+date: 10th March 2023
+
+* Federated Learning
+- Data transfer, data privacy
+* Hedonic Game (Game theoretic approach)
+- different distributions
+- join only for benefit
+* Model of federated learning
+- Error model for
+  - Uniform federation
+  - Coarse-grained federation
+  - Fine-grained federation
+
+#+BEGIN_NOTES
+- Explain these different types of federation
+#+END_NOTES
+
+* Stability
+** Uniform Federation
+- Same number of samples
+- Small/large number of samples
+
+** Coarse-grained federation
+- Same number of samples
+- Small/large number of samples
+
+** Fine-grained federation
+#+ATTR_HTML: :width 45% :align left
+[[file:~/Pictures/Screenshots/Screenshot from 2023-04-09 22-35-59.png]]
+#+ATTR_REVEAL: :frag (fade-in)
+#+ATTR_HTML: :width 45% :align right
+[[file:~/Pictures/Screenshots/Screenshot from 2023-04-09 22-35-59.png]]
+* Optimality
+#+ATTR_REVEAL: :frag (fade-in)
+- Optimal: minimizes weighted sum of errors across all agents
+- Algorithm:
+  - Start with every agent doing local learning
+  - Group the agents togetner in ascending order of size, stopping when the first agent would increase its error by joining the coalition
+- Equivalence of player preference and reducing cost
+
+#+BEGIN_NOTES
+- Error model taken from the paper "Model sharing games" by the same author
+#+END_NOTES
+
+#+reveal: split
+#+ATTR_REVEAL: :frag (fade-in)
+
+- Swapping
+- Monotonicity of joining
+- Monotonicity of leaving
+- Merging
+
+#+reveal: split
+#+ATTR_REVEAL: :frag (fade-in)
+
+- Model
+  \[ \hat{\theta}_C = \frac{1}{\sum_{i \in C} n_i} . \sum_{i \in C} n_i . \hat{\theta}_i\]
+  \[ err_j(C) = \frac{\mu_e}{\sum_{i \in C}n_i} + \sigma^2 . \frac{\sum_{i \in C, i \neq j} n_i^2 + \left( \sum_{i \in C, i \neq j} n_i \right)^2}{\left( \sum_{i \in C} n_i \right)^2}\]
+* Price of Anarchy
+#+ATTR_REVEAL: :frag (fade-in)
+- for $n_i \geq \frac{\mu_e}{\sigma^2}, \forall i$, the grand coalition $\pi_g$ is always core stable
+- for $n_i \leq \frac{\mu_e}{\sigma^2}, \forall i$, the individually stable or core stable is also optimal
+- $\Pi_M$ is maximum cost IS partition, then $err_i(\Pi_M) \leq \frac{\mu_e}{n_i}$ for all players $i$
+
+#+reveal: split
+
+- Error lower bound when a player $j$ joins coalition $C$
+  \[err_j(C \cup \{n_j\}) \geq \begin{cases} \frac{1}{2}.\frac{\mu_e}{n_j}, n_j \geq \frac{\mu_e + \sigma^2}{2\sigma^2} \\ \sigma^2, \text{otherwise}\end{cases}\]
+- Error upper bound when a player $j$ joins coalition $C$ if total number of samples $N_C \geq \frac{\mu_e}{3\sigma^2}$, then
+  \[err_j(C \cup \{n_j\} \leq 7.25.\sigma^2\]
+
+#+reveal: split
+
+- $n_i \leq \frac{\mu_e}{3\sigma^2}, \forall i$, with atleast one player in a coalition with mass of its partners no more than $\frac{\mu_e}{3\sigma^2}$, then the only stable arrangement of these players is to have all of them federating together
+- Price of Anarchy
+  \[ PoA = \frac{f_w(\Pi_M)}{f_w(\Pi_{opt})} \leq 9\]
+* Limitations
+- Theoretical study, results might be different in practice
+- Optimality bound has some assumptions, this may lead to different bounds
+* Related Work
+- ~Donahue and Kleinberg~ studied models of fairness
+- ~Hu et al. 2023~ models clients behaviour in network
+- ~Cui et al 2021~ tries to find collaboration equilibrium
+- ~Le et al. 2021~ analyzes incentives for agents to contribute computational resources while using an auction approach
+* My extension
+- Nothing as of now
+* Conclusion
+ Thank You

@@ -1,0 +1,464 @@
+% Created 2023-04-25 Tue 10:39
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{Lokesh Mohanty}
+\date{\today}
+\title{PRNN Notes}
+\hypersetup{
+ pdfauthor={Lokesh Mohanty},
+ pdftitle={PRNN Notes},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.0.60 (Org mode 9.7-pre)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{Naive Baye's Classifier (02/03/2023)}
+\label{sec:org78a3b3b}
+Here we assume that in the features are independent of each other which makes it is easy to find the class conditional density  \(h\) 
+
+\begin{align*}
+h_B(x) = \begin{cases} 1, P_{y=1/x} > P_{y=0/x} \\ 0, otherwise \end{cases} \\
+p_{x/y=i} = \Pi_{j=1}^d p_{xy/y=i}
+\end{align*}
+
+\section{The Bias-Variance decomposition}
+\label{sec:orgeb0aedd}
+
+\(R(h) = Bias^{2} + Variance + Noise^2\)
+\begin{align*}
+  Bias = \mathbb{E}[\overline{h}(x) - h^*(x)] \\
+  Variance = \mathbb{E}[h_D(x) - \overline{h}(x)]^2 \\
+  Noise = \mathbb{E}[h(x) - h^*(x)]
+\end{align*}
+
+\section{Regularization}
+\label{sec:org4b20941}
+
+\textbf{ERM}: \(\min_{\theta} \hat{R}(h_{\theta}})\)
+Regularized ERM: \(\min_{\theta} \hat{R}(h_{\theta}}) + \lambda \Omega (\theta)\), (Regularizer) \(\Omega (\theta): \theta \rightarrow \mathbb{R}\), (Regularization constant) \(\lambda\)
+
+\textbf{Claim}: A regularized \(h_{\theta}\) will have more bias compared to its unregularized counterpart
+
+\textbf{Eg}:
+  \(y = ax^2 + \epsilon\), \(\epsilon \sim \mathcal{N}(0, I)\), \(x \in \mathbb{R}\)
+  \(D = {(x_i, y_i)}^6_{i = 1}\)
+
+\begin{align*}
+  h_1^w(x_i) &= \sum_{j=1}^6 w_ix_i^j + w_0 \\
+  h_1^{w*}(x) &= \underset{w}{\arg\min} \hat{R}(h_1^w) \\
+  \hat{h}_1^{w*}(x) &= \arg\min_w \left[ \hat{R}(h_1^w + \lambda ||w||_2^2) \right] \\
+  \Omega: w \rightarrow \mathbb{R}^{+} &= ||w||_2^2 \\
+  \text{Bias } \hat{h}^{w*}_1 &> \text{Bias } h_1^{w*} \\
+\end{align*}
+It can also be considered as a constrained optimization problem (i.e., \(\min \hat{R}(w)\) s.t. \(\Omega(w) \le k\)(some constant))
+
+\section{Fisher Linear Discriminant Analysis (FLDA)}
+\label{sec:org13d407a}
+
+\begin{align*}
+  h_b(x) = \begin{cases}
+            0, \, p_{y=0/x} - p_{y=1/x} > 0 \\
+            1, \, otherwise
+          \end{cases}
+\end{align*}
+
+Discriminant function: \(P_{y=0/x} - P_{y=1/x}\)
+
+\subsection{Linear Separability}
+\label{sec:org58a45e0}
+A given \(\mathcal{D}\), is called linearly separable, if there exists a linear discriminant function such that \(\forall x_i \in \mathcal{D}\), \(w^Tx_i>0\) if \(y_i = 0\) and \(w^Tx_i < 0\) if \(y_i = 1\).
+
+Given a \(\mathcal{D}\) (linearly separable), find a \textbf{good} \(\mathbf{w}\). (maximize the difference between the projected means of the different classes)
+suppose \(y_i \in {c_1, c_2}\), let \(\mu_1 = \frac{1}{n_1}\sum_{i, y_i \in c_1} w^Tx_i\), \(\mu_2 = \frac{1}{n_2}\sum_{i, y_i \in c_2} w^Tx_i\), \(s^2_1 = \sum_{i:x_i \in c_1} (w^Tx_i - \mu_1)^2\), \(s^2_2 = \sum_{i:x_i \in c_2} (w^Tx_i - \mu_1)^2\)
+
+\begin{align*}
+  R_{FLDA}(w) &= \frac{\mu_{1}^2 - \mu_2^2}{s^2_1 + s^2_2}  = \frac{W^T S_B W}{W^T S_W W}\\
+  w^{*}_{FLDA} &= \arg \max_w R_{FLDA}(w) \rightarrow w: S_B W = \lambda S_W W
+\end{align*}
+
+inter-class scatter -> \(\mu_1^2 - \mu^2_2\)
+intra-class scatter -> \(s^2_1 + s^2_2\)
+
+\begin{align*}
+  \left( \mu_1 - \mu_2 \right)^2 &= W^T S_B W \\
+  S_B^{d \times d} &= (m_1 - m_2)(m_1 - m_2)^T \, \rightarrow \text{ between class scatter matrix} \\
+  S_1^2 &= W^T \left[ \sum_{i \in C_1} (x_i - m_1)(x_i - m_1)^T \right] W \\
+  S_2^2 &= W^T \left[ \sum_{i \in C_2} (x_i - m_2)(x_i - m_2)^T \right] W \\
+\text{Define } S_w &= \sum_{i \in C_1} (x_i - m_1)(x_i - m_1)^T \, \rightarrow \text{ with class scatter matrix}
+\end{align*}
+
+Observe,
+\begin{align*}
+S_B W = (m_1 - m_2)(m_1 - m_2)^T W = k(m_1 - m_2), \text{ (as $(m_1 - m_2)^T W$ is scalar)} \\
+\text{Since, } S_B W = \lambda S_W W \implies k(m_1 - m_2) = \lambda S_W W \implies W_{FLDA} = c . S_W^{-1}(m_1 - m_2)
+\end{align*}
+
+\section{Perceptron Training Algorithm (28/02/2023)}
+\label{sec:orgf216477}
+
+Let \(w_k\), \(x_k\) and \(y_k\) denote \(w\), \(x\) and \(y\) at the kth iteration
+Define \(\Delta w_k = w_{k+1} - w_k\), such that
+\begin{align*}
+\Delta w_k = \begin{cases}
+0, \text{ if ($w^T_k x_k > 0$ and $y_k = 1$) or ($w^T_k x_k < 0$ and $y_k = 0$)} \\
+x_k, \text{ if $w^T_k x_k \leq 0$ and $y_k = 1$} \\
+-x_k, \text{ if $w^T_k x_k \geq 0$ and $y_k = 0$} \\
+\end{cases}
+\end{align*}
+
+\subsection{Claim: This algorithm converges in finite number of steps}
+\label{sec:orgff112af}
+
+\textbf{Proof by contradiction:}
+\begin{itemize}
+\item Multiply all \(x_i\) with \(y_i = 0\) by \(-1\).
+\item Then, \(w^T x_i > 0\) \(\forall i\).
+\item \(w_{k+1} = w_k + x_k\) if \(w_k^T x_k \leq 0\).
+\end{itemize}
+
+Assume that the algorithm fails to find a seperating hyperplane. Then, \(w_k^T x_k \leq 0\) \(\forall k\). (counring only misclassifications)
+\begin{align*}
+w_{k+1} &= w_k + x_k \\
+\lVert w_{k+1} \rVert^2 &\leq \lVert w_k \rVert^2 + \lVert x_k \rVert^2 \,\, [\because w^T_k x_k \leq 0] \\
+\lVert w_k \rVert^2 &\leq \lVert w_0 \rVert^2 + \sum_{i=0}^{k-1} \lVert x_i \rVert^2 \\
+\text{without the loss} &\text{ of generality, assume $w_0 = [0 ... 0]^{d \times 1}$} \\
+\lVert w_k \rVert^2 &\leq \sum_{i=0}^{k-1} \lVert x_i \rVert^2 \\
+\text{let } M &= \max_i \lVert x_i \rVert^2 \\
+\implies \lVert w_k \rVert^2 &\leq k M
+\end{align*}
+
+Since data is linearly separable, \(\exists\) a \(w^{*}\) such that \(x_i^Tw^{*} > 0, \forall i\)
+Let \(v = \min_i x_i^T w^{*}\)
+\begin{align*}
+  w_k^T w^{*} &= \left( \sum_{i=0}^{k-1} x_i \right)^T w^{*} \\
+  |w_k^T w^{*}|^2 &\geq k^2v^2 \\
+  \lVert w_k \rVert^2 \lVert w^{*} \rVert^2 &\geq k^2v^2 \text{ cauchy schwartz} \\
+  \lVert w^{*} \rVert^2 kM &\geq k^2v^2 \\
+  k &\leq \frac{\lVert w^{*} \rVert^2 M}{v^2}
+\end{align*}
+\section{Non-parametric Density Estimation (02/03/2023)}
+\label{sec:org447d7a9}
+
+Estimate \(P_x(x_i)\) directly
+
+Suppose \(P_x\) is the density to be estimated
+
+Probability of a point \(x\) falling in a region \(\mathcal{R}\) (on the support of \(P_x\)) is given by
+\begin{align*}
+P = \int_R P_x(x) dx
+\end{align*}
+Suppose sample \(x_1, ..., x_n \sim i.i.d. P_x\)
+Probability of \(k\) points out of \(n \in \mathcal{R}\)
+
+ML estimate for \(P = k/n\), where \(k\) is the number of data points(from \(\mathcal{D}\)) that \(\in R\)
+
+If \(\mathcal{R}\) is small and has a volume of \(\mathcal{V}\), then \(P \approx P(x)\mathcal{V}\)
+Hence, \(P(x)\mathcal{V} = k/n \implies P(x) = \frac{k}{n.\mathcal{V}}\)
+
+\subsection{Parzen window estimate (generalization of histogram idea)}
+\label{sec:org6b492fe}
+fix \(\mathcal{V}\) and count \(k\)
+\(R_n\) is a \(d\) dimensional hypercube with length \(h_0\)
+
+\begin{align*}
+  V_n = h_n^d
+\end{align*}
+
+Define a window function:
+\begin{align*}
+  \phi(u) &= \begin{cases} 1, |u_j| \leq 1/2, j=1,...,d \\ 0, otherwise \end{cases} \\
+  \implies k_n &= \sum_{i=1}^n \phi \left( \frac{x-x_i}{h_n} \right) \\
+  \implies P_n(x) &= \frac{\frac{1}{n} \sum_i=1^n \phi \left( \frac{x - x_i}{h_n} \right)}{h_n^d}
+\end{align*}
+
+Gaussian kernel: \(\phi(u) = exp(- \lVert u - u_0 \rVert^2)\)
+
+\subsection{k-nearest neighbour estimates}
+\label{sec:orgeff8e8a}
+
+fix \(k\) and grow \(\mathcal{V}\),
+\begin{align*}
+P(x) = \frac{k}{n \mathcal{V}}
+\end{align*}
+Suppose we place a volume of \(\mathcal{V}\) around a point \(x\) and capture \(k\) samples
+Let \(k_i\) be the number of points with class i
+\begin{align*}
+k &= \sum_i k_i \\
+\implies P(x, y_i) &= \frac{k_i}{n\mathcal{V}} \\
+\implies P(y_i/x) &= \frac{P(x, y_i}{\sum_i P(x, y_i)} \\
+\implies P(y_i/x) &= \frac{\frac{k_i}{n\mathcal{V}}}{\frac{k}{n\mathcal{V}}} = \frac{k_i}{k}
+\end{align*}
+
+\subsubsection{knn classifier}
+\label{sec:org5d59e68}
+\begin{align*}
+h_{\theta}(x) = \begin{cases} 1, k_1 > k_0 \\ 0, k_0 \geq k_1 \end{cases}
+\end{align*}
+
+knn is a bayes classifier with density coming from non-parametric density estimation
+knn error is upper bounded by twice of minimum error (bayes error)
+
+\section{Support Vector Machines (09/03/2023)}
+\label{sec:orgdb71189}
+
+Linearly separable data
+\(\exists w\) such that \(w^Tx_i + b > 0\) if \(y_i = 1\) and \(<0\) if \(y_i = -1\)
+
+Hyperplane: \(w^Tx + b = 0\)
+
+\(\implies \exists \epsilon > 0\) such that 
+\begin{align*}
+w^Tx_i + b &\geq \epsilon, \text{ if $y_i = 1$} \\
+           &<   -\epsilon, \text{ if $y_i = -1$} \\
+\implies w^Tx_i + b &\geq 1, \text{ if $y_i = 1$} \\
+           &<   -1, \text{ if $y_i = -1$} \\
+\implies y_i(w^Tx_i + b) &\geq 1 \text{ }\forall i
+\end{align*}
+
+Which means that there is no data point between the lines \(w^Tx + b = 1\) and \(w^Tx + b = -1\) which are parallel to \(w^Tx + b = 0\).
+Distance between the lines is \(\frac{2}{\lVert w \rVert}\)
+
+\textbf{SVM}: \(\min_w \frac{1}{2} w^Tw\) subject to \(y_i(w^Tx_i + b) \geq 1\) \(\forall i\)
+
+\subsection{Constrained optimization}
+\label{sec:org44eaf93}
+\(\min f(w)\), \(w \in \mathbb{R}^d\) subject to \(a_j^Tw + b_j \leq 0\),
+\(j = 1, ..., r\), \(f: \mathbb{R}^d \rightarrow \mathbb{R}\), \(a_j \in \mathbb{R}^d\), \(b_j \in \mathbb{R}-1\)
+
+Define a Lagrangian funciton
+\(L(w, \mu) = f(w) + \sum_{j=1}^r \mu (a_j^Tw + b_j)\), \(\mu \in \mathbb{R}\), \(j = 1, ..., r\) -> lag coefficient
+
+KKT (Karush-Kuhn-Tucker) conditions
+For a convex \(f(w)\), any \(w^{*}\) is a global minima, iff \(w^{*}\) is feasible and \(\exists \mu_j^{*}\), \(j=1, ..., r\) such that
+\begin{enumerate}
+\item \(\nabla L(w^{*}, \mu^{*}) = 0\)
+\item \(\mu_j^{*} \geq 0\) \(\forall j\)
+\item \(\mu_j^{*} (a_j^Tw^T + b_j) = 0\) \(\forall j\)
+\end{enumerate}
+
+\subsection{KKT conditions for SVM}
+\label{sec:org362081e}
+\(L(w, b, \mu) = \frac{1}{2} w^Tw + \sum_{i=1}^n \mu_i \left[ 1 - y_i(w^Tx_i + b) \right]\)
+\begin{enumerate}
+\item \(\nabla_w L = 0 \implies w^{*} = \sum_{i=1}^n \mu^{*}y_ix_i\), \(\nabla_b L = 0 \implies \sum_{i=1}^n \mu^{*}y_i = 0\)
+\item \(\mu_j^{*} \geq 0\) \(\forall j\)
+\item \(\mu_j^{*} (a_j^Tw^T + b_j) = 0\) \(\forall j\) \(\implies \mu_i^{*} \left[ 1 - y_i(w^{*T}x_i + b^{*}) \right] = 0\) \(\forall i\)
+\end{enumerate}
+
+Define \(S = \{x_i: \mu_i > 0\}\), \(w^{*} = \sum_{i \in S} y_i\mu_ix_i\)
+
+\subsubsection{Duality (14/03/2023)}
+\label{sec:orga3c8a92}
+\(L(w, \mu) = f(w) + \sum_{j=1}^{\gamma} \mu_j (a_j^T w + b_j)\)
+
+Dual: \(q: \mathbb{R}^{\gamma} \rightarrow \mathbb{R}\)
+\(q(\mu) = \inf_{\mu} L(w, \mu)\)
+Dual problem: \(\max_{\mu} q(\mu)\) s.t. \(\mu_j \geq 0\), \(j = 1, ..., \gamma\)
+
+Primal-dual relation: If primal has a solution, dual also has a solution
+\(q(\mu^{*}) = f(w^{*})\)
+
+\(w^{*}\) is optimal for primal, \(\mu^{*}\) is optimal for dual iff
+\begin{enumerate}
+\item \(w^{*}\) is feasible for primal and \(\mu^{*}\) is feasible for dual
+\item \(f(w^{*}) = L(w^{*}, \mu^{*}) = \min_w L(w, \mu^{*}) = q(\mu^{*})\)
+\end{enumerate}
+
+\subsection{Solution}
+\label{sec:orgba442ce}
+for SVM primal,
+\begin{align}
+q(\mu) = \inf_{w, b} \left\{ \frac{1}{2}w^Tw + \sum_{i=1}^n \mu_i \left[ 1 - y_i(w^Tx_i + b) \right] \right\}
+\end{align}
+if \(\sum_i \mu_iy_i \neq 0\) then \(q(\mu) = -\infty\)
+
+To prevent this, we add a constraint \(\sum_i \mu_iy_i = 0\)
+
+\begin{align*}
+w^{*} = \arg\inf_w q(\mu) = \sum_{i \in S} \mu_iy_ix_i \text{, \{comes from } \nabla L(w^{*}, \mu) = 0\}
+\end{align*}
+Substitute \(w^{*}, b^{*}\) and \(\sum_i \mu_i y_i = 0\) in equation (1)
+
+\begin{align*}
+q(\mu) &= \frac{1}{2} w^{*T}w^{*} + \sum_{i=1}^n \mu_i - \sum_{i=1}^n \mu_i y_i (w^{*T}x_i + b^{*}) \\
+w^{*} &= \sum_i \mu_iy_ix_i, \,\, \sum_i\mu_iy_i = 0
+\end{align*}
+
+\begin{align*}
+\implies q(\mu) &= \frac{1}{2} \left( \sum_i \mu_iy_ix_i  \right)^T + \dots \\
+                &= \sum_{i=1}^n\mu_i - \frac{1}{2}\sum_i\sum_j \mu_iy_i \mu_jy_j x_i^Tx_j
+\end{align*}
+
+\uline{Note}: The dual problem only involves the inner products of the data points.
+
+Dual Problem: (Quadratic programming problem with linear constraints)
+\begin{align*}
+&\max_{\mu} \sum_i \mu_i - \frac{1}{2} \sum_i\sum_j \mu_i\mu_j y_iy_j x_i^Tx_j \\
+&\text{s.t. }\mu_i \geq 0\text{ }i=1...n, \sum_{i=1}^n y_i\mu_i = 0
+\end{align*}
+\begin{align*}
+w^{*} &= \sum_i\mu_i^{*}y_ix_i = \sum_{i \in S}\mu_i^{*}y_ix_i\\
+S &= \left\{ x_i \middle \mu_i > 0 \right\} \text{, support vectors} \\
+\mu_i^{*} &\left[ 1 - y_i(x_i^Tw^{*} + b^{*}) \right] = 0 \forall i \\
+\implies & 1 - y_i(x_i^T w^{*} + b^{*}) = 0 \\
+\implies & y_i(x_i^Tw^{*} + b^{*}) = 1
+\end{align*}
+
+\uline{Observations}:
+\begin{enumerate}
+\item The hyperplanes that maximize the margin pass through some datapoints
+\item These datapoints are called support vectors
+\end{enumerate}
+
+\section{SVM for not linearly separable case (14/03/2023)}
+\label{sec:org3b08bfb}
+\(\not\exists w\) s.t. \(y_i(w^Tx_i + b) > 1\)
+
+Introduce another variable into optimization
+\(y_i(w^Tx_i + b) > 1 - \xi_i\) (slack variable),
+
+this allows misclassifications
+This can lead to all misclassification as slack variable leading to undesirable \(w\)
+Hence we also \(\xi_i\) to the optimization function
+
+\textbf{Primal}:
+\begin{align*}
+&\min_w \frac{1}{2} w^Tw + \sum_{i=1}^n c \xi_i \\
+&\text{s.t. } y_i(w^Tx_i + b) \geq 1 - \xi_i \text{ ,    } \xi_i \geq 0 \,\forall i
+ \end{align*}
+
+\begin{align*}
+L(w, b, \xi, \mu, \lambda) = \frac{1}{2}w^Tw + \sum_{i=1}^n c \xi_i + \sum_{i=1}^n \mu_i (1 - \xi_i - y_i(w^Tx_i + b)) \sum_{i=1}^n \lambda_i\xi_i
+\end{align*}
+
+\textbf{K.K.T conditions}:
+\begin{enumerate}
+\item \(\nabla_w L = 0 \implies w^{*} = \sum_i \mu_i y_i x_i\)
+\item \(\nabla_bL = 0, \implies \sum_i \mu_i^{*}y_i = 0\)
+\item \(\nabla_{\xi}L = 0 \implies \mu_i^{*} + \lambda_i^{*} = c, \,\forall i\)
+\item \(1 - \xi_i - y_i(w^Tx_i + b) \leq 0, \xi_i \geq 0, \,\forall i\)
+\item \(\mu_i \geq 0, \lambda_i \geq 0\)
+\item \(\mu_i (1 - \xi_i - y_i(w^Tx_i + b)) = 0, \lambda_i\xi_i = 0, \,\forall i\)
+\end{enumerate}
+
+\begin{align*}
+\phi(\mu, \lambda) = \inf_{w, b, \xi} L(w, b, \xi, \mu, \lambda)
+\end{align*}
+Here we have a term \(\sum_i (c - \mu_i - \lambda_i)\xi_i\) which either becomes unbounded (\(\xi \rightarrow \infty\) if \(c - \mu_i - \lambda_i < 0\))
+or gives a trivial solution (\(\xi \rightarrow 0\) if \(c - \mu_i - \lambda_i > 0\))
+Hence we assume \(c - \mu_i - \lambda_i = 0\) to get a good solution
+
+\textbf{Dual problem}: (16/03/2023)
+
+\begin{align*}
+&\max_{\mu} \sum_i \mu_i - \frac{1}{2} \sum_i\sum_j \mu_i\mu_j y_iy_j x_i^Tx_j \\
+&\text{s.t. }\mu_i \geq 0\text{ and } 0 \leq \mu_i \leq c
+\end{align*}
+
+Can be solved using SMO (Sequential minimal optimization)
+
+For \(x_i \in S_i\), \(\mu_i > 0\), \(\epsilon = 0\), \(y_i(w^Tx_i + b) = 1\)
+
+Large \(c \rightarrow\) less misclassifications (bias - variance trade)
+
+\section{Kernel SVM}
+\label{sec:org957a92d}
+Suppose \(x \in \mathbb{R}^2\) (not linearly separable), with \(x = \begin{bmatrix} x_1 & x_2 \end{bmatrix}\)
+
+\begin{align*}
+&g(x) = ax_i + bx_2 + cx_1x_2 + dx_1^2 + ex_2^2 + f \\
+&z = \phi(x), \phi: \mathbb{R}^2 \rightarrow \mathbb{R}^6 :\rightarrow \text{ feature transformation} \\
+&\phi(x) = \begin{bmatrix} 1 & x_1 & x_2 & x_1x_2 & x_1^2 & x_2^2\end{bmatrix} \\
+&g(z) = w^Tz
+\end{align*}
+
+
+\uline{SVM with transformations}
+\(\phi: \mathbb{R}^d \rightarrow \mathbb{R}^{d'}\), \(d' >> d\)
+
+\(\mathcal{D} = \left\{ (z_i, y_i) \right\}_{i=1}^n\)
+
+Dual:
+\begin{align*}
+&\max_{\mu} \sum_i \mu_i - \frac{1}{2} \sum_i\sum_j \mu_i\mu_j y_iy_j \phi(x_i)^T\phi(x_j) \\
+&\text{s.t. } 0 \leq \mu_i \leq c
+\end{align*}
+
+Suppose \(\exists\) a function \(k: \mathbb{R}^d \times \mathbb{R}^d \rightarrow \mathbb{R}\) s.t. \(k(x_i, x_j) = \phi(x_i)^T\phi(x_j)\)
+
+\begin{align*}
+\implies &\max_{\mu} \sum_i \mu_i - \frac{1}{2} \sum_i\sum_j \mu_i\mu_j y_iy_j k(x_i, x_j) \\
+&\text{s.t. } 0 \leq \mu_i \leq c
+\end{align*}
+
+\section{Kernels in general}
+\label{sec:org393e472}
+\textbf{Mercer's Theorem}: Let \(\overline{k}\) is a \(n \times n\) matrix with \(\overline{k_{ij}} = k(x_i, x_j)\)
+If \(\overline{k}_{n \times n}\) is a PSD \(\forall \,\mathcal{D}\), then \(k\) is called a valid kernel
+(\(\exists\) a space \(\mathcal{H}\) and mapping \(\phi: \mathbb{R}^d \rightarrow \mathcal{H}\), s.t. \(k(.) = \phi(.)^T\phi(.)\))
+
+\(\overline{k}_{n \times n}\) PSD \(\implies \sum_{i,j}^n \alpha_i\alpha_j k(x_i, x_j) \geq 0\) \(\forall \alpha_i, \alpha_j \in \mathbb{R}\)
+
+\uline{Examples of valid kernel functions}
+\begin{enumerate}
+\item Polynomial kernel: \(k_P(x_1, x_2) = (1 + x_1^Tx_2)^P\)
+\item Gaussian kernel: \(k_G(x_1, x_2) = e^{\frac{-\lVert x_1 - x_2 \rVert^2}{\sigma^{2}}}\) (generally good for SVM)
+\item Sigmoid kernel: \(k_S(x_1, x_2) = tanh(ax_1^Tx_2 + b)\)
+\end{enumerate}
+
+\section{SVM Summary}
+\label{sec:orga29a923}
+Given \(\mathcal{D} = \left\{ x_i, y_i \right\}_{i=1}^n\), choose a \(k(.)\)
+\(\mu^{*} = \arg\max_{\mu} \sum_i\mu_i - \frac{1}{2}\mu_i\mu_j y_iy_j k(x_i, x_j)\), s.t. \(0 \leq \mu_i \leq c\) (SMO)
+
+Store \(x^{*}\) over \(S\)
+\begin{align*}
+h(x) &= \sum_{i \in S} \mu_i^{*} y_i k(x_i, x) + b^{*} \\
+     &= \sum_{i \in S}\mu_i^{*}y_i e^{\frac{- \lVert x_i - x \rVert^2}{\sigma^2}} + b^{*}
+\end{align*}
+It looks like \textbf{GMM} and \textbf{parzen window estimator} but only over a few datapoints
+
+\section{SVM as ERM}
+\label{sec:orgfc97e2b}
+
+\begin{align*}
+&\min_{w, b, \xi} \frac{1}{2} w^Tw + \sum_{i=1}^n c \xi_i \\
+&\text{s.t. } y_i(w^Tx_i + b) \geq 1 - \xi_i \text{ ,    } \xi_i \geq 0 \,\forall i
+ \end{align*}
+
+Given an \(w\) and \(b\), \(\xi_i\) has to satisfy, \(\xi_i \geq \max(0, 1 - y_i(w^Tx_i + b))\)
+
+\begin{align*}
+\implies &\min_{w, b} \frac{1}{2} w^Tw + \sum_{i=1}^n c \max(0, 1 - y_i(w^Tx_i + b)) \\
+&\text{s.t. } y_i(w^Tx_i + b) \geq 1 - \xi_i \text{ ,    } \xi_i \geq 0 \,\forall i
+ \end{align*}
+
+This can be written as \(\Omega(w) + c \hat{R}(h)\)
+
+\begin{align*}
+\hat{R}(h) &= \sum_{i=1}^n ]max(0, 1 - y_i(w^Tx_i + b)) \approx \mathop{\mathbb{E}}_{P_{xy}} l(h(x), y) \\
+l(h(x), h) &= \max(0, 1 - y_ih(x))
+\end{align*}
+
+\section{Tasks}
+\label{sec:orgfbd87ab}
+\begin{itemize}
+\item[{$\square$}] Read SMO (Sequential minimal optimization) paper [for solving SVM]
+\end{itemize}
+\end{document}

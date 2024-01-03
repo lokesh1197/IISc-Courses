@@ -1,0 +1,93 @@
+% Created 2023-04-14 Fri 00:33
+% Intended LaTeX compiler: pdflatex
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usetheme{Madrid}
+\author{Lokesh Mohanty}
+\date{RL 2023}
+\title{Asynchronous Methods for Deep Reinforcement Learning}
+\institute[IISc]{ Department of Computational and Data Sciences\\ Indian Institute of Science}
+\logo{\includegraphics[height=1cm]{logo.png}}
+\makeatletter
+\setbeamertemplate{footline}{
+\leavevmode%
+\hbox{%
+\begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+\usebeamerfont{author in head/foot}\insertshortauthor\expandafter\ifblank\expandafter{\beamer@shortinstitute}{}{~~(\insertshortinstitute)}
+\end{beamercolorbox}%
+\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+\usebeamerfont{title in head/foot}\insertshorttitle%
+\end{beamercolorbox}%
+\begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+\usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+\end{beamercolorbox}}%
+\vskip0pt%
+}
+\makeatother
+\hypersetup{
+ pdfauthor={Lokesh Mohanty},
+ pdftitle={Asynchronous Methods for Deep Reinforcement Learning},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.0.60 (Org mode 9.7-pre)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\begin{frame}[label={sec:org5e69319}]{Motivation}
+\begin{itemize}
+\item Develop a simple and lightweight framework for deep reinforcement learning that uses asynchronous gradient descent for optimizing deep neural network controllers.
+\item The authors aim to show that parallel actor-learners have a stabilizing effect on training, allowing all four methods to successfully train neural network controllers.
+\item The best performing method, an asynchronous variant of actor-critic, surpasses the current state-of-the-art on the Atari domain while training for half the time on a single multi-core CPU instead of a GPU.
+\item Furthermore, they show that asynchronous actor-critic succeeds on a wide variety of continuous motor control problems as well as on a new task of navigating random 3D mazes using visual input.
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org8c3c737}]{Proposed methodology}
+\begin{itemize}
+\item Simple and lightweight framework for deep reinforcement learning that uses asynchronous gradient descent for optimizing deep neural network controllers.
+\item The authors present asynchronous variants of four standard reinforcement learning algorithms, namely Q-learning, SARSA, actor-critic, and deterministic policy gradient, and show that parallel actor-learners have a stabilizing effect on training.
+\item The proposed framework allows stable training of neural networks through reinforcement learning with both value-based and policy-based methods, off-policy as well as on-policy methods, and in discrete as well as continuous domains.
+\item The authors also show that the proposed asynchronous algorithms train faster than DQN trained on an Nvidia K40 GPU when trained on the Atari domain using 16 CPU cores, with A3C surpassing the current state-of-the-art in half the training time
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org634a561}]{Results}
+\begin{itemize}
+\item The proposed asynchronous variants of standard reinforcement learning algorithms are able to train neural network controllers on a variety of domains in a stable manner.
+\item The authors demonstrate that the proposed framework allows stable training of neural networks through reinforcement learning with both value-based and policy-based methods, off-policy as well as on-policy methods, and in discrete as well as continuous domains.
+\item When trained on the Atari domain using 16 CPU cores, the proposed asynchronous algorithms train faster than DQN trained on an Nvidia K40 GPU, with A3C surpassing the current state-of-the-art in half the training time.
+\item Furthermore, asynchronous actor-critic succeeds on a wide variety of continuous motor control problems as well as on a new task of navigating random 3D mazes using visual input.
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:orgea816bf}]{Extensions}
+\begin{itemize}
+\item One possible extension is to investigate the effect of different hyperparameters on the performance of the proposed asynchronous algorithms.
+\item Another possible extension is to explore the use of more sophisticated exploration strategies, such as intrinsic motivation or curiosity-driven learning, to improve the sample efficiency of the algorithms.
+\item The authors also suggest that their framework could be extended to incorporate other types of neural network architectures, such as convolutional neural networks or recurrent neural networks, and that it could be applied to other domains beyond those considered in this work.
+\item Finally, they suggest that their framework could be used for multi-agent reinforcement learning problems by extending it to allow for communication between agents.
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org45bc836}]{Conclusion}
+\begin{itemize}
+\item Presents a simple and lightweight framework for deep reinforcement learning that uses asynchronous gradient descent for optimizing deep neural network controllers.
+\item The authors demonstrate that parallel actor-learners have a stabilizing effect on training, allowing all four methods to successfully train neural network controllers.
+\item The best performing method, an asynchronous variant of actor-critic, surpasses the current state-of-the-art on the Atari domain while training for half the time on a single multi-core CPU instead of a GPU.
+\item Furthermore, they show that asynchronous actor-critic succeeds on a wide variety of continuous motor control problems as well as on a new task of navigating random 3D mazes using visual input.
+\item The proposed framework allows stable training of neural networks through reinforcement learning with both value-based and policy-based methods, off-policy as well as on-policy methods, and in discrete as well as continuous domains
+\end{itemize}
+
+\footnotetext[1]{Kate Donahue and Jon Kleinberg, Optimality and Stability in Federated Learning: A Game-theoretic Approach, NeurIPS 2021}
+\centering \Large \emph{--- Thank You ---}
+\end{frame}
+\end{document}

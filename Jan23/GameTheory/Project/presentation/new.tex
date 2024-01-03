@@ -1,0 +1,186 @@
+% Created 2023-04-10 Mon 10:20
+% Intended LaTeX compiler: pdflatex
+\documentclass[presentation]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usetheme{default}
+\usecolortheme{}
+\usefonttheme{}
+\useinnertheme{}
+\useoutertheme{}
+\author{Lokesh Mohanty}
+\date{\today}
+\title{}
+
+\hypersetup{
+ pdfauthor={Lokesh Mohanty},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.0.60 (Org mode 9.7-pre)}, 
+ pdflang={English}}
+\begin{document}
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+
+\begin{frame}[label={sec:org8a6d250}]{Federated Learning}
+\begin{itemize}
+\item Data transfer, data privacy
+\end{itemize}
+\begin{block}{A more complex slide}
+This slide illustrates the use of Beamer blocks.  The following text,
+with its own headline, is displayed in a block:
+\begin{theorem}[Org mode increases productivity]\label{sec:org8ac8df5}
+\begin{itemize}
+\item org mode means not having to remember \LaTeX{} commands.
+\item it is based on ascii text which is inherently portable.
+\item Emacs!
+\end{itemize}
+
+\hfill \(\qed\)
+\end{theorem}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgb07f38b}]{Hedonic Game (Game theoretic approach)}
+\begin{itemize}
+\item different distributions
+\item join only for benefit
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org117f25a}]{Model of federated learning}
+\begin{itemize}
+\item Error model for
+\begin{itemize}
+\item Uniform federation
+\item Coarse-grained federation
+\item Fine-grained federation
+\end{itemize}
+\end{itemize}
+
+\begin{NOTES}
+\begin{itemize}
+\item Explain these different types of federation
+\end{itemize}
+\end{NOTES}
+\end{frame}
+
+\begin{frame}[label={sec:org56ea401}]{Stability}
+\begin{block}{Uniform Federation}
+\begin{itemize}
+\item Same number of samples
+\item Small/large number of samples
+\end{itemize}
+\end{block}
+
+\begin{block}{Coarse-grained federation}
+\begin{itemize}
+\item Same number of samples
+\item Small/large number of samples
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org855faeb}]{Fine-grained federation}
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{itemize}
+\item this is fine grained company
+\item this is fine grained company
+\item this is fine grained company
+\end{itemize}
+\end{column}
+\begin{column}{0.5\columnwidth}
+\begin{example}[Fine grained image]\label{sec:orge0ef8e5}
+\begin{center}
+\includegraphics[width=.9\linewidth]{/home/lokesh/Pictures/Screenshots/Screenshot from 2023-04-09 22-35-59.png}
+\end{center}
+\end{example}
+\end{column}
+\end{columns}
+\end{frame}
+\begin{frame}[label={sec:org78ed917}]{Optimality}
+\begin{itemize}
+\item Optimal: minimizes weighted sum of errors across all agents
+\item Algorithm:
+\begin{itemize}
+\item Start with every agent doing local learning
+\item Group the agents togetner in ascending order of size, stopping when the first agent would increase its error by joining the coalition
+\end{itemize}
+\item Equivalence of player preference and reducing cost
+\end{itemize}
+
+\begin{NOTES}
+\begin{itemize}
+\item Error model taken from the paper "Model sharing games" by the same author
+\end{itemize}
+\end{NOTES}
+
+\begin{itemize}
+\item Swapping
+\item Monotonicity of joining
+\item Monotonicity of leaving
+\item Merging
+\end{itemize}
+
+\begin{itemize}
+\item Model
+\[ \hat{\theta}_C = \frac{1}{\sum_{i \in C} n_i} . \sum_{i \in C} n_i . \hat{\theta}_i\]
+\[ err_j(C) = \frac{\mu_e}{\sum_{i \in C}n_i} + \sigma^2 . \frac{\sum_{i \in C, i \neq j} n_i^2 + \left( \sum_{i \in C, i \neq j} n_i \right)^2}{\left( \sum_{i \in C} n_i \right)^2}\]
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org2ba618f}]{Price of Anarchy}
+\begin{itemize}
+\item for \(n_i \geq \frac{\mu_e}{\sigma^2}, \forall i\), the grand coalition \(\pi_g\) is always core stable
+\item for \(n_i \leq \frac{\mu_e}{\sigma^2}, \forall i\), the individually stable or core stable is also optimal
+\item \(\Pi_M\) is maximum cost IS partition, then \(err_i(\Pi_M) \leq \frac{\mu_e}{n_i}\) for all players \(i\)
+\end{itemize}
+
+\begin{itemize}
+\item Error lower bound when a player \(j\) joins coalition \(C\)
+\[err_j(C \cup \{n_j\}) \geq \begin{cases} \frac{1}{2}.\frac{\mu_e}{n_j}, n_j \geq \frac{\mu_e + \sigma^2}{2\sigma^2} \\ \sigma^2, \text{otherwise}\end{cases}\]
+\item Error upper bound when a player \(j\) joins coalition \(C\) if total number of samples \(N_C \geq \frac{\mu_e}{3\sigma^2}\), then
+\[err_j(C \cup \{n_j\} \leq 7.25.\sigma^2\]
+\end{itemize}
+
+\begin{itemize}
+\item \(n_i \leq \frac{\mu_e}{3\sigma^2}, \forall i\), with atleast one player in a coalition with mass of its partners no more than \(\frac{\mu_e}{3\sigma^2}\), then the only stable arrangement of these players is to have all of them federating together
+\item Price of Anarchy
+\[ PoA = \frac{f_w(\Pi_M)}{f_w(\Pi_{opt})} \leq 9\]
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org4adb6a4}]{Limitations}
+\begin{itemize}
+\item Theoretical study, results might be different in practice
+\item Optimality bound has some assumptions, this may lead to different bounds
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:orgabc9924},fragile]{Related Work}
+ \begin{itemize}
+\item \texttt{Donahue and Kleinberg} studied models of fairness
+\item \texttt{Hu et al. 2023} models clients behaviour in network
+\item \texttt{Cui et al 2021} tries to find collaboration equilibrium
+\item \texttt{Le et al. 2021} analyzes incentives for agents to contribute computational resources while using an auction approach
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:org3f00a2e}]{My extension}
+\begin{itemize}
+\item Nothing as of now
+\end{itemize}
+\end{frame}
+\begin{frame}[label={sec:orga37b084}]{Conclusion}
+Thank You
+\end{frame}
+\end{document}

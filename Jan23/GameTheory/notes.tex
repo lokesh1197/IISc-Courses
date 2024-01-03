@@ -1,0 +1,305 @@
+% Created 2023-03-20 Mon 11:12
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{Lokesh Mohanty}
+\date{\today}
+\title{Game Theory Notes}
+\hypersetup{
+ pdfauthor={Lokesh Mohanty},
+ pdftitle={Game Theory Notes},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 28.2 (Org mode 9.7-pre)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{Properties required for auction (06/03/2023)}
+\label{sec:orga2b49cf}
+\begin{enumerate}
+\item DSIC
+\item Maximize social welfare (\(\sum x_i v_i\))
+\item Computational tractability
+\end{enumerate}
+
+\section{Design Approach (06/03/2023)}
+\label{sec:orgaf18c2d}
+Reduce mechanism design to algorithm design
+
+\textbf{Step  I}: Assume without justification, truthful bids design. (for properties 2 and 3)
+\textbf{Step II}: Given \(x^{*}\), set \(p^{*}\) to achieve DSIC. (for property 1)
+
+\section{Myerson's Lemma (06/03/2023)}
+\label{sec:orge37cfb1}
+For any single parameter environment
+\begin{enumerate}
+\item An allocation rule is implementable iff it is monotonous.
+\item If x is monotonous, then there exists a unique payment rule(p) such that (x, p) is DSIC.
+\item The payment rule (p) admits an explicit formula.
+\end{enumerate}
+
+\begin{align*}
+p_i(b_i, b_{-i}) = \int_0^{b_i} z x_i' (z, b_{-i}) dz
+\end{align*}
+
+Monotonocity:
+\(x\) is said to be monotonous \(\forall i\), \(\forall b_i\) if \(x_i(z, b_{-i})\) is non-decreasing in \(Z\)
+
+\section{Single Parameter Environment (10/03/2023)}
+\label{sec:orgf0f8b80}
+n Bidder each with private \(v_i\) and quasi-linear utility
+
+Allocatoin Rule \(x: \mathbb{R}_+^n \rightarrow X\)(feasible set)
+Payment Rule \(p: \mathbb{R}_+^n \rightarrow \mathbb{R}_+^n\)
+
+Error of Single parameter environment
+\begin{itemize}
+\item Single Item Auction
+\begin{itemize}
+\item DSIC
+\item Welfare max \(\sum_i^n x_iv_i\), \(\left( \sum_i^n x_ib_i \right)\)
+\item computational efficient
+\end{itemize}
+\item Ad Auction
+\end{itemize}
+
+Write \(x(z) = x_i(z, b_i)\) and \(p(z) = p_i(z, b_i)\)
+\textbf{Proof}:
+\begin{align*}
+0 &\leq z < y \\
+z x(z) - p(z) &\geq z x(y) - p(y) \\
+y x(y) - p(y) &\geq y x(z) - p(z) \\
+\implies z (x(y) - x(z)) &\leq p(y) p(z) \leq y (x(y) - x(z))
+\end{align*}
+
+for piece-wise constant \(x_i\),
+\begin{align*}
+p_i(b_i, b_{-i}) = \sum_{j=1}^l z_i\text{ jump }x_0(, b_{-i})
+\end{align*}
+
+general form:
+\begin{align*}
+p_i'(z, b_i) = z_i x_i'(z, b_i)
+\end{align*}
+
+\begin{center}
+\includesvg[width=.9\linewidth]{./myer}
+\end{center}
+
+\textbf{Eg:} Single Item Auction
+\(\hat{x}\) = second highest bidder -> not implementable as it is not monotonous
+
+Myerson's lemma's insight: focus only on allocation rule and ignore payment rule.
+\begin{itemize}
+\item Ensure: monotonous, welfare maximization and computational efficient
+\end{itemize}
+
+
+\textbf{Eg:} Single Item single bidder (reserve price auctions) -> fixed price, the bidder gets it if he pays the price (reserve price)
+
+\section{Revealation Principle (10/03/2023)}
+\label{sec:orga8e7df5}
+\textbf{Theorem 2}:
+for every auction \(\mu\) in which every bidder has a dominant strategy (no matter the private valuation),
+there exists an equivalent truth telling DSIC auction \(\mu'\)
+
+\section{Bayesian Model (13/03/2023)}
+\label{sec:org032f8ba}
+\subsection{Revenue}
+\label{sec:orgf3b2a48}
+Revenue: \(\sum_{i=1}^n p_i(b)\)
+Myerson's law doesn't work for Revenue maximization. Due to lack of a good model, we use bayesian model
+
+\textbf{Example}: Single Item single bidder(reserve price auction) has trivial solution for welfare maximization but not for revenue maximization
+
+\subsection{Model}
+\label{sec:org4d5c0a3}
+\begin{itemize}
+\item Single parameter environment
+\item Known distributions (\(F_i\))
+\item Assume valuations (\(v_i \sim F_i\)) are mutually independent
+\end{itemize}
+
+Maximize Expectation: \(\mathbb{E}_{v \sim F} \left[ \sum_i p_i(v) \right]\), where \(F = F_1 \times F_2 \times ... \times F_n\)
+
+Goal: Identify DSIC auction with max expected revenue
+
+Expected Revenue for general r: \(\mathbb{E} \left[ p_1 (v) \right] = r \mathbb{P}_{F_i}\{ v_i \geq r \} = r(1 - F_i(r))\)
+
+\textbf{Example}: Single Item 2 bidder
+\(F_1 = F_2 = \text{Unif}[0, 1]\)
+Expected Revenue of second price auction: \(\mathbb{E}_{v_1 \sim F_1, v_2 \sim F_2} [\sum_{i=1}^2 p_i(v)] = \mathbb{E}_{v \sim F} [min \{v_1, v_2\}] = 1/3\)
+
+\textbf{Example}: Single Item 2 bidder with reserve price
+Expected Revenue of second price auction:
+\begin{align*}
+\mathbb{E}_{v_1 \sim F_1, v_2 \sim F_2} \left[ \sum_{i=1}^2 p_i(v) \right] &= 0 . Pr\{v_1 < 1/2, v_2 < 1/2\} + 1/2 . Pr\{v_1 \geq 1/2, v_2 < 1/2\} \\
+&+ 1/2 . Pr\{ v_1 < 1/2, v_2 \geq 1/2\} + \mathbb{E}[\min(v1, v2)]. Pr\{v_1 \geq 1/2, v_2 \geq 1/2\}
+\end{align*}
+
+\subsection{Revenue maximization using virtual welfare maximization (13/03/2023, 15/03/2023)}
+\label{sec:orgca81fca}
+Goal: Description of an expected revenue maximizing DSIC auction for any single parameter environment and any \(F_1, F_2, ..., F_n\)
+
+Result(Myerson): Expected Revenue = Expected Virtual Welfare
+Definition (Virtual welfare): For a bidder i, with value distribution \(F_i\) and valuation \(z_i\), their virtual value is defined as
+\begin{align*}
+\phi_i(z) = z - \frac{1 - F_i(z)}{f_i(z)}
+\end{align*}
+will assume \(F_1\) is continuous throughout, r support on \([0, v_{max}]\)
+we can see from the definition that \(\phi_i(v_i) \leq v_i\)
+
+\textbf{---------------------------------------------------- (15/03/2023)--------------------------------------------------------------}
+
+\textbf{Lemma}: For every single parameter environment with valuation distributions \(F_1, F_2, ..., F_n\), every DSIC(x, p) mechanism.
+
+Every \(i\), every \(v_{-i}\) of the other agents
+\begin{align*}
+\mathop{\mathbb{E}}_{v_i \sim F_i} [p_i(v)] = \mathop{\mathbb{E}}_{v_i \sim F_i} [x_i(v_i, v_{-i}) \phi_i(v_i)]
+\end{align*}
+\textbf{Proof}:
+\begin{align*}
+p_i(v_i, v_{-i}) &= \int_0^{v_i} z x_i'(z, v_{-i} dz \\
+\mathop{\mathbb{E}}_{v_i \sim F_i} [p_i(v_i, v_{-i})] &= \int_0^{v_{max}} p_i (v_i, v_{-i}) f_i(v_i) dv \\
+\implies \mathop{\mathbb{E}}_{v_i \sim F_i} [p_i(v)] &= \int_0^{v_{max}} \left[ \int_0^{v_i} z x_i'(z, v_{-i})dz \right] f_i(v_i) dv_i \\
+&= \int_0^{v_{max}} \left[ \int_0^{v_{max}} f_i(v_i) dv_i \right] z x_i'(z, v_{-i})dz \\
+&= \int_0^{v_{max}} \left[ 1 - F_i(z) \right] z x_i'(z, v_{-i})dz \\
+&= \int_0^{v_{max}} \left[ 1 - F_i(z) \right] z x_i'(z, v_{-i})dz \\
+&= \left[ 1 - F_i(z) \right]z \left( x_i'(z, v_{-i}) \right)\mathop{|}_0^{v_{max}} - \int_0^{v_{max}} x_i(z, v_{-i})(1 - F_i(z)  -zf_i(z))dz \\
+&= 0 + \int_0^{v_{max}} x_i(z, v_{-i}) f_i(z) \left( z - \frac{1-F_i(z)}{f_i(z)} \right)dz \\
+&= \int_0^{v_{max}} x_i(z, v_{-i}) \phi_i(z) f_i(z) dz \\
+&= \mathop{\mathbb{E}}_{v_i \sim F_i} \left[ x_i(v_i, v_{-i}) \phi_i(v_i) \right]
+\end{align*}
+
+\textbf{Theorem}: For every single param environment with valuation distributions \(F_1, F_2, ..., F_n\) and every DSIC with \((x, p)\)
+\begin{align*}
+\mathop{\mathbb{E}}_{v \sim F} \left[ \sum_{i=1}^n p_i(v) \right] &= \mathop{\mathbb{E}}_{v \sim F} \left[ \sum_{i=1}^n x_i(v) \phi_i(v_i) \right] \\
+\text{Where } F &= \mathop{\Pi}_{i=1}^nF_i
+\end{align*}
+
+\textbf{Proof}:
+\begin{align*}
+\mathop{\mathbb{E}}_{v \sim F} \left[ \sum_{i=1}^n p_i(v) \right] &= \mathop{\mathbb{E}}_{v \sim F} \left[ \sum_{i=1}^n \phi_i(v_i)x_i(v) \right] \\
+\implies \mathop{\mathbb{E}}_{v \sim F} \left[ p_i(v) \right] &= \mathop{\mathbb{E}}_{v \sim F} \left[ \phi_i(v_i) x_i(v) \right] \text{  \{Linearity of expectation\}}
+\end{align*}
+
+
+\textbf{New Objective (equivalent)}: Identify DSIC mechanism \((x, p)\) that maximizes expected virtual welfare
+\begin{align*}
+\max \sum_{i=1}^n x_i \phi_i(v_i) \text{    s.t.   } (x_1, x_2, ..., x_n) \in \mathcal{X}
+\end{align*}
+This is called virtual-welfare maximizing allocation
+
+\textbf{Sufficient} condition for monotonocity of \(x^{*}\)
+\textbf{Definition} [Regular Distribution]: A distribution for \(F_i\) is said to be regular if the
+corresponding virtual valuation function \(\phi_i(z) = z - \frac{1 - F_i(z)}{f_i(z)}\) is non-decreasing
+
+Virtual Welfare maximiser \(\rightarrow\) Mechanism \(x^{*}\)
+
+\uline{Assumptions}: All \(F_i\) are regular
+\begin{enumerate}
+\item Transform the (truthfully) reported valuations (\(v_i\)) into \(\phi_i(v_i)\)
+\item Choose the feasible allocation \((x_1, x_2, ..., x_n) \in \mathcal{X}\) that maximizes \(\sum_{i=1}^nx_i(\phi_i(v_i))\)
+\item Choose payment via Myerson's Lemma
+\end{enumerate}
+
+\textbf{Theorem}: [Virtual welfare maximizer \(x^{*}\) are revenue optimizers]
+For every single parameter environemnts and regular distributions of the corresponding virtual welfare max \(x^{*}\) is a DSIC mechanism with max possible expected revenue.
+
+\textbf{Eg:} Revenue optimum mechanism for single item auction
+Consider \(v_1, v_2, ..., v_n \sim F_1\), \(F_1 \rightarrow\) strongly regular
+Here \(x^{*}\) corresponds to
+\begin{align*}
+\max \sum_{i=1}^n x_i \phi(v_i) \text{  s.t.  } \sum_{i=1}^n x_i \leq 1
+\end{align*}
+If \(v_{(1)} > v_{(2)} > ... > v_{(n)} \implies \phi(v_{(1)}) > \phi(v_{(2)}) > ... > \phi(v_{(n)})\) 
+Reserve price \((r) = \phi^{-1}(0)\)
+
+Optimum: Second price auction with reserve price \(\phi^{-1}(0)\)
+
+\textbf{---------------------------------------------------- (20/03/2023)--------------------------------------------------------------}
+
+\textbf{Eg:} Single Item non-identical bidders (regular) \(v_i \sim F_i\) can have \(\phi_i(v_i) > \phi_2(v_2)\) with \(v_1 < v_2\)
+
+This shows that revenue optimized auctions can become complex leading to wierd auctions which are not interpretable.
+
+\subsection{Simple Near-Optimal Auctions}
+\label{sec:orgec528af}
+This give simple, robust and practical but near-optimal auction
+
+\subsubsection{Prophet Inequality}
+\label{sec:orgc14e930}
+Known Distributions: \(G_1, G_2, ..., G_n\) (independent)
+
+In each round \(i \in \{1, 2, ..., n\}\), observe \(\pi_i \sim G_i\)
+After seeing \(\pi_i\), irrecovable decision: accept \(\pi_i\) and stop (or) discard \(\pi_i\) and continue
+\textbf{Benchmark}: Fully clairvoyant prophet \(\rightarrow\) \(\mathbb{E}_{\pi \sim G} [\max_{i \leq i \leq n} \pi_i]\)
+
+\textbf{Theorem:} For every sequence of n distributions (Samuel-Cahn) \(G_1, G_2, ..., G_n\), there exists a strategy that
+guarantees expected reward at least \(\frac{1}{2} \mathbb{E}[\max \pi_{i}]\). However, there is such a threshold strategy which accepts
+price \(\pi_i\)  iff \(\pi_i \geq\) some threshold \(t\)
+
+\textbf{Proof:} Write \(Z^{+} := \max \{Z, 0\}\), \(q(t) =\) probability that all \(\pi_i < t\)
+
+Define:
+Event \(E_i\): only price \(\pi_i \geq t\) (\(\pi_j < t\, \forall j \neq i)\)
+
+
+Derive an linear bound on expected reward of \(t\) threshold strategy:
+\begin{align*}
+\mathbb{E} \left[\text{strategy reward} \middle| E_i \right] &= \mathbb{E} \left[ \pi_i \middle| E_i \right] \\
+&= t + \mathbb{E} \left[ \pi_i - t \middle| E_i \right]\\
+\implies \mathop{\mathbb{E}}_{\pi \sim G} \left[ \text{strategy reward} \right]
+&\geq (1 - q(t))t + \sum_{i=1}^n \mathop{\mathbb{E}}_{\pi \sim G} \left[ \pi_i - t \middle| E_i \right] Pr \{E_i\}  \\
+&= (1 - q(t))t + \sum_{i=1}^n \mathop{\mathbb{E}}_{\pi \sim G} \left[ \pi_i - t \middle| \pi_i \geq t, \pi_j < t \, \forall j  \right] Pr \{\pi_i \geq t\} Pr \{\pi_j < t \, \forall j \neq i\}  \\
+&= (1 - q(t))t + \sum_{i=1}^n \mathop{\mathbb{E}}_{\pi \sim G} \left[ \pi_i - t \middle| \pi_i \geq t \right] Pr \{\pi_i \geq t\} Pr \{\pi_j < t \, \forall j \neq i\}  \\
+&= (1 - q(t))t + \sum_{i=1}^n \mathop{\mathbb{E}}_{\pi \sim G} \left[ \pi_i - t \middle| \pi_i \geq t \right] Pr \{\pi_i \geq t\} q(t)  \\
+&= (1 - q(t))t +  q(t)\sum_{i=1}^n \mathop{\mathbb{E}} \left[ \pi_i - t \right]^{+}   \\
+\implies \mathbb{E} \left[\text{strategy reward} \middle| E_i \right] &\geq (1 - q(t))t +  q(t)\sum_{i=1}^n \mathop{\mathbb{E}} \left[ \pi_i - t \right]^{+}
+\end{align*}
+
+Derive an upper bound on expected reward of prophet:
+\begin{align*}
+\mathop{\mathbb{E}} \left[ \max_i \pi_i \right] &= \mathop{\mathbb{E}}_{\pi} \left[ t + \max_{1 \leq i \leq n} (\pi_i - t) \right] \\
+&= t + \mathop{\mathbb{E}}_{\pi} \left[ \max_i (\pi_i - t) \right] \\
+&\leq t + \mathop{\mathbb{E}}_{\pi} \left[ \max_i (\pi_i - t)^+ \right] \leq t + \sum_{i=1}^n \mathop{\mathbb{E}}_{\pi} \left[ (\pi_i - t)^+ \right]
+\end{align*}
+
+Therefore for \(q(t) = \frac{1}{2}\) and from lower and upper bounds we can see that
+\begin{align*}
+\mathbb{E} \left[ \text{strategy reward} \right] \geq \frac{1}{2} \mathbb{E} \left[ \max_i \pi_i \right]
+\end{align*}
+
+\uline{Note:} work with adversarial tie breaking
+Mechanism: virtual threshold
+\begin{enumerate}
+\item Choose L\textsuperscript{*} such that \(Pr \{ \max_i\}\)
+\end{enumerate}
+\section{Tasks}
+\label{sec:orgba605b6}
+\begin{itemize}
+\item[{$\square$}] Assignment (Welfare maximization always leads to monotonous allocation rule)
+\item[{$\square$}] Homework: \(X_1, X_2, ..., X_n \sim Unif[a, b]\), \(\mathbb{E} [\min_{1 \leq i \leq n} X_i] = \frac{b + na}{n + 1}\), \(Y = \min_{1 \leq i \leq n}X_{i}\)
+\item[{$\square$}] Midterm 2: March 29
+\end{itemize}
+
+\section{Glossary}
+\label{sec:orge09c61b}
+\begin{itemize}
+\item DSIC: Dominant Strategy Incentive Compatibility
+\end{itemize}
+\end{document}

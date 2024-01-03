@@ -1,0 +1,173 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{Policy gradient methods}
+
+\begin{document}
+\maketitle
+
+\textit{Chapter 13 of Sutton-Barto}
+
+\section{Policy gradient methods}
+\label{sec:policy-grad-meth}
+
+Methods that parameterize the policy (may or may not parameterize the value function)
+
+Let $\pi(a|s, \theta) = Pr(A_t = a | S_t = s, \theta)$
+
+\paragraph{Example:} Parameterized Boltzmann policy\\
+
+\begin{align*}
+\pi(a | s, \theta) &= \frac{e^{\theta^T \phi(s, a)}}{\sum_{b \in A(s)} \theta^T\phi(s, b)}
+\end{align*}
+
+$\phi(s, a)$: features associated with $(s, a)$ tuples \\
+
+\begin{align*}
+\pi(a | s, \theta) &= \frac{e^{h(s, a \theta)}}{\sum_{b \in A(s)}e^{h(s, b, \theta)}}
+\end{align*}
+
+$h$ can be via LFA or Neural network based parameterization \\
+
+Let $\theta \in \mathbb{R}^{d'}$ and $J: \mathbb{R}^{d'} \rightarrow \mathbb{R}$ be the performance function. \\
+
+Then,
+\begin{align*}
+  \theta_{t+1} &= \theta_t + \hat{\alpha \nabla J(\theta_t)}
+\end{align*}
+
+Here, $\nabla \hat{J}(\theta_t)$ is the estimate of $\nabla J(\theta_t)$
+
+\paragraph{Example}:
+Goal: Find $\lambda$ such that average queue length as function of $\lambda$ is minimized
+
+$\theta = \lambda$, $J(\theta) = \mathbb{E} \left[ Q(\theta) \right]$ \\
+
+\paragraph{Assumption (on policy)}: $\pi(a | s, \theta) > 0 \forall a, s, \theta$\\
+Example of $J(\theta)$: value function $v_{\pi_{\theta}}$ under policy $\pi_{\theta}$
+
+\paragraph{Policy gradient theorem}: [Episode setting with $\gamma = 1$]
+\begin{align*}
+\nabla J(\theta) \propto \sum_s\mu(s) \sum_a q_{\pi}(s, a) \nabla_{\theta}\pi(a | s, \theta)
+\end{align*}
+
+\noindent Here, $J(\theta) = v_{\pi_{\theta}}(s_0)$ where $s_0 \in S$ is same given state.
+
+Consider
+
+\begin{align*}
+  \nabla J(\theta) &= \nabla_{\theta}v_{\pi_{\theta}}(s_0) \\
+                   &= \nabla_{\theta} \left( \sum_{a \in A(s_0)} \pi(a | s_0, \theta) q_{\pi}(s_0, a) \right) \\
+                   &= \sum_a \left( \nabla \pi (a | s_0, \theta) q_{\pi}(s_0, a) + \pi(a |s_0, \theta) \nabla \left(\sum_{s', r}p(s', r | s_0, a)(r + v_{\pi}(s'))\right) \right)\\
+\end{align*}
+\begin{align*}
+                     \nabla \left(\sum_{s', r}p(s', r | s_0, a)(r + v_{\pi}(s'))\right) \right)
+                   &= \sum_{s', r}p(s', r|s_0, a)\nabla v_{\pi}(s') \\
+  &= \sum_{s'}\overline{p}(s'|s_0, a)\nabla v_{\pi}(s') \\
+ \text{where, } \overline{p}(s', |s_0, a) &= \sum_rp(s', r|s_0, a)
+\end{align*}
+
+
+\begin{align*}
+\nabla J(\theta) &= \sum_a \left[ \nabla \pi (a|s_0, \theta) q_{\pi}(s_0, a) + \pi(a|s_0,\theta) \left( \sum_{s'} \overline{p}(s'|s_0, a) \nabla v_{\pi}(s') \right) \right]\\
+                 &= \sum_a \left[ \nabla \pi(a|s_0, \theta)q_{\pi}(s, a) 
+  + \pi(a|s_0,\theta)\sum_{s'}\overline{p}(s'|s_0, a)
+\\ &\times \left[ \sum_{a'} \left( \nabla \pi(a'|s', \theta)q_{\pi}(s', a') + \pi(a'|s', \theta) \times \sum_{s"}\overline{p}(s"|s', a') \times \nabla v_{\pi}(s")  \right) \right] \right]
+\end{align*}
+
+Probability of given from $s_0$ to x in k steps under $\pi$
+\begin{align*}
+\sum_{x \in S}\sum_{k=0}^{\infty}Pr(s_0 \rightarrow x, k, \pi)\sum_a\nabla\pi(a|x,\theta)q_{\pi}(x, a)
+\end{align*}
+
+Then,
+\begin{align*}
+\nabla J(\theta) &= \nabla v_{\pi_{\theta}}(s_0) \\
+  &= \sum_x\eta(x) \sum_a\nabla \pi(a|x, \theta)q_{\pi}(x, a) \\
+  &= \sum_{s'}\eta(s')\sum_x \left(\frac{\eta(x)}{\sum_{s'}\eta(s')}\right) \sum_a \nabla \pi(a|x, \theta)q_{\pi}(x, a) \\
+  &\propto \sum_x\mu(x)\sum_a\nabla\pi(a|x, \theta)\mu(x) \times q_{\pi}(x, a)
+\end{align*}
+
+
+\section{Reinforce: Monte-Carlo policy gradient}
+\label{sec:reinf-monte-carlo}
+
+\paragraph{Note:}
+
+\begin{align*}
+ \nabla J(\theta) &\propto \sum_s \mu(s) \sum_aq_{\pi}(s, a) \nabla_{\theta}\pi(a|s, \theta) \\
+  &= \mathop{\mathbb{E}}_{\pi} \left[ \sum_aq_{\pi}(s_t, a) \nabla \pi(a|s_t, \theta) \right] \\
+  &= \mathop{\mathbb{E}}_{\pi} \left[ \sum_a\pi(a|s_t, \theta)q_{\pi}(s_t, a) \frac{\nabla \pi(a|s_t, \theta)}{\pi(a|s_t, \theta)} \right] \\
+  &= \mathop{\mathbb{E}}_{\pi} \left[ q_{\pi}(s_t, A_t) \frac{\nabla \pi(A_t|s_t, \theta)}{\pi(A_t|s_t, \theta)} \right] \\
+  &= \mathop{\mathbb{E}}_{\pi} \left[ G_t \frac{\nabla \pi(A_t|s_t, \theta)}{\pi(A_t|s_t, \theta)} \right] \\
+\end{align*} 
+
+Where $G_t$ is the return from time $t$.
+
+\paragraph{Reinforce}
+
+\begin{align*}
+  \theta_{t+1} &= \theta_t + \alpha G_t \frac{\nabla \pi(A_t|s_t, \theta_t)}{\pi(A_t|s_t, \theta_t)} \\
+  &= \theta_t + \alpha \left( \mathop{\mathbb{E}}_{\pi} \left[ G_t \frac{\nabla \pi(A_t|s_t, \theta_t)}{\pi(A_t|s_t, \theta_t) \middle| f_t}\right] + M_{t+1} \right) \\
+\end{align*}
+
+\noindent Where, $M_{t+1} = \frac{G_t \nabla \pi(A_t | s_t, \theta_t)}{\pi(A_t | s_t, \theta_t)} - \mathop{\mathbb{E}}_{\pi} \left[ G_t \frac{\nabla \pi(A_t|s_t, \theta_t)}{\pi(A_t|s_t, \theta_t) \middle| f_t}\right]$ \\
+
+\noindent Here, $f_t = \sigma(\theta_s, S_s, A_s, s \leq t)$, $t \geq 0$, $\{\theta_s \leq c, s_t \leq b, A_s \leq a, s \leq t\} \in f_t$\\
+
+$(M_t, f_t)$, $t \geq 0$ is a martingale difference sequence, $\mathbb{E} [M_{t+1} | f_t] = 0$ \\
+
+If $\sum_t \alpha_t M_{t+1} < \infty$ (happens if $\sum_t\alpha^2_t < \infty$,
+$E[M_{t+1}^2 | f_t] \leq k(1 + \lVert \theta_t \rVert^2)$) \\
+
+$\sum_t\alpha_t = \infty$, $\sum_t\alpha_t^2 < \infty$ \\
+
+\textbf{ODE: } $\theta(t) = \mathbb{E}_{\pi} \left[ G_t \frac{\nabla\pi(A_t|s_t, \theta_t)}{\pi(A_t|s_t, \theta_t)} \right] = \nabla J(\theta_t)$ \\
+
+Stationary points $\{\theta | \nabla J(\theta) = 0\}$ \\
+Under some conditions, can show that $\theta_t \rightarrow$ local maxima of J.
+
+Pemantle (1990)
+
+\section{Reinforce with Baseline}
+\label{sec:reinf-with-basel}
+
+Let $b: S \rightarrow \mathbb{R}$ be a certain function, we call this the baseline function. \\
+
+The policy gradient can be generalized as follows
+\begin{align*}
+\nabla J(\theta) &\propto \sum_s\mu(s) \sum_a \left( q_{\pi}(s, a) - b(s) \right) \nabla \pi(a|s, \theta) \\
+  \sum_a b(s) \nabla \pi(a|s, \theta) &= b(s) \sum_a \nabla \pi(a|s, \theta)
+\end{align*}
+where, $\sum_a \nabla \pi(a|s, \theta) = 0$
+
+\begin{align*}
+  \theta_{t+1} &= \theta_t + \alpha (G_t - b(s_t))\frac{\nabla \pi(A_t|s_t, \theta_t)}{\pi(A_t|s_t, \theta_t)} \\
+\end{align*}
+
+A good choice of $b(s_t)$ is $v_{\pi}(s_t)$.
+\begin{align*}
+  \theta_{t+1} &= \theta_t + \alpha (G_t - \hat{v}(s_t, w_t))\frac{\nabla \pi(A_t|s_t, \theta_t)}{\pi(A_t|s_t, \theta_t)}
+\end{align*}
+
+\paragraph{Incremental update algorithm}
+\begin{align*}
+ \text{(PG update)  } \theta_{t+1} &= \theta_t + \alpha \left( R_{t+1} + \gamma \hat{v}(s_{t+1}, w_t) - \hat{v}(s_t, w_t) \right) \nabla log \pi(A_t|s_t, \theta_t) \\
+  \text{(TD update) } w_{t+1} &= w_t + \beta\left(R_{t+1} + \gamma G(s_{t+1}, w_t) - \hat{v}(s_t, w_t)\right) \nabla \hat{v}(s_t, w_t)
+\end{align*}
+
+$\sum_t\alpha_t = \sum_t\beta_t = \infty$, $\sum_t\alpha_t^2, \sum_t\beta_t^2 < \infty$, $\frac{\alpha_t}{\beta_t}\rightarrow 0$ as $t \rightarrow \infty$
+
+This is called \textbf{Actor-Critic algorithm}.
+
+
+
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
