@@ -8,10 +8,10 @@
 - [DS 290: Modelling and Simulation](./Aug22/MS/ "MS") (MS)
 
 ## January 2022
-- [Pattern Recognition for Neural Networks](./Jan22/PRNN/ "PRNN") (PRNN)
-- [Reinforcement Learning](./Jan22/RL/ "RL") (RL)
-- [Game Theory](./Jan22/GT/ "GT") (GT)
+- [Pattern Recognition for Neural Networks](./Jan23/PRNN/ "PRNN") (PRNN)
+- [Reinforcement Learning](./Jan23/ReinforcementLearning/ "ReinforcementLearning") (ReinforcementLearning)
+- [Game Theory](./Jan23/GameTheory/ "GameTheory") (GameTheory)
 
-## August 2023
+## August 2023 (Incomplete)
 - [Advanced Deep Representation Learning](./Aug23/ADRL/ "ADRL") (ADRL)
 - [Topics in Stochastic Approximation Algorithms](./Aug23/TSAA/ "TSAA") (TSAA)

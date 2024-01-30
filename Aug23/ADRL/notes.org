@@ -1,0 +1,5 @@
+#+title: Advanced Deep Representation Learning
+#+author: Lokesh Mohanty
+#+instructor: Prathosh A. P.
+
+* Latent Variable Models and Variational Inference
